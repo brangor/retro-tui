@@ -3,11 +3,11 @@ import { sharedStyles } from '../styles/shared.js';
 import { ansiToHtml } from '../utils/ansi.js';
 
 /**
- * <retro-text> - Static text block with ANSI color support
+ * <tui-text> - Static text block with ANSI color support
  * 
  * Set content via textContent or the content property.
  */
-export class RetroText extends LitElement {
+export class Text extends LitElement {
   static properties = {
     content: { type: String },
   };
@@ -41,4 +41,6 @@ export class RetroText extends LitElement {
   }
 }
 
-customElements.define('retro-text', RetroText);
+if (!customElements.get('tui-text')) {
+  customElements.define('tui-text', Text);
+}

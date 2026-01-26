@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { sharedStyles } from '../styles/shared.js';
 
 /**
- * <retro-card> - Playing card with terminal box-draw aesthetic
+ * <tui-card> - Playing card with terminal box-draw aesthetic
  * 
  * Three visual states using different box-drawing characters:
  * - neutral: single line border (┌──┐)
@@ -23,7 +23,7 @@ import { sharedStyles } from '../styles/shared.js';
  * 
  * @slot - Custom content (overrides rank/suit display)
  */
-export class RetroCard extends LitElement {
+export class Card extends LitElement {
   static properties = {
     rank: { type: String },
     suit: { type: String },
@@ -304,4 +304,6 @@ export class RetroCard extends LitElement {
   }
 }
 
-customElements.define('retro-card', RetroCard);
+if (!customElements.get('tui-card')) {
+  customElements.define('tui-card', Card);
+}

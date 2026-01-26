@@ -3,7 +3,7 @@ import { sharedStyles } from '../styles/shared.js';
 import { ansiToHtml } from '../utils/ansi.js';
 
 /**
- * <retro-output> - Scrolling log output with ANSI color support
+ * <tui-output> - Scrolling log output with ANSI color support
  * 
  * @attr {number} max-lines - Maximum lines to keep (default: 500)
  * @attr {boolean} autoscroll - Auto-scroll to bottom on new content
@@ -12,7 +12,7 @@ import { ansiToHtml } from '../utils/ansi.js';
  * @method append(text) - Add a line of text
  * @method clear() - Clear all output
  */
-export class RetroOutput extends LitElement {
+export class Output extends LitElement {
   static properties = {
     maxLines: { type: Number, attribute: 'max-lines' },
     autoscroll: { type: Boolean },
@@ -136,4 +136,6 @@ export class RetroOutput extends LitElement {
   }
 }
 
-customElements.define('retro-output', RetroOutput);
+if (!customElements.get('tui-output')) {
+  customElements.define('tui-output', Output);
+}

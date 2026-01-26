@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { sharedStyles } from '../styles/shared.js';
 
 /**
- * <retro-palette> - Tabbed character picker
+ * <tui-palette> - Tabbed character picker
  *
  * @attr {Object} palettes - Map of palette names to char arrays
  *   Example: { 'Box': ['─', '│', ...], 'Blocks': ['█', '▓', ...] }
@@ -17,7 +17,7 @@ import { sharedStyles } from '../styles/shared.js';
  * @fires char-select - When character is clicked
  *   detail: { char: string }
  */
-export class RetroPalette extends LitElement {
+export class Palette extends LitElement {
   static properties = {
     palettes: { type: Object },
     currentPalette: { type: String, attribute: 'current-palette' },
@@ -149,4 +149,6 @@ export class RetroPalette extends LitElement {
   }
 }
 
-customElements.define('retro-palette', RetroPalette);
+if (!customElements.get('tui-palette')) {
+  customElements.define('tui-palette', Palette);
+}

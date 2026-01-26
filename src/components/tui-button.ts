@@ -20,7 +20,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export type SelectionStyle = 'invert' | 'border';
 
 /**
- * <retro-button> - Terminal-styled button
+ * <tui-button> - Terminal-styled button
  *
  * A flexible button component that works standalone, in toolbars, or as menu triggers.
  * Supports two selection feedback styles: color inversion or border weight changes.
@@ -34,13 +34,13 @@ export type SelectionStyle = 'invert' | 'border';
  *
  * @slot - Button label/content
  *
- * @cssprop [--retro-button-bg] - Override background color
- * @cssprop [--retro-button-color] - Override text color
- * @cssprop [--retro-button-border-color] - Override border color
+ * @cssprop [--tui-button-bg] - Override background color
+ * @cssprop [--tui-button-color] - Override text color
+ * @cssprop [--tui-button-border-color] - Override border color
  * @cssprop [--selection-style] - Inherited selection style (invert | border)
  */
-@customElement('retro-button')
-export class RetroButton extends LitElement {
+@customElement('tui-button')
+export class Button extends LitElement {
   /** Visual style variant */
   @property({ reflect: true })
   variant: ButtonVariant = 'default';
@@ -77,9 +77,9 @@ export class RetroButton extends LitElement {
         --_selection-style: var(--selection-style, invert);
 
         /* Themeable properties with fallbacks */
-        --_btn-bg: var(--retro-button-bg, var(--surface-base));
-        --_btn-color: var(--retro-button-color, var(--text-primary));
-        --_btn-border-color: var(--retro-button-border-color, var(--border-default));
+        --_btn-bg: var(--tui-button-bg, var(--surface-base));
+        --_btn-color: var(--tui-button-color, var(--text-primary));
+        --_btn-border-color: var(--tui-button-border-color, var(--border-default));
         --_btn-border-width: var(--border-width, 1px);
 
         /* Size tokens */
@@ -325,6 +325,6 @@ export class RetroButton extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'retro-button': RetroButton;
+    'tui-button': Button;
   }
 }

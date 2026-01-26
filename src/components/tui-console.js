@@ -3,7 +3,7 @@ import { sharedStyles } from '../styles/shared.js';
 import { ansiToHtml } from '../utils/ansi.js';
 
 /**
- * <retro-console> - Interactive command console with history
+ * <tui-console> - Interactive command console with history
  * 
  * @attr {string} prompt - Command prompt (default: "> ")
  * @attr {number} history-size - Max history entries (default: 100)
@@ -13,7 +13,7 @@ import { ansiToHtml } from '../utils/ansi.js';
  * @method print(text) - Print output to console
  * @method clear() - Clear console output
  */
-export class RetroConsole extends LitElement {
+export class Console extends LitElement {
   static properties = {
     prompt: { type: String },
     historySize: { type: Number, attribute: 'history-size' },
@@ -239,4 +239,6 @@ export class RetroConsole extends LitElement {
   }
 }
 
-customElements.define('retro-console', RetroConsole);
+if (!customElements.get('tui-console')) {
+  customElements.define('tui-console', Console);
+}

@@ -2,13 +2,13 @@ import { LitElement, html, css } from 'lit';
 import { sharedStyles } from '../styles/shared.js';
 
 /**
- * <retro-table> - ASCII-bordered data table
+ * <tui-table> - ASCII-bordered data table
  * 
  * @attr {string} border - Border style: single | double | heavy | none
  * 
  * @method setData(columns, rows) - Set table data
  */
-export class RetroTable extends LitElement {
+export class Table extends LitElement {
   static properties = {
     border: { type: String },
     _columns: { state: true },
@@ -136,4 +136,6 @@ export class RetroTable extends LitElement {
   }
 }
 
-customElements.define('retro-table', RetroTable);
+if (!customElements.get('tui-table')) {
+  customElements.define('tui-table', Table);
+}
