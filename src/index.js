@@ -13,7 +13,7 @@ export { Text } from './components/tui-text.js';
 export { Menu, MenuItem, MenuAction, MenuDivider } from './components/tui-menu.js';
 export { Statusbar, StatusItem } from './components/tui-statusbar.js';
 export { Modal } from './components/tui-modal.js';
-export { Button } from './components/tui-button.ts';
+export { Button } from './components/tui-button.js';
 export { Toolbar, Tool } from './components/tui-toolbar.js';
 export { Toast, tuiToast } from './components/tui-toast.js';
 export { Card } from './components/tui-card.js';

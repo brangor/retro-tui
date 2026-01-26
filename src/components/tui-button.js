@@ -1,23 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-
-/**
- * Button variant types
- * - default: Standard bordered button
- * - primary: Filled with primary color
- * - danger: Error/destructive styling
- * - ghost: No border until hover
- * - icon: Square, fixed size for toolbars
- * - menu: Transparent, for menu bar triggers
- */
-export type ButtonVariant = 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu';
-
-/** Button size options */
-export type ButtonSize = 'sm' | 'md' | 'lg';
-
-/** Selection feedback style */
-export type SelectionStyle = 'invert' | 'border';
 
 /**
  * <tui-button> - Terminal-styled button
@@ -39,31 +21,25 @@ export type SelectionStyle = 'invert' | 'border';
  * @cssprop [--tui-button-border-color] - Override border color
  * @cssprop [--selection-style] - Inherited selection style (invert | border)
  */
-@customElement('tui-button')
 export class Button extends LitElement {
-  /** Visual style variant */
-  @property({ reflect: true })
-  variant: ButtonVariant = 'default';
+  static properties = {
+    variant: { type: String, reflect: true },
+    size: { type: String, reflect: true },
+    selectionStyle: { type: String, attribute: 'selection-style' },
+    selected: { type: Boolean, reflect: true },
+    disabled: { type: Boolean, reflect: true },
+    block: { type: Boolean, reflect: true },
+  };
 
-  /** Button sizing */
-  @property({ reflect: true })
-  size: ButtonSize = 'md';
-
-  /** Selection feedback style - falls back to CSS --selection-style or 'invert' */
-  @property({ attribute: 'selection-style' })
-  selectionStyle?: SelectionStyle;
-
-  /** Selected/toggle state (for toolbars) */
-  @property({ type: Boolean, reflect: true })
-  selected = false;
-
-  /** Disabled state */
-  @property({ type: Boolean, reflect: true })
-  disabled = false;
-
-  /** Full width display */
-  @property({ type: Boolean, reflect: true })
-  block = false;
+  constructor() {
+    super();
+    this.variant = 'default';
+    this.size = 'md';
+    this.selectionStyle = undefined;
+    this.selected = false;
+    this.disabled = false;
+    this.block = false;
+  }
 
   static styles = [
     sharedStyles,
@@ -323,8 +299,4 @@ export class Button extends LitElement {
   }
 }
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'tui-button': Button;
-  }
-}
+customElements.define('tui-button', Button);
