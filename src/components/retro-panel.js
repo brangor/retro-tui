@@ -17,6 +17,8 @@ import { sharedStyles } from '../styles/shared.js';
  * @attr {string} color - Semantic color: primary | secondary | error | success | info
  *                        (Legacy: cyan | green | magenta | yellow | red still work)
  * @attr {string} variant - 'bright' | 'classic'
+ * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
+ *                                  Inherited by child components (toolbar, buttons)
  * @attr {boolean} collapsible - Whether panel can be collapsed
  * @attr {boolean} collapsed - Current collapsed state
  * @attr {boolean} selected - Panel is selected but not focused
@@ -27,12 +29,15 @@ import { sharedStyles } from '../styles/shared.js';
  * @fires focus-request - When panel wants focus
  * 
  * @slot - Panel content
+ * 
+ * @cssprop [--selection-style] - Inherited selection style for child components
  */
 export class RetroPanel extends LitElement {
   static properties = {
     title: { type: String },
     color: { type: String },
     variant: { type: String, reflect: true },
+    selectionStyle: { type: String, attribute: 'selection-style', reflect: true },
     collapsible: { type: Boolean },
     collapsed: { type: Boolean },
     selected: { type: Boolean, reflect: true },
@@ -48,7 +53,20 @@ export class RetroPanel extends LitElement {
         --panel-color: var(--color-info);
         --panel-color-bg: var(--surface-elevated);
         --panel-color-fg: var(--text-primary);
+        
+        /* Pass selection-style to children (inheritable) */
+        --selection-style: var(--parent-selection-style, invert);
+        
         display: block;
+      }
+      
+      /* When selection-style attribute is set, override and pass to children */
+      :host([selection-style="invert"]) {
+        --selection-style: invert;
+      }
+      
+      :host([selection-style="border"]) {
+        --selection-style: border;
       }
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -302,6 +320,7 @@ export class RetroPanel extends LitElement {
     this.title = '';
     this.color = '';
     this.variant = 'bright'; // 'bright' or 'classic'
+    this.selectionStyle = ''; // 'invert' or 'border' - inherits from CSS if not set
     this.collapsible = false;
     this.collapsed = false;
     this.selected = false;
