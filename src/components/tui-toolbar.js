@@ -13,6 +13,7 @@ import './tui-button.ts';  // Import tui-button for use
  * @attr {string} selected - Currently selected tool id
  * @attr {string} size - Button size: 'sm' | 'md' | 'lg'
  * @attr {string} selection-style - Selection feedback: 'invert' | 'border'
+ * @attr {boolean} show-hotkeys - Show keyboard shortcuts next to tools (default: true)
  * 
  * @fires tool-select - When a tool button is clicked
  *   detail: { tool: string }
@@ -26,6 +27,7 @@ export class Toolbar extends LitElement {
     size: { type: String, reflect: true },
     selectionStyle: { type: String, attribute: 'selection-style' },
     tools: { type: Array },
+    showHotkeys: { type: Boolean, attribute: 'show-hotkeys' },
   };
 
   static styles = [
@@ -50,6 +52,41 @@ export class Toolbar extends LitElement {
       :host([orientation="horizontal"]) .toolbar {
         flex-direction: row;
         flex-wrap: wrap;
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         TOOL WITH HOTKEY
+         ═══════════════════════════════════════════════════════════════════ */
+
+      .tool-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+      }
+
+      .hotkey {
+        font-size: 0.65rem;
+        color: var(--text-muted, #888);
+        font-family: var(--font-mono);
+        text-transform: uppercase;
+        min-width: 1ch;
+        text-align: center;
+      }
+
+      /* Vertical: hotkey to the left */
+      :host([orientation="vertical"]) .tool-item,
+      :host(:not([orientation])) .tool-item {
+        flex-direction: row;
+      }
+
+      /* Horizontal: hotkey above */
+      :host([orientation="horizontal"]) .tool-item {
+        flex-direction: column;
+      }
+
+      :host([orientation="horizontal"]) .hotkey {
+        font-size: 0.6rem;
+        line-height: 1;
       }
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -82,6 +119,7 @@ export class Toolbar extends LitElement {
     this.size = 'md';
     this.selectionStyle = '';
     this.tools = [];
+    this.showHotkeys = true;
   }
 
   updated(changedProperties) {
@@ -110,16 +148,19 @@ export class Toolbar extends LitElement {
               return html`<div class="divider"></div>`;
             }
             return html`
-              <tui-button
-                variant="icon"
-                size=${this.size}
-                ?selected=${this.selected === tool.id}
-                selection-style=${this.selectionStyle || 'invert'}
-                title="${tool.name || tool.id}${tool.key ? ` (${tool.key})` : ''}"
-                @click=${() => this._handleClick(tool.id)}
-              >
-                ${tool.icon || tool.id.charAt(0).toUpperCase()}
-              </tui-button>
+              <div class="tool-item">
+                ${this.showHotkeys && tool.key ? html`<span class="hotkey">${tool.key}</span>` : ''}
+                <tui-button
+                  variant="icon"
+                  size=${this.size}
+                  ?selected=${this.selected === tool.id}
+                  selection-style=${this.selectionStyle || 'invert'}
+                  title="${tool.name || tool.id}${tool.key ? ` (${tool.key})` : ''}"
+                  @click=${() => this._handleClick(tool.id)}
+                >
+                  ${tool.icon || tool.id.charAt(0).toUpperCase()}
+                </tui-button>
+              </div>
             `;
           })}
         </div>
