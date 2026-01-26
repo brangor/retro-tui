@@ -1,0 +1,120 @@
+/**
+ * RetroTUI Design Tokens
+ * 
+ * Theme switching via class on :root or body:
+ *   <body class="theme-terminal-classic">
+ *   <body class="theme-vibrant-scifi">
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   THEME: Terminal Classic
+   The original dark terminal look - tinted backgrounds, colored text
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.theme-terminal-classic,
+:root {
+  /* Semantic Colors */
+  --color-primary: #00ffff;
+  --color-primary-bg: #002b36;
+  --color-primary-fg: #00ffff;
+  
+  --color-secondary: #00ff00;
+  --color-secondary-bg: #003300;
+  --color-secondary-fg: #00ff00;
+  
+  --color-error: #ff5555;
+  --color-error-bg: #330000;
+  --color-error-fg: #ff5555;
+  
+  --color-success: #50fa7b;
+  --color-success-bg: #003300;
+  --color-success-fg: #50fa7b;
+  
+  --color-info: #8be9fd;
+  --color-info-bg: #002233;
+  --color-info-fg: #8be9fd;
+
+  /* Surfaces */
+  --surface-base: #0a0a0a;
+  --surface-elevated: #1a1a1a;
+  --surface-overlay: #2a2a2a;
+  --text-primary: #e0e0e0;
+  --text-muted: #666666;
+  --border-default: #333333;
+
+  /* Structural */
+  --border-width: 1px;
+  --border-radius: 0px;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Legacy mappings (for existing components) */
+  --bg: var(--surface-base);
+  --text: var(--text-primary);
+  --text-dim: var(--text-muted);
+  --border: var(--border-default);
+  --cyan: var(--color-primary);
+  --green: var(--color-secondary);
+  --yellow: #f1fa8c;
+  --red: var(--color-error);
+  --magenta: #ff79c6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   THEME: Vibrant Sci-fi
+   Bold, saturated colors - solid backgrounds, high contrast
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.theme-vibrant-scifi {
+  /* Semantic Colors - saturated, bold */
+  --color-primary: #ff00ff;
+  --color-primary-bg: #ff00ff;
+  --color-primary-fg: #000000;
+  
+  --color-secondary: #00ffcc;
+  --color-secondary-bg: #00ffcc;
+  --color-secondary-fg: #000000;
+  
+  --color-error: #ff3366;
+  --color-error-bg: #ff3366;
+  --color-error-fg: #ffffff;
+  
+  --color-success: #00ff66;
+  --color-success-bg: #00ff66;
+  --color-success-fg: #000000;
+  
+  --color-info: #6666ff;
+  --color-info-bg: #6666ff;
+  --color-info-fg: #ffffff;
+
+  /* Surfaces - deep blue-black */
+  --surface-base: #0d0d1a;
+  --surface-elevated: #1a1a2e;
+  --surface-overlay: #2a2a4a;
+  --text-primary: #ffffff;
+  --text-muted: #8888aa;
+  --border-default: #4a4a6a;
+
+  /* Structural - thicker, subtle rounding */
+  --border-width: 2px;
+  --border-radius: 2px;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Legacy mappings */
+  --bg: var(--surface-base);
+  --text: var(--text-primary);
+  --text-dim: var(--text-muted);
+  --border: var(--border-default);
+  --cyan: var(--color-secondary);
+  --green: var(--color-success);
+  --yellow: #ffcc00;
+  --red: var(--color-error);
+  --magenta: var(--color-primary);
+}

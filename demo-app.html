@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetroTUI - App Shell Demo</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-light: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-dim: #8b949e;
+      --cyan: #58a6ff;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --magenta: #bc8cff;
+      --red: #f85149;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Toolbar buttons */
+    .tool-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .tool-btn:hover {
+      background: var(--border);
+    }
+
+    .tool-btn.active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      color: var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <retro-app title="RETRO-TUI" subtitle="APP SHELL DEMO">
+    <!-- Menu Bar -->
+    <retro-menu slot="menu">
+      <retro-menu-item label="File" hotkey="f">
+        <retro-menu-action label="New" shortcut="Ctrl+N"></retro-menu-action>
+        <retro-menu-action label="Open..." shortcut="Ctrl+O"></retro-menu-action>
+        <retro-menu-action label="Save" shortcut="Ctrl+S"></retro-menu-action>
+        <retro-menu-divider></retro-menu-divider>
+        <retro-menu-action label="Export .txt"></retro-menu-action>
+        <retro-menu-action label="Copy to Clipboard" shortcut="Ctrl+C"></retro-menu-action>
+      </retro-menu-item>
+      <retro-menu-item label="Edit" hotkey="e">
+        <retro-menu-action label="Undo" shortcut="Ctrl+Z"></retro-menu-action>
+        <retro-menu-action label="Redo" shortcut="Ctrl+Y"></retro-menu-action>
+        <retro-menu-divider></retro-menu-divider>
+        <retro-menu-action label="Clear All" danger></retro-menu-action>
+      </retro-menu-item>
+      <retro-menu-item label="View" hotkey="v">
+        <retro-menu-action label="Toggle Grid" shortcut="G"></retro-menu-action>
+        <retro-menu-action label="Toggle Sidebar" shortcut="Ctrl+B"></retro-menu-action>
+      </retro-menu-item>
+      <retro-menu-item label="Help" hotkey="h">
+        <retro-menu-action id="show-help" label="Keyboard Shortcuts" shortcut="?"></retro-menu-action>
+        <retro-menu-action id="show-about" label="About"></retro-menu-action>
+      </retro-menu-item>
+    </retro-menu>
+
+    <!-- Left Toolbar -->
+    <retro-panel slot="toolbar" title="Tools">
+      <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+        <button class="tool-btn active" title="Brush (B)">●</button>
+        <button class="tool-btn" title="Line (L)">╱</button>
+        <button class="tool-btn" title="Fill (F)">▣</button>
+        <button class="tool-btn" title="Rectangle (R)">□</button>
+        <button class="tool-btn" title="Eraser (E)">⌫</button>
+      </div>
+    </retro-panel>
+
+    <!-- Main Workspace -->
+    <retro-panel slot="main" title="Workspace" color="cyan">
+      <retro-output id="workspace-output" max-lines="100"></retro-output>
+    </retro-panel>
+
+    <!-- Right Sidebar -->
+    <retro-panel slot="sidebar" title="Palettes" color="green" collapsible>
+      <div id="palette-grid" style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;"></div>
+    </retro-panel>
+
+    <!-- Status Bar -->
+    <retro-statusbar slot="status">
+      <retro-status-item label="Tool" value="Brush"></retro-status-item>
+      <retro-status-item label="Char" value="─"></retro-status-item>
+      <retro-status-item label="Pos" value="0,0"></retro-status-item>
+      <retro-status-item label="Size" value="40×20"></retro-status-item>
+      <retro-status-item label="Context" value="workspace"></retro-status-item>
+    </retro-statusbar>
+  </retro-app>
+
+  <!-- Help Modal -->
+  <retro-modal id="help-modal" title="Keyboard Shortcuts">
+    <h3>Tools</h3>
+    <p><kbd>B</kbd> Brush &nbsp; <kbd>L</kbd> Line &nbsp; <kbd>F</kbd> Fill &nbsp; <kbd>R</kbd> Rectangle &nbsp; <kbd>E</kbd> Eraser</p>
+    
+    <h3>Canvas Navigation</h3>
+    <p><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> Move cursor</p>
+    <p><kbd>Space</kbd> Place character</p>
+    <p><kbd>Shift+Space</kbd> Place + advance right</p>
+    <p><kbd>Enter</kbd> Place + advance down</p>
+    <p><kbd>Home</kbd> / <kbd>End</kbd> Start / end of row</p>
+    
+    <h3>Palette Navigation</h3>
+    <p><kbd>Ctrl+↑↓←→</kbd> Navigate palette grid</p>
+    <p><kbd>1-9</kbd> Quick select first 9 characters</p>
+    
+    <h3>General</h3>
+    <p><kbd>Ctrl+Z</kbd> Undo</p>
+    <p><kbd>G</kbd> Toggle grid overlay</p>
+    <p><kbd>Esc</kbd> Close menus/modals</p>
+    <p><kbd>?</kbd> Show this help</p>
+  </retro-modal>
+
+  <!-- About Modal -->
+  <retro-modal id="about-modal" title="About">
+    <h3>RetroTUI</h3>
+    <p>Terminal-aesthetic UI components for the web.</p>
+    <p>Built with Lit Web Components. Zero runtime dependencies beyond Lit (~5KB).</p>
+    <p>Works anywhere: React, Vue, plain HTML.</p>
+    
+    <h3>Features</h3>
+    <p>• Real-time push updates from shell/node scripts</p>
+    <p>• ANSI color support</p>
+    <p>• Keyboard-first navigation</p>
+    <p>• GridSketch-style app shell layout</p>
+  </retro-modal>
+
+  <script type="module">
+    import './src/index.js';
+    import { retroPush } from './src/utils/push-client.js';
+
+    const output = document.getElementById('workspace-output');
+    
+    // Welcome message
+    output?.append('Welcome to the RetroTUI App Shell demo!');
+    output?.append('');
+    output?.append('This demonstrates the GridSketch layout pattern:');
+    output?.append('  • Header with menu bar');
+    output?.append('  • Tools panel (left)');
+    output?.append('  • Workspace (center)');
+    output?.append('  • Sidebar (right, collapsible)');
+    output?.append('  • Status bar (bottom)');
+    output?.append('');
+    output?.append('Try:');
+    output?.append('  • Click menu items to see dropdowns');
+    output?.append('  • Collapse the Palettes panel');
+    output?.append('  • Push messages from terminal');
+
+    // Connect to push server
+    retroPush.connect();
+    
+    retroPush.on('build', ({ type, data }) => {
+      output?.append(data);
+    });
+
+    retroPush.on('_connected', () => {
+      output?.append('\x1b[32m✓\x1b[0m Connected to push server');
+    });
+
+    // Populate palette grid
+    const paletteChars = ['─', '│', '┌', '┐', '└', '┘', '├', '┤', '┬', '┴', '┼', '═', '║', '╔', '╗', '╚'];
+    const paletteGrid = document.getElementById('palette-grid');
+    paletteChars.forEach(char => {
+      const btn = document.createElement('button');
+      btn.textContent = char;
+      btn.style.cssText = 'width: 28px; height: 28px; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 14px; cursor: pointer;';
+      btn.addEventListener('click', () => output?.append(`Selected: ${char}`));
+      paletteGrid?.appendChild(btn);
+    });
+
+    // Wire up modals
+    const helpModal = document.getElementById('help-modal');
+    const aboutModal = document.getElementById('about-modal');
+
+    document.getElementById('show-help')?.addEventListener('action', () => {
+      helpModal?.show();
+    });
+
+    document.getElementById('show-about')?.addEventListener('action', () => {
+      aboutModal?.show();
+    });
+
+    // Keyboard shortcut for help
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        e.preventDefault();
+        helpModal?.show();
+      }
+    });
+  </script>
+</body>
+</html>

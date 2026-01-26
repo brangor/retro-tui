@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetroTUI Paint - Example App</title>
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════
+       APP-SPECIFIC STYLES
+       These extend RetroTUI for the paint app
+       ═══════════════════════════════════════════════════════════════════ */
+
+    /* Canvas Grid */
+    .canvas-grid {
+      display: grid;
+      gap: 1px;
+      background: var(--border);
+      padding: 1px;
+      user-select: none;
+    }
+
+    .cell {
+      width: 20px;
+      height: 20px;
+      background: var(--bg);
+      cursor: crosshair;
+      transition: outline 0.1s;
+    }
+
+    .cell:hover {
+      outline: 1px solid var(--text-dim);
+      outline-offset: -1px;
+    }
+
+    .cell.cursor {
+      outline: 2px solid var(--cyan);
+      outline-offset: -2px;
+      z-index: 1;
+    }
+
+    /* Palette Tabs */
+    .palette-tabs {
+      display: flex;
+      gap: 0.25rem;
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .palette-tab {
+      padding: 0.2rem 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .palette-tab:hover {
+      border-color: var(--text);
+    }
+
+    .palette-tab.active {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* Color Swatches */
+    .color-swatches {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      padding: 0.5rem;
+    }
+
+    .color-swatch {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.1s, transform 0.1s;
+    }
+
+    .color-swatch:hover {
+      border-color: var(--text);
+      transform: scale(1.1);
+    }
+
+    .color-swatch.selected {
+      border-color: var(--yellow);
+      box-shadow: 0 0 0 1px var(--yellow);
+    }
+
+    /* Color preview */
+    .color-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .color-preview__swatch {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .color-preview__name {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- ═══════════════════════════════════════════════════════════════════
+       APP SHELL
+       Using RetroTUI components for layout
+       ═══════════════════════════════════════════════════════════════════ -->
+
+  <retro-app title="RETRO PAINT" subtitle="EXAMPLE APP">
+    
+    <!-- Menu Bar -->
+    <retro-menu slot="menu">
+      <retro-menu-item label="Edit" hotkey="e">
+        <retro-menu-action id="action-undo" label="Undo" shortcut="Ctrl+Z"></retro-menu-action>
+        <retro-menu-divider></retro-menu-divider>
+        <retro-menu-action id="action-clear" label="Clear All" danger></retro-menu-action>
+      </retro-menu-item>
+      <retro-menu-item label="Help" hotkey="h">
+        <retro-menu-action id="action-help" label="Controls" shortcut="?"></retro-menu-action>
+      </retro-menu-item>
+    </retro-menu>
+
+    <!-- Left Toolbar -->
+    <retro-panel id="panel-tools" slot="toolbar" title="Tools">
+      <retro-toolbar id="toolbar" orientation="vertical"></retro-toolbar>
+    </retro-panel>
+
+    <!-- Main Canvas -->
+    <retro-panel id="panel-canvas" slot="main" title="Canvas" color="cyan" active>
+      <div id="canvas" class="canvas-grid"></div>
+    </retro-panel>
+
+    <!-- Right Sidebar: Color Palette -->
+    <retro-panel id="panel-palette" slot="sidebar" title="Colors" color="green" collapsible>
+      <div id="palette-tabs" class="palette-tabs"></div>
+      <div id="color-swatches" class="color-swatches"></div>
+    </retro-panel>
+
+    <!-- Status Bar -->
+    <retro-statusbar slot="status">
+      <retro-status-item label="Tool" id="statusTool" value="Brush"></retro-status-item>
+      <retro-status-item label="Color" id="statusColor" value="Cyan"></retro-status-item>
+      <retro-status-item label="Pos" id="statusPos" value="0,0"></retro-status-item>
+      <retro-status-item label="Mode" id="statusMode" value="CANVAS"></retro-status-item>
+    </retro-statusbar>
+  </retro-app>
+
+  <!-- Help Modal -->
+  <retro-modal id="modal-help" title="Controls">
+    <h3>Tools</h3>
+    <p><kbd>B</kbd> Brush &nbsp; <kbd>F</kbd> Fill &nbsp; <kbd>E</kbd> Eraser</p>
+    
+    <h3>Drawing</h3>
+    <p><kbd>Click</kbd> or <kbd>Drag</kbd> to paint</p>
+    <p><kbd>Arrow Keys</kbd> move cursor (when canvas focused)</p>
+    <p><kbd>Space</kbd> place color at cursor</p>
+    
+    <h3>Colors</h3>
+    <p><kbd>1-9</kbd> Quick select colors</p>
+    
+    <h3>Navigation</h3>
+    <p><kbd>Tab</kbd> Cycle focus: Canvas → Colors → Tools</p>
+    
+    <h3>Actions</h3>
+    <p><kbd>Ctrl+Z</kbd> Undo</p>
+    <p><kbd>?</kbd> Show this help</p>
+  </retro-modal>
+
+  <!-- Toast container (for notifications) -->
+  <retro-toast></retro-toast>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

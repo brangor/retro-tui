@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetroTUI - Demo</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg-light: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-dim: #8b949e;
+      --cyan: #58a6ff;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --magenta: #bc8cff;
+      --red: #f85149;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: var(--cyan);
+      font-weight: normal;
+      margin-bottom: 1rem;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .instructions {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .instructions code {
+      background: var(--bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 2px;
+    }
+
+    .instructions pre {
+      background: var(--bg);
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>░░ RETRO-TUI <span style="color: var(--green)">[ DEMO ]</span> ░░</h1>
+  
+  <div class="instructions">
+    <strong>Push updates from terminal:</strong>
+    <pre>curl -X POST http://localhost:3001/push -H "Content-Type: application/json" -d '{"channel":"build","type":"log","data":"Build started..."}'</pre>
+    <pre>./push.sh log "Hello from shell!"</pre>
+    <pre>node push.js --channel=build --message="Compiling..."</pre>
+  </div>
+
+  <div class="demo-grid">
+    <!-- Live Output Panel -->
+    <retro-panel title="Build Output" color="cyan">
+      <retro-output id="build-output" max-lines="50"></retro-output>
+    </retro-panel>
+
+    <!-- Status Panel -->
+    <retro-panel title="System Status" color="green" collapsible>
+      <retro-table id="status-table"></retro-table>
+    </retro-panel>
+
+    <!-- Console Panel -->
+    <retro-panel title="Console" color="magenta">
+      <retro-console id="console" prompt="❯ "></retro-console>
+    </retro-panel>
+  </div>
+
+  <script type="module" src="/src/index.js"></script>
+  <script type="module" src="/src/demo.js"></script>
+</body>
+</html>

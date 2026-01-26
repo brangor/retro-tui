@@ -1,0 +1,51 @@
+{
+  "name": "retro-tui",
+  "version": "0.1.0",
+  "description": "Terminal-aesthetic UI components for the web with real-time script integration",
+  "type": "module",
+  "main": "dist/retro-tui.js",
+  "module": "dist/retro-tui.js",
+  "exports": {
+    ".": {
+      "import": "./dist/retro-tui.js"
+    },
+    "./src/*": "./src/*"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "server": "node server/index.js",
+    "start": "concurrently \"npm run dev\" \"npm run server\"",
+    "example:paint": "vite examples/paint",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "keywords": [
+    "terminal",
+    "tui",
+    "web-components",
+    "lit",
+    "retro",
+    "ascii"
+  ],
+  "author": "Brandon",
+  "license": "MIT",
+  "dependencies": {
+    "lit": "^3.1.0",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "concurrently": "^8.2.0"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  }
+}
