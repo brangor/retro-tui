@@ -1,15 +1,18 @@
 import { LitElement, html, css } from 'lit';
 import { sharedStyles } from '../styles/shared.js';
+import './retro-button.ts';  // Import retro-button for use
 
 /**
  * <retro-toolbar> - Tool button group with terminal aesthetic
  * 
+ * Uses <retro-button variant="icon"> internally for consistent styling.
  * Supports vertical (default) or horizontal orientation.
  * Emits tool-select event when a tool is clicked.
  * 
  * @attr {string} orientation - 'vertical' | 'horizontal'
  * @attr {string} selected - Currently selected tool id
  * @attr {string} size - Button size: 'sm' | 'md' | 'lg'
+ * @attr {string} selection-style - Selection feedback: 'invert' | 'border'
  * 
  * @fires tool-select - When a tool button is clicked
  *   detail: { tool: string }
@@ -21,6 +24,7 @@ export class RetroToolbar extends LitElement {
     orientation: { type: String, reflect: true },
     selected: { type: String },
     size: { type: String, reflect: true },
+    selectionStyle: { type: String, attribute: 'selection-style' },
     tools: { type: Array },
   };
 
@@ -29,6 +33,8 @@ export class RetroToolbar extends LitElement {
     css`
       :host {
         display: block;
+        /* Pass selection-style to children */
+        --selection-style: var(--toolbar-selection-style, invert);
       }
 
       .toolbar {
@@ -47,59 +53,9 @@ export class RetroToolbar extends LitElement {
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         TOOL BUTTONS
+         DIVIDER
          ═══════════════════════════════════════════════════════════════════ */
 
-      .tool-btn {
-        width: 36px;
-        height: 36px;
-        padding: 0;
-        background: var(--surface-base);
-        border: var(--border-width) solid var(--border-default);
-        color: var(--text-primary);
-        font-family: inherit;
-        font-size: var(--spacing-md);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.1s, border-color 0.1s, color 0.1s;
-      }
-
-      .tool-btn:hover {
-        background: var(--border-default);
-        border-color: var(--text-muted);
-      }
-
-      .tool-btn:focus {
-        outline: 1px solid var(--color-primary);
-        outline-offset: 1px;
-      }
-
-      .tool-btn.active {
-        background: var(--color-primary);
-        border-color: var(--color-primary);
-        color: var(--surface-base);
-      }
-
-      .tool-btn.active:hover {
-        filter: brightness(1.1);
-      }
-
-      /* Size variants */
-      :host([size="sm"]) .tool-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 0.85rem;
-      }
-
-      :host([size="lg"]) .tool-btn {
-        width: 44px;
-        height: 44px;
-        font-size: 1.25rem;
-      }
-
-      /* Divider */
       .divider {
         background: var(--border-default);
       }
@@ -124,7 +80,15 @@ export class RetroToolbar extends LitElement {
     this.orientation = 'vertical';
     this.selected = '';
     this.size = 'md';
+    this.selectionStyle = '';
     this.tools = [];
+  }
+
+  updated(changedProperties) {
+    // Update CSS custom property when selection-style changes
+    if (changedProperties.has('selectionStyle') && this.selectionStyle) {
+      this.style.setProperty('--toolbar-selection-style', this.selectionStyle);
+    }
   }
 
   _handleClick(toolId) {
@@ -146,13 +110,16 @@ export class RetroToolbar extends LitElement {
               return html`<div class="divider"></div>`;
             }
             return html`
-              <button
-                class="tool-btn ${this.selected === tool.id ? 'active' : ''}"
+              <retro-button
+                variant="icon"
+                size=${this.size}
+                ?selected=${this.selected === tool.id}
+                selection-style=${this.selectionStyle || 'invert'}
                 title="${tool.name || tool.id}${tool.key ? ` (${tool.key})` : ''}"
                 @click=${() => this._handleClick(tool.id)}
               >
                 ${tool.icon || tool.id.charAt(0).toUpperCase()}
-              </button>
+              </retro-button>
             `;
           })}
         </div>
@@ -173,46 +140,24 @@ customElements.define('retro-toolbar', RetroToolbar);
 /**
  * <retro-tool> - Individual tool button for use in slots
  * 
+ * Wraps <retro-button variant="icon"> for use inside <retro-toolbar> slots.
+ * 
  * @attr {string} tool-id - Tool identifier
  * @attr {string} icon - Icon character to display
  * @attr {boolean} active - Whether this tool is active
+ * @attr {string} size - Button size: 'sm' | 'md' | 'lg'
  */
 export class RetroTool extends LitElement {
   static properties = {
     toolId: { type: String, attribute: 'tool-id' },
     icon: { type: String },
     active: { type: Boolean, reflect: true },
+    size: { type: String },
   };
 
   static styles = css`
     :host {
       display: contents;
-    }
-
-    button {
-      width: 36px;
-      height: 36px;
-      padding: 0;
-      background: var(--surface-base);
-      border: var(--border-width) solid var(--border-default);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: var(--spacing-md);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.1s, border-color 0.1s;
-    }
-
-    button:hover {
-      background: var(--border-default);
-    }
-
-    :host([active]) button {
-      background: var(--color-primary);
-      border-color: var(--color-primary);
-      color: var(--surface-base);
     }
   `;
 
@@ -221,6 +166,7 @@ export class RetroTool extends LitElement {
     this.toolId = '';
     this.icon = '';
     this.active = false;
+    this.size = 'md';
   }
 
   _handleClick() {
@@ -233,9 +179,14 @@ export class RetroTool extends LitElement {
 
   render() {
     return html`
-      <button @click=${this._handleClick}>
+      <retro-button
+        variant="icon"
+        size=${this.size}
+        ?selected=${this.active}
+        @click=${this._handleClick}
+      >
         <slot>${this.icon}</slot>
-      </button>
+      </retro-button>
     `;
   }
 }

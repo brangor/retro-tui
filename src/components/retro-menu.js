@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { sharedStyles } from '../styles/shared.js';
+import './retro-button.ts';  // Import retro-button for use
 
 /**
  * <retro-menu> - Menu bar with dropdown menus
@@ -41,6 +42,8 @@ export class RetroMenu extends LitElement {
 /**
  * <retro-menu-item> - Single menu with dropdown
  * 
+ * Uses <retro-button variant="menu"> for the trigger.
+ * 
  * @attr {string} label - Menu label
  * @attr {string} hotkey - Hotkey letter (underlined)
  * @slot - Dropdown content (retro-menu-action elements)
@@ -59,31 +62,16 @@ export class RetroMenuItem extends LitElement {
         position: relative;
       }
 
-      .trigger {
-        background: transparent;
-        border: var(--border-width) solid transparent;
-        color: var(--text-primary);
-        font-family: inherit;
-        font-size: 0.85rem;
-        padding: var(--spacing-xs) var(--spacing-sm);
-        cursor: pointer;
-        transition: all 0.1s;
-      }
-
-      .trigger:hover,
-      :host(.open) .trigger {
-        background: var(--text-primary);
-        color: var(--surface-base);
-      }
-
+      /* Hotkey styling within the button */
       .hotkey {
         color: var(--color-secondary);
         text-decoration: underline;
       }
 
-      .trigger:hover .hotkey,
-      :host(.open) .trigger .hotkey {
-        color: var(--surface-base);
+      /* When trigger is hovered/open, hotkey inherits inverted color */
+      :host(.open) .hotkey,
+      retro-button:hover .hotkey {
+        color: inherit;
       }
 
       .dropdown {
@@ -166,9 +154,13 @@ export class RetroMenuItem extends LitElement {
     }
 
     return html`
-      <button class="trigger" @click=${this._toggle}>
+      <retro-button 
+        variant="menu" 
+        ?selected=${this._open}
+        @click=${this._toggle}
+      >
         ${labelHtml}
-      </button>
+      </retro-button>
       <div class="dropdown">
         <slot @click=${this._close}></slot>
       </div>

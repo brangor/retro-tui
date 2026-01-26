@@ -119,7 +119,7 @@ export class RetroButton extends LitElement {
           background 0.1s ease-out,
           border-color 0.1s ease-out,
           color 0.1s ease-out,
-          border-width 0.1s ease-out,
+          box-shadow 0.1s ease-out,
           filter 0.1s ease-out;
 
         &:hover:not(:disabled) {
@@ -249,11 +249,10 @@ export class RetroButton extends LitElement {
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         SELECTED STATE
-         Respects selection-style for different feedback
+         SELECTED STATE: INVERT STYLE (default)
+         Color swap on selected
          ═══════════════════════════════════════════════════════════════════ */
 
-      /* Invert style: color swap on selected */
       :host([selected]) button {
         background: var(--text-primary);
         color: var(--surface-base);
@@ -264,20 +263,53 @@ export class RetroButton extends LitElement {
         filter: brightness(1.1);
       }
 
-      /* Border style override: double border on selected
-         Applied when selection-style="border" attribute is set */
-      :host([selection-style="border"][selected]) button {
-        background: var(--_btn-bg);
-        color: var(--_btn-color);
-        border-width: 2px;
-        border-style: double;
-      }
-
-      /* Icon variant with selection */
+      /* Icon variant with invert selection */
       :host([variant="icon"][selected]) button {
         background: var(--color-primary);
         color: var(--surface-base);
         border-color: var(--color-primary);
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         SELECTED STATE: BORDER STYLE
+         Progressive border weight: single → heavy → double
+         Uses box-shadow to avoid layout shifts (no border-width changes)
+         ═══════════════════════════════════════════════════════════════════ */
+
+      /* Border style: hover shows heavy border via box-shadow */
+      :host([selection-style="border"]) button:hover:not(:disabled) {
+        background: var(--_btn-bg);
+        border-color: var(--text-primary);
+        box-shadow: 0 0 0 1px var(--text-primary);
+      }
+
+      /* Border style: selected shows double line with visible gap
+         Structure: border (outer) → gap (bg color) → inner line */
+      :host([selection-style="border"][selected]) button {
+        background: var(--_btn-bg);
+        color: var(--_btn-color);
+        border-color: var(--text-primary);
+        box-shadow: 
+          inset 0 0 0 2px var(--_btn-bg),
+          inset 0 0 0 3px var(--text-primary);
+      }
+
+      :host([selection-style="border"][selected]) button:hover:not(:disabled) {
+        filter: none;
+        background: var(--surface-elevated);
+      }
+
+      /* Border style for icon variant */
+      :host([selection-style="border"][variant="icon"]) button:hover:not(:disabled) {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 1px var(--color-primary);
+      }
+
+      :host([selection-style="border"][variant="icon"][selected]) button {
+        border-color: var(--color-primary);
+        box-shadow: 
+          inset 0 0 0 2px var(--_btn-bg),
+          inset 0 0 0 3px var(--color-primary);
       }
     `,
   ];
