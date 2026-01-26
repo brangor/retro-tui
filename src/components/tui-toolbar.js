@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { sharedStyles } from '../styles/shared.js';
-import './tui-button.ts';  // Import tui-button for use
+import './tui-button.js';  // Import tui-button for use
 
 /**
  * <tui-toolbar> - Tool button group with terminal aesthetic
