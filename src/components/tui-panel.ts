@@ -438,6 +438,12 @@ export class Panel extends LitElement {
         z-index: 100;
       }
 
+      /* Floating panel shadow */
+      :host([draggable]) .panel {
+        box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3), 
+                    6px 6px 0 rgba(255, 255, 255, 0.05);
+      }
+
       .header.draggable {
         cursor: grab;
       }
