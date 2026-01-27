@@ -220,12 +220,14 @@ export class Panel extends LitElement {
          ═══════════════════════════════════════════════════════════════════ */
 
       .panel {
+        position: relative;
         background: var(--surface-elevated);
         border: var(--border-width, 1px) solid var(--panel-color);
         border-radius: var(--border-radius, 0);
         display: flex;
         flex-direction: column;
         min-height: 0;
+        height: 100%;
         transition: border-width 0.1s, box-shadow 0.1s;
       }
 
