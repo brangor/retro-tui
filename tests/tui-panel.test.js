@@ -58,10 +58,10 @@ describe('tui-panel', () => {
     expect(dismissed).to.be.true;
   });
 
-  it('has floating-header class when floating', async () => {
+  it('has draggable class when floating', async () => {
     const el = await fixture(html`<tui-panel title="Test" floating>Content</tui-panel>`);
     const header = el.shadowRoot.querySelector('.header');
-    expect(header.classList.contains('floating')).to.be.true;
+    expect(header.classList.contains('draggable')).to.be.true;
   });
 
   it('applies absolute positioning when floating', async () => {

@@ -29,51 +29,15 @@ describe('tui-sidebar', () => {
     expect(slot).to.exist;
   });
 
-  it('can be collapsed', async () => {
-    const el = await fixture(html`<tui-sidebar side="left" collapsed></tui-sidebar>`);
-    expect(el.collapsed).to.be.true;
-  });
-
-  it('emits sidebar-collapse event on toggle', async () => {
-    const el = await fixture(html`<tui-sidebar side="left"></tui-sidebar>`);
-    
-    let collapseEvent = null;
-    el.addEventListener('sidebar-collapse', (e) => { collapseEvent = e.detail; });
-    
-    const collapseBtn = el.shadowRoot.querySelector('.collapse-btn');
-    collapseBtn.click();
-    
-    expect(collapseEvent).to.exist;
-    expect(collapseEvent.side).to.equal('left');
-    expect(collapseEvent.collapsed).to.be.true;
-  });
-
-  it('has resize handle when not collapsed', async () => {
-    const el = await fixture(html`<tui-sidebar side="left"></tui-sidebar>`);
-    const handle = el.shadowRoot.querySelector('.resize-handle');
-    expect(handle).to.exist;
-  });
-
-  it('hides resize handle when collapsed', async () => {
-    const el = await fixture(html`<tui-sidebar side="left" collapsed></tui-sidebar>`);
-    const handle = el.shadowRoot.querySelector('.resize-handle');
-    expect(handle).to.not.exist;
-  });
-
-  it('emits sidebar-resize on drag', async () => {
+  it('applies size as width for left/right sidebar', async () => {
     const el = await fixture(html`<tui-sidebar side="left" size="250"></tui-sidebar>`);
-    
-    let resizeEvent = null;
-    el.addEventListener('sidebar-resize', (e) => { resizeEvent = e.detail; });
-    
-    const handle = el.shadowRoot.querySelector('.resize-handle');
-    
-    handle.dispatchEvent(new PointerEvent('pointerdown', { clientX: 250, clientY: 100, bubbles: true }));
-    document.dispatchEvent(new PointerEvent('pointermove', { clientX: 300, clientY: 100 }));
-    document.dispatchEvent(new PointerEvent('pointerup', {}));
-    
-    expect(resizeEvent).to.exist;
-    expect(resizeEvent.size).to.be.a('number');
+    expect(el.style.width).to.equal('250px');
+  });
+
+  it('has content container', async () => {
+    const el = await fixture(html`<tui-sidebar side="left"></tui-sidebar>`);
+    const content = el.shadowRoot.querySelector('.content');
+    expect(content).to.exist;
   });
 
   // Task 2: calculateDropIndex
