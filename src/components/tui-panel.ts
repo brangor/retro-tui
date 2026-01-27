@@ -419,10 +419,18 @@ export class Panel extends LitElement {
         overflow: auto;
         padding: var(--spacing-sm);
         min-height: 0;
+        /* Smooth collapse animation */
+        max-height: 1000px;
+        transition: max-height 0.2s ease-out, padding 0.2s ease-out, opacity 0.15s ease-out;
+        opacity: 1;
       }
 
       .collapsed .content {
-        display: none;
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        opacity: 0;
+        overflow: hidden;
       }
 
       .collapsed .header {
@@ -680,11 +688,21 @@ export class Panel extends LitElement {
     this.dismiss();
   };
 
-  updated(changedProperties: Map<string, unknown>): void {
-    // Position
-    if (this.draggable && (changedProperties.has('positionX') || changedProperties.has('positionY'))) {
+  firstUpdated(): void {
+    // Apply initial position for draggable panels
+    if (this.draggable) {
       this.style.left = `${this.positionX}px`;
       this.style.top = `${this.positionY}px`;
+    }
+  }
+
+  updated(changedProperties: Map<string, unknown>): void {
+    // Position - always update when draggable and properties change
+    if (this.draggable) {
+      if (changedProperties.has('positionX') || changedProperties.has('positionY') || changedProperties.has('draggable')) {
+        this.style.left = `${this.positionX}px`;
+        this.style.top = `${this.positionY}px`;
+      }
     }
     
     // Sizing
