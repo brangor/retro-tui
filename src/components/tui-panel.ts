@@ -78,7 +78,7 @@ export class Panel extends LitElement {
   dismissable = false;
 
   @property({ type: Boolean, reflect: true })
-  draggable = false;
+  floating = false;
 
   @property({ type: Number, attribute: 'position-x' })
   positionX = 0;
@@ -107,7 +107,14 @@ export class Panel extends LitElement {
   @property({ type: Number, attribute: 'min-height' })
   minHeight = 100;
 
-  @property({ type: String, reflect: true })
+  @property({ 
+    type: String, 
+    reflect: true,
+    converter: {
+      fromAttribute: (value: string | null) => value || '',
+      toAttribute: (value: string) => value || null  // Don't reflect empty string
+    }
+  })
   docked: 'left' | 'right' | 'top' | 'bottom' | '' = '';
 
   // Private drag state
@@ -230,8 +237,15 @@ export class Panel extends LitElement {
         display: flex;
         flex-direction: column;
         min-height: 0;
-        height: 100%;
+        height: auto;
+        min-height: 100%;
         transition: border-width 0.1s, box-shadow 0.1s;
+      }
+
+      /* Collapsed: shrink to header only */
+      .collapsed {
+        min-height: 0;
+        height: auto;
       }
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -443,18 +457,26 @@ export class Panel extends LitElement {
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         DRAGGABLE POSITIONING
+         FLOATING POSITIONING
          ═══════════════════════════════════════════════════════════════════ */
 
-      :host([draggable]) {
+      :host([floating]) {
         position: absolute;
         z-index: 100;
       }
 
       /* Floating panel shadow */
-      :host([draggable]) .panel {
+      :host([floating]) .panel {
         box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3), 
                     6px 6px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .header.floating {
+        cursor: grab;
+      }
+
+      .header.floating:active {
+        cursor: grabbing;
       }
 
       .header.draggable {
@@ -571,6 +593,20 @@ export class Panel extends LitElement {
   }
 
   dismiss(): void {
+    // Store position/state if persist-id is set
+    if (this.persistId) {
+      const memory = {
+        x: this.positionX,
+        y: this.positionY,
+        width: this.panelWidth,
+        height: this.panelHeight,
+        collapsed: this.collapsed,
+        docked: this.docked,
+        floating: this.floating,
+      };
+      localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
+    }
+    
     this.dispatchEvent(new CustomEvent('panel-dismiss', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
@@ -578,13 +614,64 @@ export class Panel extends LitElement {
     }));
   }
 
+  /**
+   * Restore panel position/state from localStorage
+   * @returns true if restored, false if no stored state
+   */
+  restorePosition(): boolean {
+    if (!this.persistId) return false;
+    
+    const stored = localStorage.getItem(`tui-panel-memory-${this.persistId}`);
+    if (!stored) return false;
+    
+    try {
+      const memory = JSON.parse(stored);
+      
+      if (memory.x !== undefined) this.positionX = memory.x;
+      if (memory.y !== undefined) this.positionY = memory.y;
+      if (memory.width !== undefined) this.panelWidth = memory.width;
+      if (memory.height !== undefined) this.panelHeight = memory.height;
+      if (memory.collapsed !== undefined) this.collapsed = memory.collapsed;
+      
+      return true;
+    } catch (e) {
+      console.warn(`[tui-panel] Failed to restore position for ${this.persistId}:`, e);
+      return false;
+    }
+  }
+
+  // Track if we were docked when drag started (for proper undock behavior)
+  private _wasDocked: 'left' | 'right' | 'top' | 'bottom' | '' = '';
+
   private _onDragStart = (e: PointerEvent): void => {
-    if (!this.draggable) return;
+    // Allow drag for both floating and docked panels (docked can be undocked via drag)
+    if (!this.floating && !this.docked) return;
     
     e.preventDefault();
     this._isDragging = true;
     this._dragStartX = e.clientX;
     this._dragStartY = e.clientY;
+    
+    // If docked, switch to floating mode for visual drag feedback
+    if (this.docked) {
+      this._wasDocked = this.docked;
+      
+      // Calculate position relative to viewport and workspace
+      const rect = this.getBoundingClientRect();
+      const workspace = this.closest('tui-workspace');
+      const workspaceRect = workspace?.getBoundingClientRect() ?? { left: 0, top: 0 };
+      
+      // Set initial floating position to current visual position
+      this.positionX = rect.left - workspaceRect.left;
+      this.positionY = rect.top - workspaceRect.top;
+      
+      // Switch to floating for drag
+      this.docked = '';
+      this.floating = true;
+      this.slot = 'floating';
+      workspace?.appendChild(this);
+    }
+    
     this._dragOffsetX = this.positionX;
     this._dragOffsetY = this.positionY;
     
@@ -689,17 +776,17 @@ export class Panel extends LitElement {
   };
 
   firstUpdated(): void {
-    // Apply initial position for draggable panels
-    if (this.draggable) {
+    // Apply initial position for floating panels
+    if (this.floating) {
       this.style.left = `${this.positionX}px`;
       this.style.top = `${this.positionY}px`;
     }
   }
 
   updated(changedProperties: Map<string, unknown>): void {
-    // Position - always update when draggable and properties change
-    if (this.draggable) {
-      if (changedProperties.has('positionX') || changedProperties.has('positionY') || changedProperties.has('draggable')) {
+    // Position - always update when floating and properties change
+    if (this.floating) {
+      if (changedProperties.has('positionX') || changedProperties.has('positionY') || changedProperties.has('floating')) {
         this.style.left = `${this.positionX}px`;
         this.style.top = `${this.positionY}px`;
       }
@@ -727,11 +814,14 @@ export class Panel extends LitElement {
   }
 
   render() {
+    // Panels are draggable if floating OR docked (docked panels can be dragged to undock)
+    const isDraggable = this.floating || !!this.docked;
+    
     return html`
       <div class="panel ${this.collapsed ? 'collapsed' : ''}">
         <div 
-          class="header ${this.draggable ? 'draggable' : ''}"
-          @pointerdown=${this.draggable ? this._onDragStart : undefined}
+          class="header ${isDraggable ? 'draggable' : ''} ${this.floating ? 'floating' : ''}"
+          @pointerdown=${isDraggable ? this._onDragStart : undefined}
         >
           <span class="title">${this.title}</span>
           <div class="header-controls">
@@ -748,7 +838,7 @@ export class Panel extends LitElement {
         <div class="content">
           <slot></slot>
         </div>
-        ${this.resizable && this.draggable ? html`
+        ${this.resizable && this.floating ? html`
           <div class="resize-handle" @pointerdown=${this._onResizeStart}></div>
         ` : ''}
       </div>

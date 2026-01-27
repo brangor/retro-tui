@@ -43,7 +43,7 @@ describe('tui-workspace', () => {
   it('emits layout-change when panel moves', async () => {
     const el = await fixture(html`
       <tui-workspace>
-        <tui-panel slot="floating" title="Test" draggable position-x="50" position-y="50">Content</tui-panel>
+        <tui-panel slot="floating" title="Test" floating position-x="50" position-y="50">Content</tui-panel>
       </tui-workspace>
     `);
     
@@ -64,7 +64,7 @@ describe('tui-workspace', () => {
   it('emits layout-change when panel dismissed', async () => {
     const el = await fixture(html`
       <tui-workspace>
-        <tui-panel slot="floating" title="Test" draggable dismissable>Content</tui-panel>
+        <tui-panel slot="floating" title="Test" floating dismissable>Content</tui-panel>
       </tui-workspace>
     `);
     
@@ -84,7 +84,7 @@ describe('tui-workspace', () => {
   it('emits layout-change when panel resizes', async () => {
     const el = await fixture(html`
       <tui-workspace>
-        <tui-panel slot="floating" title="Test" draggable resizable panel-width="200" panel-height="150">Content</tui-panel>
+        <tui-panel slot="floating" title="Test" floating resizable panel-width="200" panel-height="150">Content</tui-panel>
       </tui-workspace>
     `);
     
@@ -119,7 +119,7 @@ describe('tui-workspace', () => {
   it('detects gravity zone on panel drag near left edge', async () => {
     const el = await fixture(html`
       <tui-workspace gravity-zone="50">
-        <tui-panel slot="floating" title="Test" draggable position-x="50" position-y="50">Content</tui-panel>
+        <tui-panel slot="floating" title="Test" floating position-x="50" position-y="50">Content</tui-panel>
       </tui-workspace>
     `);
     
@@ -142,7 +142,7 @@ describe('tui-workspace', () => {
   it('emits panel-dock when dropped in gravity zone', async () => {
     const el = await fixture(html`
       <tui-workspace gravity-zone="50">
-        <tui-panel slot="floating" title="Test" draggable position-x="20" position-y="100">Content</tui-panel>
+        <tui-panel slot="floating" title="Test" floating position-x="20" position-y="100">Content</tui-panel>
       </tui-workspace>
     `);
     
@@ -165,5 +165,111 @@ describe('tui-workspace', () => {
     
     expect(dockEvent).to.exist;
     expect(dockEvent.side).to.equal('left');
+  });
+
+  // Task 2: getPanelStates API
+  it('getPanelStates returns all panel info', async () => {
+    const el = await fixture(html`
+      <tui-workspace>
+        <tui-panel slot="left" id="colors" title="Colors" docked="left">Colors</tui-panel>
+        <tui-panel slot="floating" id="tools" title="Tools" floating position-x="100" position-y="50">Tools</tui-panel>
+        <tui-panel slot="floating" id="hidden" title="Hidden" floating hidden>Hidden</tui-panel>
+      </tui-workspace>
+    `);
+    
+    await new Promise(r => setTimeout(r, 50));
+    
+    const states = el.getPanelStates();
+    
+    expect(states).to.be.an('array');
+    expect(states.length).to.equal(3);
+    
+    const colors = states.find(p => p.id === 'colors');
+    expect(colors).to.exist;
+    expect(colors.title).to.equal('Colors');
+    expect(colors.mode).to.equal('docked');
+    expect(colors.side).to.equal('left');
+    expect(colors.visible).to.be.true;
+    
+    const tools = states.find(p => p.id === 'tools');
+    expect(tools).to.exist;
+    expect(tools.mode).to.equal('floating');
+    expect(tools.x).to.equal(100);
+    expect(tools.visible).to.be.true;
+    
+    const hidden = states.find(p => p.id === 'hidden');
+    expect(hidden).to.exist;
+    expect(hidden.visible).to.be.false;
+  });
+
+  // Task 3: auto-dock attribute
+  it('auto-dock sets panel docked attribute on gravity zone drop', async () => {
+    const el = await fixture(html`
+      <tui-workspace auto-dock gravity-zone="50">
+        <tui-panel slot="floating" title="Tools" floating position-x="100" position-y="50">Tools</tui-panel>
+      </tui-workspace>
+    `);
+    
+    const panel = el.querySelector('tui-panel');
+    
+    // Initially floating
+    expect(panel.floating).to.be.true;
+    expect(panel.docked).to.equal('');
+    
+    // Move into gravity zone
+    panel.dispatchEvent(new CustomEvent('panel-move', {
+      detail: { panelId: 'Tools', x: 20, y: 100 },
+      bubbles: true,
+      composed: true,
+    }));
+    
+    // End drag in gravity zone
+    panel.dispatchEvent(new CustomEvent('panel-drag-end', {
+      detail: { panelId: 'Tools', x: 20, y: 100 },
+      bubbles: true,
+      composed: true,
+    }));
+    
+    await new Promise(r => setTimeout(r, 50));
+    
+    // Panel should have docked attribute set
+    expect(panel.docked).to.equal('left');
+    expect(panel.floating).to.be.false;
+  });
+
+  // Task 4: auto-undock
+  it('auto-dock undocks panel when dragged away from edge', async () => {
+    const el = await fixture(html`
+      <tui-workspace auto-dock gravity-zone="50">
+        <tui-panel slot="left" title="Tools" docked="left">Tools</tui-panel>
+      </tui-workspace>
+    `);
+    
+    const panel = el.querySelector('tui-panel');
+    
+    // Initially docked
+    expect(panel.docked).to.equal('left');
+    
+    // Drag to center (outside gravity zones)
+    panel.dispatchEvent(new CustomEvent('panel-move', {
+      detail: { panelId: 'Tools', x: 300, y: 200 },
+      bubbles: true,
+      composed: true,
+    }));
+    
+    // End drag outside gravity zone
+    panel.dispatchEvent(new CustomEvent('panel-drag-end', {
+      detail: { panelId: 'Tools', x: 300, y: 200 },
+      bubbles: true,
+      composed: true,
+    }));
+    
+    await new Promise(r => setTimeout(r, 50));
+    
+    // Panel should be floating now
+    expect(panel.floating).to.be.true;
+    expect(panel.docked).to.equal('');
+    expect(panel.positionX).to.equal(300);
+    expect(panel.positionY).to.equal(200);
   });
 });

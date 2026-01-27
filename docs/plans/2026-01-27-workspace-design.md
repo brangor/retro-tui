@@ -30,7 +30,8 @@ All three are variations on the panel concept — boxes with title bars and cont
 
 Panels are independently capable, not dependent on workspace:
 
-- `<tui-panel draggable>` — Can be dragged anywhere in its container
+- `<tui-panel floating>` — Can be dragged anywhere in its container
+- `<tui-panel docked="left">` — Attached to a sidebar, flows with siblings
 - Collapse/dismiss work standalone
 - Apps can use floating panels without the full workspace infrastructure
 
@@ -106,7 +107,8 @@ Workspace never mutates state directly — it proposes changes via events, and t
 - `dismissed` — Not rendered, but position/state preserved for restore
 
 **Attributes:**
-- `draggable` — Boolean, enables drag behavior
+- `floating` — Boolean, enables drag behavior with absolute positioning
+- `docked` — String ('left' | 'right' | 'top' | 'bottom'), attaches panel to sidebar
 - `resizable` — Boolean, enables resize handles when floating
 - `max-width`, `max-height` — Limits for resizing
 - `collapsed` — Boolean, controls collapsed state
@@ -259,8 +261,8 @@ Workspace provides a `getPanelStates()` method so apps can build this menu.
 
 ## Implementation Phases
 
-### Phase 1: Standalone Draggable Panels ✅ COMPLETE
-- ✅ Enhanced `tui-panel` with `draggable` attribute
+### Phase 1: Standalone Floating Panels ✅ COMPLETE
+- ✅ Enhanced `tui-panel` with `floating` attribute (renamed from `draggable` to avoid HTML attribute conflict)
 - ✅ Added `dismissable` with X button and `panel-dismiss` event
 - ✅ Added `resizable` with resize handle and constraints
 - ✅ Added `collapsible` with smooth height animation

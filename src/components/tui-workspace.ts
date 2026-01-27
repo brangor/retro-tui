@@ -27,6 +27,9 @@ export class Workspace extends LitElement {
   @property({ type: Number, attribute: 'gravity-zone' })
   gravityZone = 50;
 
+  @property({ type: Boolean, attribute: 'auto-dock' })
+  autoDock = false;
+
   @state()
   private _bounds: DOMRect = new DOMRect();
 
@@ -37,6 +40,58 @@ export class Workspace extends LitElement {
 
   get bounds(): DOMRect {
     return this._bounds;
+  }
+
+  /**
+   * Get state of all panels in the workspace (for View menu integration)
+   */
+  getPanelStates(): Array<{
+    id: string;
+    title: string;
+    mode: 'floating' | 'docked';
+    side?: 'left' | 'right' | 'top' | 'bottom';
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    collapsed: boolean;
+    visible: boolean;
+  }> {
+    const states: Array<{
+      id: string;
+      title: string;
+      mode: 'floating' | 'docked';
+      side?: 'left' | 'right' | 'top' | 'bottom';
+      x?: number;
+      y?: number;
+      width?: number;
+      height?: number;
+      collapsed: boolean;
+      visible: boolean;
+    }> = [];
+    
+    const allPanels = this.querySelectorAll('tui-panel');
+    
+    for (const panel of allPanels) {
+      const el = panel as HTMLElement;
+      const docked = (el as any).docked;
+      const isDocked = !!docked && docked !== '';
+      
+      states.push({
+        id: el.id || (el as any).title,
+        title: (el as any).title || el.id,
+        mode: isDocked ? 'docked' : 'floating',
+        side: isDocked ? docked : undefined,
+        x: isDocked ? undefined : ((el as any).positionX ?? 0),
+        y: isDocked ? undefined : ((el as any).positionY ?? 0),
+        width: (el as any).panelWidth ?? el.offsetWidth,
+        height: (el as any).panelHeight ?? el.offsetHeight,
+        collapsed: (el as any).collapsed ?? false,
+        visible: !el.hidden,
+      });
+    }
+    
+    return states;
   }
 
   static styles = [
@@ -190,7 +245,11 @@ export class Workspace extends LitElement {
 
   private _handlePanelMove = (e: CustomEvent): void => {
     const panel = e.target as HTMLElement;
-    if (!panel.hasAttribute('draggable')) return;
+    const isFloating = panel.hasAttribute('floating');
+    const isDocked = !!(panel as any).docked;
+    
+    // Only handle floating or docked panels (docked panels can be dragged to undock)
+    if (!isFloating && !isDocked) return;
     
     const { x, y } = e.detail;
     const panelWidth = (panel as any).panelWidth ?? panel.offsetWidth ?? 100;
@@ -208,8 +267,8 @@ export class Workspace extends LitElement {
       }));
     }
     
-    // Constrain to bounds (only if bounds are valid)
-    if (this._bounds.width > 0 && this._bounds.height > 0) {
+    // Constrain to bounds (only for floating panels)
+    if (isFloating && this._bounds.width > 0 && this._bounds.height > 0) {
       const maxX = this._bounds.width - panelWidth;
       const maxY = this._bounds.height - panelHeight;
       
@@ -230,18 +289,92 @@ export class Workspace extends LitElement {
   };
 
   private _handlePanelDragEnd = (e: CustomEvent): void => {
+    const panelId = e.detail?.panelId;
+    const panel = panelId ? this._findPanelById(panelId) : null;
+    
     if (this._dockPreview) {
+      // Dropping in a gravity zone
+      const side = this._dockPreview as 'left' | 'right' | 'top' | 'bottom';
+      
       this.dispatchEvent(new CustomEvent('panel-dock', {
-        detail: { 
-          panelId: e.detail?.panelId, 
-          side: this._dockPreview 
-        },
+        detail: { panelId, side },
         bubbles: true,
         composed: true,
       }));
+      
+      // If auto-dock enabled, set the panel's attributes and move it
+      if (this.autoDock && panel) {
+        // Store last floating position for potential restore
+        (panel as any)._lastFloatingPosition = {
+          x: (panel as any).positionX,
+          y: (panel as any).positionY,
+          width: (panel as any).panelWidth,
+          height: (panel as any).panelHeight,
+        };
+        
+        // Set docked attribute, clear floating
+        (panel as any).docked = side;
+        (panel as any).floating = false;
+        
+        // Move panel to appropriate container
+        const sidebar = this._getSidebar(side);
+        if (sidebar) {
+          // Append to sidebar (no slot needed, sidebar is the parent)
+          panel.removeAttribute('slot');
+          sidebar.appendChild(panel);
+        } else {
+          // No sidebar - dock directly to workspace slot
+          panel.slot = side;
+          this.appendChild(panel);
+        }
+      }
+    } else if (this.autoDock && panel && (panel as any).docked) {
+      // Dropping outside gravity zones while docked = undock
+      const x = e.detail?.x ?? 100;
+      const y = e.detail?.y ?? 100;
+      
+      this.dispatchEvent(new CustomEvent('panel-undock', {
+        detail: { panelId, x, y },
+        bubbles: true,
+        composed: true,
+      }));
+      
+      (panel as any).docked = '';
+      (panel as any).floating = true;
+      (panel as any).positionX = x;
+      (panel as any).positionY = y;
+      
+      // Move panel back to workspace with floating slot
+      panel.slot = 'floating';
+      this.appendChild(panel);
     }
+    
     this._dockPreview = null;
   };
+
+  private _findPanelById(panelId: string): HTMLElement | null {
+    const allPanels = this.querySelectorAll('tui-panel');
+    for (const panel of allPanels) {
+      if (panel.id === panelId || (panel as any).title === panelId) {
+        return panel as HTMLElement;
+      }
+    }
+    return null;
+  }
+
+  private _getSidebar(side: 'left' | 'right' | 'top' | 'bottom'): HTMLElement | null {
+    const slot = this.shadowRoot?.querySelector(`slot[name="${side}"]`) as HTMLSlotElement;
+    if (!slot) return null;
+    
+    const elements = slot.assignedElements();
+    for (const el of elements) {
+      if (el.tagName.toLowerCase() === 'tui-sidebar') {
+        return el as HTMLElement;
+      }
+    }
+    
+    return null;
+  }
 
   private _handlePanelResize = (e: CustomEvent): void => {
     const panel = e.target as HTMLElement;
@@ -298,7 +431,7 @@ export class Workspace extends LitElement {
     
     const panels = this._getFloatingPanels();
     for (const panel of panels) {
-      if (!panel.hasAttribute('draggable')) continue;
+      if (!panel.hasAttribute('floating')) continue;
       
       const x = (panel as any).positionX ?? 0;
       const y = (panel as any).positionY ?? 0;
