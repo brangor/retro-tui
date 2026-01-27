@@ -86,6 +86,13 @@ export class Panel extends LitElement {
   @property({ type: Number, attribute: 'position-y' })
   positionY = 0;
 
+  // Private drag state
+  private _isDragging = false;
+  private _dragStartX = 0;
+  private _dragStartY = 0;
+  private _dragOffsetX = 0;
+  private _dragOffsetY = 0;
+
   static styles = [
     sharedStyles,
     css`
@@ -423,6 +430,8 @@ export class Panel extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('click', this._handleClick);
+    document.removeEventListener('pointermove', this._onDragMove);
+    document.removeEventListener('pointerup', this._onDragEnd);
   }
 
   toggle(): void {
@@ -450,6 +459,46 @@ export class Panel extends LitElement {
     }));
   }
 
+  private _onDragStart = (e: PointerEvent): void => {
+    if (!this.draggable) return;
+    
+    e.preventDefault();
+    this._isDragging = true;
+    this._dragStartX = e.clientX;
+    this._dragStartY = e.clientY;
+    this._dragOffsetX = this.positionX;
+    this._dragOffsetY = this.positionY;
+    
+    document.addEventListener('pointermove', this._onDragMove);
+    document.addEventListener('pointerup', this._onDragEnd);
+  };
+
+  private _onDragMove = (e: PointerEvent): void => {
+    if (!this._isDragging) return;
+    
+    const deltaX = e.clientX - this._dragStartX;
+    const deltaY = e.clientY - this._dragStartY;
+    
+    this.positionX = this._dragOffsetX + deltaX;
+    this.positionY = this._dragOffsetY + deltaY;
+    
+    this.dispatchEvent(new CustomEvent('panel-move', {
+      detail: { 
+        panelId: this.id || this.title,
+        x: this.positionX, 
+        y: this.positionY 
+      },
+      bubbles: true,
+      composed: true,
+    }));
+  };
+
+  private _onDragEnd = (): void => {
+    this._isDragging = false;
+    document.removeEventListener('pointermove', this._onDragMove);
+    document.removeEventListener('pointerup', this._onDragEnd);
+  };
+
   updated(changedProperties: Map<string, unknown>): void {
     if (this.draggable && (changedProperties.has('positionX') || changedProperties.has('positionY'))) {
       this.style.left = `${this.positionX}px`;
@@ -463,6 +512,7 @@ export class Panel extends LitElement {
         <div 
           class="header ${this.collapsible ? 'clickable' : ''} ${this.draggable ? 'draggable' : ''}"
           @click=${this.collapsible && !this.draggable ? this.toggle : undefined}
+          @pointerdown=${this.draggable ? this._onDragStart : undefined}
         >
           ${this.collapsible ? html`
             <button class="toggle" aria-label="Toggle panel">

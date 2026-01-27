@@ -76,4 +76,25 @@ describe('tui-panel', () => {
     expect(el.positionX).to.equal(100);
     expect(el.positionY).to.equal(50);
   });
+
+  it('emits panel-move event during drag', async () => {
+    const el = await fixture(html`<tui-panel title="Test" draggable>Content</tui-panel>`);
+    let moveEvent = null;
+    el.addEventListener('panel-move', (e) => { moveEvent = e.detail; });
+    
+    const header = el.shadowRoot.querySelector('.header');
+    
+    // Simulate drag start
+    header.dispatchEvent(new PointerEvent('pointerdown', { clientX: 10, clientY: 10, bubbles: true }));
+    
+    // Simulate drag move
+    document.dispatchEvent(new PointerEvent('pointermove', { clientX: 50, clientY: 30 }));
+    
+    // Simulate drag end
+    document.dispatchEvent(new PointerEvent('pointerup', {}));
+    
+    expect(moveEvent).to.exist;
+    expect(moveEvent.x).to.be.a('number');
+    expect(moveEvent.y).to.be.a('number');
+  });
 });
