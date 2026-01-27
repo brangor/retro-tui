@@ -53,7 +53,8 @@ export class App extends LitElement {
       :host {
         display: flex;
         flex-direction: column;
-        min-height: 100vh;
+        height: 100vh;
+        overflow: hidden;
         background: var(--surface-base);
         color: var(--text-primary);
       }
