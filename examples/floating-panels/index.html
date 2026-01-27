@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Floating Panels Demo</title>
+  <link rel="stylesheet" href="../../src/styles/tokens.css">
+  <style>
+    body {
+      margin: 0;
+      background: var(--surface-base);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+    }
+    
+    .workspace {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .canvas {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .canvas-hint {
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+    
+    .event-log {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface-elevated);
+      border-top: 1px solid var(--color-info);
+      padding: 8px 16px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    
+    .event-log-title {
+      color: var(--color-info);
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="workspace">
+    <div class="canvas">
+      <div>[ Canvas Area ]</div>
+      <div class="canvas-hint">Drag panels by title bar • Resize from corner • Collapse/dismiss with buttons</div>
+    </div>
+    
+    <tui-panel 
+      id="colors-panel"
+      title="Colors" 
+      color="primary"
+      draggable 
+      dismissable 
+      collapsible
+      resizable
+      position-x="50"
+      position-y="50"
+      panel-width="200"
+      panel-height="250"
+    >
+      <div style="padding: 8px;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+          <div style="width: 40px; height: 40px; background: #ff5555; border: 1px solid #fff3;"></div>
+          <div style="width: 40px; height: 40px; background: #50fa7b; border: 1px solid #fff3;"></div>
+          <div style="width: 40px; height: 40px; background: #bd93f9; border: 1px solid #fff3;"></div>
+          <div style="width: 40px; height: 40px; background: #f1fa8c; border: 1px solid #fff3;"></div>
+          <div style="width: 40px; height: 40px; background: #8be9fd; border: 1px solid #fff3;"></div>
+          <div style="width: 40px; height: 40px; background: #ff79c6; border: 1px solid #fff3;"></div>
+        </div>
+      </div>
+    </tui-panel>
+    
+    <tui-panel 
+      id="tools-panel"
+      title="Tools" 
+      color="secondary"
+      draggable 
+      dismissable 
+      collapsible
+      resizable
+      position-x="280"
+      position-y="50"
+      panel-width="180"
+      panel-height="300"
+    >
+      <div style="padding: 8px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="padding: 8px; border: 1px solid var(--color-secondary); cursor: pointer;">▢ Select</div>
+        <div style="padding: 8px; border: 1px solid var(--color-secondary); cursor: pointer;">✎ Brush</div>
+        <div style="padding: 8px; border: 1px solid var(--color-secondary); cursor: pointer;">◯ Eraser</div>
+        <div style="padding: 8px; border: 1px solid var(--color-secondary); cursor: pointer;">◧ Fill</div>
+      </div>
+    </tui-panel>
+    
+    <tui-panel 
+      id="layers-panel"
+      title="Layers" 
+      color="info"
+      draggable 
+      dismissable 
+      collapsible
+      resizable
+      position-x="50"
+      position-y="330"
+      panel-width="250"
+      panel-height="200"
+    >
+      <div style="padding: 8px; display: flex; flex-direction: column; gap: 4px;">
+        <div style="padding: 6px; background: var(--surface-base); display: flex; justify-content: space-between;">
+          <span>◉ Layer 3</span>
+          <span style="opacity: 0.5">👁</span>
+        </div>
+        <div style="padding: 6px; background: var(--surface-base); display: flex; justify-content: space-between;">
+          <span>○ Layer 2</span>
+          <span style="opacity: 0.5">👁</span>
+        </div>
+        <div style="padding: 6px; background: var(--surface-base); display: flex; justify-content: space-between;">
+          <span>○ Layer 1</span>
+          <span style="opacity: 0.5">👁</span>
+        </div>
+      </div>
+    </tui-panel>
+    
+    <div class="event-log">
+      <div class="event-log-title">Event Log</div>
+      <div id="log-content">Events will appear here...</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import '../../src/components/tui-panel.ts';
+    
+    const logContent = document.getElementById('log-content');
+    const maxLogLines = 5;
+    const logLines = [];
+    
+    function log(msg) {
+      logLines.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
+      if (logLines.length > maxLogLines) logLines.shift();
+      logContent.textContent = logLines.join('\n');
+    }
+    
+    // Log events for debugging
+    document.querySelectorAll('tui-panel').forEach(panel => {
+      panel.addEventListener('panel-move', e => {
+        log(`move: ${e.detail.panelId} → (${Math.round(e.detail.x)}, ${Math.round(e.detail.y)})`);
+      });
+      
+      panel.addEventListener('panel-resize', e => {
+        log(`resize: ${e.detail.panelId} → ${Math.round(e.detail.width)}×${Math.round(e.detail.height)}`);
+      });
+      
+      panel.addEventListener('panel-dismiss', e => {
+        log(`dismiss: ${e.detail.panelId}`);
+        e.target.style.display = 'none';
+      });
+      
+      panel.addEventListener('toggle', e => {
+        log(`toggle: ${panel.title} → ${e.detail.collapsed ? 'collapsed' : 'expanded'}`);
+      });
+    });
+    
+    log('Demo ready. Try dragging, resizing, collapsing, or dismissing panels.');
+  </script>
+</body>
+</html>
