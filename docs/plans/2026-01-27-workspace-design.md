@@ -1,7 +1,8 @@
 # tui-workspace Design
 
-**Status:** Design Complete  
-**Date:** 2026-01-27
+**Status:** Implementation In Progress (Phases 1-3 Complete)  
+**Date:** 2026-01-27  
+**Last Updated:** 2026-01-27
 
 ## Overview
 
@@ -258,28 +259,47 @@ Workspace provides a `getPanelStates()` method so apps can build this menu.
 
 ## Implementation Phases
 
-### Phase 1: Standalone Draggable Panels
-- Enhance `tui-panel` with `draggable` attribute
-- Add collapse, dismiss, resize (when floating)
-- Works without workspace — apps can use immediately
+### Phase 1: Standalone Draggable Panels ✅ COMPLETE
+- ✅ Enhanced `tui-panel` with `draggable` attribute
+- ✅ Added `dismissable` with X button and `panel-dismiss` event
+- ✅ Added `resizable` with resize handle and constraints
+- ✅ Added `collapsible` with smooth height animation
+- ✅ Position properties: `position-x`, `position-y`
+- ✅ Size properties: `panel-width`, `panel-height`, `min-width`, `min-height`, `max-width`, `max-height`
+- ✅ Events: `panel-move`, `panel-resize`, `panel-dismiss`, `panel-drag-end`
+- ✅ Works standalone without workspace
 
-### Phase 2: Workspace Container
-- `tui-workspace` with main slot and floating layer
-- Drag panels within bounds
-- Event emission for Decision Engine integration
+**Bugfixes applied:**
+- Fixed initial position not applied (added `firstUpdated()`)
+- Changed collapse from `display: none` to smooth `max-height` transition
 
-### Phase 3: Sidebars & Docking
-- `tui-sidebar` component
-- Gravity zones for dock/undock
-- Panel stacking, auto-collapse, sidebar resize
+### Phase 2: Workspace Container ✅ COMPLETE
+- ✅ Created `tui-workspace` with `main` and `floating` slots
+- ✅ Bounds tracking via `ResizeObserver` with `bounds-change` event
+- ✅ Panel position/size constraints to workspace bounds
+- ✅ `layout-change` event emission for Decision Engine integration
 
-### Phase 4: Polish
-- Quick-dock SVG widget
-- Sidebar collapse to rotated-text strip
-- Sidebar relocation (drag to different edge)
+**Bugfixes applied:**
+- Skip constraint when bounds not ready (prevent zeroing positions)
+- Skip constraint when workspace too small to fit panel
+
+### Phase 3: Sidebars & Docking ✅ COMPLETE
+- ✅ Created `tui-sidebar` component with `side`, `collapsed`, `size`, `min-size` properties
+- ✅ Sidebar collapse to rotated-text strip showing panel names
+- ✅ Sidebar resize via drag handle with `sidebar-resize` event
+- ✅ Added sidebar slots to workspace (`top`, `right`, `bottom`, `left`)
+- ✅ Gravity zones with `gravity-zone` attribute (default 50px)
+- ✅ Visual dock preview overlay during drag
+- ✅ `panel-dock-preview` and `panel-dock` events
+- ✅ Added `docked` attribute to `tui-panel` for sidebar-attached state
+
+### Phase 4: Polish 🔲 NOT STARTED
+- Quick-dock SVG widget (4 inward-pointing triangles)
+- Sidebar relocation (drag title bar to different edge)
 - View menu integration / `getPanelStates()` API
+- Panel memory (store/restore positions on dismiss/restore)
 
-### Phase 5: Storybook & Documentation
+### Phase 5: Storybook & Documentation 🔲 NOT STARTED
 - Interactive demos for each component
 - Workspace organism showcase
 - Copy-paste examples for common patterns
