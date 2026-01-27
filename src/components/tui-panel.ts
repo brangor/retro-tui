@@ -15,7 +15,10 @@ type SelectionStyle = 'invert' | 'border' | '';
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * <tui-panel> - Collapsible panel with terminal aesthetic
+ * <tui-panel> - Floating panel with terminal aesthetic
+ * 
+ * Panels are floating by default and can be dragged within a tui-workspace.
+ * They snap visually to edges when dragged near them.
  * 
  * Two style variants:
  * - 'bright' (default): Header highlights when active, bold borders
@@ -32,13 +35,23 @@ type SelectionStyle = 'invert' | 'border' | '';
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
  *                                  Inherited by child components (toolbar, buttons)
+ * @attr {boolean} floating - Whether panel is floating (default: true)
+ * @attr {string} snap-edge - Edge the panel is snapped to: 'left' | 'right' | 'top' | ''
+ * @attr {number} position-x - X position in pixels
+ * @attr {number} position-y - Y position in pixels
  * @attr {boolean} collapsible - Whether panel can be collapsed
  * @attr {boolean} collapsed - Current collapsed state
+ * @attr {boolean} dismissable - Whether panel can be dismissed
+ * @attr {boolean} resizable - Whether panel can be resized
  * @attr {boolean} selected - Panel is selected but not focused
  * @attr {boolean} active - Panel is active/focused
  * @attr {string} persist-id - LocalStorage key for collapse state
  * 
  * @fires toggle - When panel is collapsed/expanded
+ * @fires panel-move - When panel is dragged
+ * @fires panel-drag-end - When panel drag ends
+ * @fires panel-dismiss - When panel is dismissed
+ * @fires panel-resize - When panel is resized
  * @fires focus-request - When panel wants focus
  * 
  * @slot - Panel content
@@ -78,7 +91,10 @@ export class Panel extends LitElement {
   dismissable = false;
 
   @property({ type: Boolean, reflect: true })
-  floating = false;
+  floating = true; // Default to floating
+
+  @property({ type: String, attribute: 'snap-edge', reflect: true })
+  snapEdge: 'left' | 'right' | 'top' | '' = '';
 
   @property({ type: Number, attribute: 'position-x' })
   positionX = 0;
@@ -628,8 +644,7 @@ export class Panel extends LitElement {
         width: this.panelWidth,
         height: this.panelHeight,
         collapsed: this.collapsed,
-        docked: this.docked,
-        floating: this.floating,
+        snapEdge: this.snapEdge,
       };
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
@@ -667,6 +682,7 @@ export class Panel extends LitElement {
       if (memory.width !== undefined) this.panelWidth = memory.width;
       if (memory.height !== undefined) this.panelHeight = memory.height;
       if (memory.collapsed !== undefined) this.collapsed = memory.collapsed;
+      if (memory.snapEdge !== undefined) this.snapEdge = memory.snapEdge;
       
       return true;
     } catch (e) {
@@ -675,12 +691,8 @@ export class Panel extends LitElement {
     }
   }
 
-  // Track if we were docked when drag started (for proper undock behavior)
-  private _wasDocked: 'left' | 'right' | 'top' | 'bottom' | '' = '';
-
   private _onDragStart = (e: PointerEvent): void => {
-    // Allow drag for both floating and docked panels (docked can be undocked via drag)
-    if (!this.floating && !this.docked) return;
+    if (!this.floating) return;
     
     // Don't start drag if clicking on a control button (collapse, dismiss)
     const target = e.target as HTMLElement;
@@ -692,27 +704,6 @@ export class Panel extends LitElement {
     this._isDragging = true;
     this._dragStartX = e.clientX;
     this._dragStartY = e.clientY;
-    
-    // If docked, switch to floating mode for visual drag feedback
-    if (this.docked) {
-      this._wasDocked = this.docked;
-      
-      // Calculate position relative to viewport and workspace
-      const rect = this.getBoundingClientRect();
-      const workspace = this.closest('tui-workspace');
-      const workspaceRect = workspace?.getBoundingClientRect() ?? { left: 0, top: 0 };
-      
-      // Set initial floating position to current visual position
-      this.positionX = rect.left - workspaceRect.left;
-      this.positionY = rect.top - workspaceRect.top;
-      
-      // Switch to floating for drag
-      this.docked = '';
-      this.floating = true;
-      this.slot = 'floating';
-      workspace?.appendChild(this);
-    }
-    
     this._dragOffsetX = this.positionX;
     this._dragOffsetY = this.positionY;
     
@@ -863,14 +854,11 @@ export class Panel extends LitElement {
   }
 
   render() {
-    // Panels are draggable if floating OR docked (docked panels can be dragged to undock)
-    const isDraggable = this.floating || !!this.docked;
-    
     return html`
       <div class="panel ${this.collapsed ? 'collapsed' : ''}">
         <div 
-          class="header ${isDraggable ? 'draggable' : ''} ${this.floating ? 'floating' : ''}"
-          @pointerdown=${isDraggable ? this._onDragStart : undefined}
+          class="header ${this.floating ? 'draggable' : ''}"
+          @pointerdown=${this.floating ? this._onDragStart : undefined}
         >
           <span class="title">${this.title}</span>
           <div class="header-controls">
