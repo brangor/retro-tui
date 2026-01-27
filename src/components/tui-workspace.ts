@@ -3,41 +3,26 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 
 /**
- * <tui-workspace> - Container for main content, sidebars, and floating panels
+ * <tui-workspace> - Container for main content and floating panels
  * 
- * Manages layout zones and constrains floating panels to bounds.
- * Detects gravity zones near edges for dock/undock behavior.
+ * Manages layout and constrains floating panels to bounds.
+ * Panels snap visually to edges when dragged near them.
  * 
  * @slot main - The primary content area (canvas)
- * @slot left - Left sidebar
- * @slot right - Right sidebar
- * @slot top - Top sidebar
- * @slot bottom - Bottom sidebar
  * @slot floating - Floating panels that sit above main content
- * 
- * @attr {number} gravity-zone - Pixels from edge to trigger dock preview (default 50)
  * 
  * @fires bounds-change - When workspace bounds change
  * @fires layout-change - When panel layout changes
- * @fires panel-dock-preview - When panel enters gravity zone during drag
- * @fires panel-dock - When panel dropped in gravity zone
  */
 @customElement('tui-workspace')
 export class Workspace extends LitElement {
-  @property({ type: Number, attribute: 'gravity-zone' })
-  gravityZone = 50;
-
-  @property({ type: Boolean, attribute: 'auto-dock' })
-  autoDock = false;
+  private static readonly SNAP_ZONE = 20; // pixels from edge to trigger snap
 
   @state()
   private _bounds: DOMRect = new DOMRect();
 
   @state()
-  private _dockPreview: string | null = null;
-
-  @state()
-  private _pendingDropIndex: number | null = null;
+  private _snapPreview: 'left' | 'right' | 'top' | null = null;
 
   private _resizeObserver: ResizeObserver | null = null;
 
@@ -46,15 +31,14 @@ export class Workspace extends LitElement {
   }
 
   /**
-   * Get state of all panels in the workspace (for View menu integration)
+   * Get state of all floating panels in the workspace
    */
   getPanelStates(): Array<{
     id: string;
     title: string;
-    mode: 'floating' | 'docked';
-    side?: 'left' | 'right' | 'top' | 'bottom';
-    x?: number;
-    y?: number;
+    snapEdge?: 'left' | 'right' | 'top';
+    x: number;
+    y: number;
     width?: number;
     height?: number;
     collapsed: boolean;
@@ -63,34 +47,28 @@ export class Workspace extends LitElement {
     const states: Array<{
       id: string;
       title: string;
-      mode: 'floating' | 'docked';
-      side?: 'left' | 'right' | 'top' | 'bottom';
-      x?: number;
-      y?: number;
+      snapEdge?: 'left' | 'right' | 'top';
+      x: number;
+      y: number;
       width?: number;
       height?: number;
       collapsed: boolean;
       visible: boolean;
     }> = [];
     
-    const allPanels = this.querySelectorAll('tui-panel');
+    const panels = this._getFloatingPanels();
     
-    for (const panel of allPanels) {
-      const el = panel as HTMLElement;
-      const docked = (el as any).docked;
-      const isDocked = !!docked && docked !== '';
-      
+    for (const panel of panels) {
       states.push({
-        id: el.id || (el as any).title,
-        title: (el as any).title || el.id,
-        mode: isDocked ? 'docked' : 'floating',
-        side: isDocked ? docked : undefined,
-        x: isDocked ? undefined : ((el as any).positionX ?? 0),
-        y: isDocked ? undefined : ((el as any).positionY ?? 0),
-        width: (el as any).panelWidth ?? el.offsetWidth,
-        height: (el as any).panelHeight ?? el.offsetHeight,
-        collapsed: (el as any).collapsed ?? false,
-        visible: !el.hidden,
+        id: panel.id || (panel as any).title,
+        title: (panel as any).title || panel.id,
+        snapEdge: (panel as any).snapEdge || undefined,
+        x: (panel as any).positionX ?? 0,
+        y: (panel as any).positionY ?? 0,
+        width: (panel as any).panelWidth ?? panel.offsetWidth,
+        height: (panel as any).panelHeight ?? panel.offsetHeight,
+        collapsed: (panel as any).collapsed ?? false,
+        visible: !panel.hidden,
       });
     }
     
@@ -112,40 +90,19 @@ export class Workspace extends LitElement {
         position: relative;
         width: 100%;
         height: 100%;
-        display: grid;
-        grid-template-areas:
-          "top top top"
-          "left main right"
-          "bottom bottom bottom";
-        grid-template-rows: auto 1fr auto;
-        grid-template-columns: auto 1fr auto;
-      }
-
-      .sidebar-top {
-        grid-area: top;
-      }
-
-      .sidebar-left {
-        grid-area: left;
-      }
-
-      .sidebar-right {
-        grid-area: right;
-      }
-
-      .sidebar-bottom {
-        grid-area: bottom;
       }
 
       .main-area {
-        grid-area: main;
         position: relative;
+        width: 100%;
+        height: 100%;
         overflow: auto;
-        min-width: 0;
-        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      /* Floating layer covers entire workspace (not just main-area) */
+      /* Floating layer covers entire workspace */
       .floating-layer {
         position: absolute;
         inset: 0;
@@ -157,8 +114,8 @@ export class Workspace extends LitElement {
         pointer-events: auto;
       }
 
-      /* Dock preview overlay - covers entire workspace */
-      .dock-preview {
+      /* Snap preview overlay */
+      .snap-preview {
         position: absolute;
         background: var(--color-info, #8be9fd);
         opacity: 0.15;
@@ -167,32 +124,25 @@ export class Workspace extends LitElement {
         transition: opacity 0.1s;
       }
 
-      .dock-preview.left {
+      .snap-preview.left {
         left: 0;
         top: 0;
         bottom: 0;
-        width: 200px;
+        width: 4px;
       }
 
-      .dock-preview.right {
+      .snap-preview.right {
         right: 0;
         top: 0;
         bottom: 0;
-        width: 200px;
+        width: 4px;
       }
 
-      .dock-preview.top {
+      .snap-preview.top {
         top: 0;
         left: 0;
         right: 0;
-        height: 150px;
-      }
-
-      .dock-preview.bottom {
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 150px;
+        height: 4px;
       }
     `,
   ];
@@ -235,176 +185,78 @@ export class Workspace extends LitElement {
     this.removeEventListener('panel-drag-end', this._handlePanelDragEnd as EventListener);
   }
 
-  private _detectGravityZone(x: number, y: number, panelWidth: number, panelHeight: number): string | null {
+  private _detectSnapEdge(x: number, y: number, panelWidth: number, panelHeight: number): 'left' | 'right' | 'top' | null {
     const bounds = this._bounds;
     
-    // Check each edge - priority: left, right, top, bottom
-    if (x <= this.gravityZone) return 'left';
-    if (x + panelWidth >= bounds.width - this.gravityZone) return 'right';
-    if (y <= this.gravityZone) return 'top';
-    if (y + panelHeight >= bounds.height - this.gravityZone) return 'bottom';
+    // Check each edge
+    if (x <= Workspace.SNAP_ZONE) return 'left';
+    if (x + panelWidth >= bounds.width - Workspace.SNAP_ZONE) return 'right';
+    if (y <= Workspace.SNAP_ZONE) return 'top';
     
     return null;
   }
 
   private _handlePanelMove = (e: CustomEvent): void => {
     const panel = e.target as HTMLElement;
-    const isFloating = panel.hasAttribute('floating');
-    const isDocked = !!(panel as any).docked;
+    if (!panel.hasAttribute('floating')) return;
     
-    // Only handle floating or docked panels (docked panels can be dragged to undock)
-    if (!isFloating && !isDocked) return;
-    
-    const { x, y, cursorY } = e.detail;
+    const { x, y } = e.detail;
     const panelWidth = (panel as any).panelWidth ?? panel.offsetWidth ?? 100;
     const panelHeight = (panel as any).panelHeight ?? panel.offsetHeight ?? 100;
     
-    // Check gravity zones
-    const gravityZone = this._detectGravityZone(x, y, panelWidth, panelHeight);
-    this._dockPreview = gravityZone;
+    // Check snap zones
+    const snapEdge = this._detectSnapEdge(x, y, panelWidth, panelHeight);
+    this._snapPreview = snapEdge;
     
-    // Update sidebar drop indicator if in gravity zone
-    if (gravityZone === 'left' || gravityZone === 'right') {
-      const sidebar = this._getSidebar(gravityZone as 'left' | 'right');
-      if (sidebar && typeof (sidebar as any).calculateDropIndex === 'function') {
-        const dropIndex = (sidebar as any).calculateDropIndex(cursorY ?? y);
-        (sidebar as any).showDropIndicator?.(dropIndex);
-        this._pendingDropIndex = dropIndex;
-      }
-    } else {
-      // Clear any active drop indicators
-      this._clearSidebarDropIndicators();
-    }
-    
-    if (gravityZone) {
-      this.dispatchEvent(new CustomEvent('panel-dock-preview', {
-        detail: { panelId: e.detail.panelId, side: gravityZone },
-        bubbles: true,
-        composed: true,
-      }));
-    }
-    
-    // Constrain to bounds (only for floating panels)
-    if (isFloating && this._bounds.width > 0 && this._bounds.height > 0) {
+    // Constrain to bounds
+    if (this._bounds.width > 0 && this._bounds.height > 0) {
       const maxX = this._bounds.width - panelWidth;
       const maxY = this._bounds.height - panelHeight;
       
-      // Only constrain if bounds can fit the panel
       if (maxX > 0 && maxY > 0) {
         const constrainedX = Math.max(0, Math.min(x, maxX));
         const constrainedY = Math.max(0, Math.min(y, maxY));
         
-        // Update panel position if constrained
         if (constrainedX !== x || constrainedY !== y) {
           (panel as any).positionX = constrainedX;
           (panel as any).positionY = constrainedY;
         }
       }
     }
-    
-    this._emitLayoutChange();
   };
-
-  private _clearSidebarDropIndicators(): void {
-    const leftSidebar = this._getSidebar('left');
-    const rightSidebar = this._getSidebar('right');
-    if (leftSidebar) (leftSidebar as any).hideDropIndicator?.();
-    if (rightSidebar) (rightSidebar as any).hideDropIndicator?.();
-    this._pendingDropIndex = null;
-  }
 
   private _handlePanelDragEnd = (e: CustomEvent): void => {
-    const panelId = e.detail?.panelId;
-    const panel = panelId ? this._findPanelById(panelId) : null;
+    const panel = e.target as HTMLElement;
+    if (!panel) return;
     
-    if (this._dockPreview) {
-      // Dropping in a gravity zone
-      const side = this._dockPreview as 'left' | 'right' | 'top' | 'bottom';
+    if (this._snapPreview) {
+      const edge = this._snapPreview;
+      const panelWidth = (panel as any).panelWidth ?? panel.offsetWidth ?? 100;
+      const panelHeight = (panel as any).panelHeight ?? panel.offsetHeight ?? 100;
       
-      this.dispatchEvent(new CustomEvent('panel-dock', {
-        detail: { panelId, side, index: this._pendingDropIndex },
-        bubbles: true,
-        composed: true,
-      }));
-      
-      // If auto-dock enabled, set the panel's attributes and move it
-      if (this.autoDock && panel) {
-        // Store last floating position for potential restore
-        (panel as any)._lastFloatingPosition = {
-          x: (panel as any).positionX,
-          y: (panel as any).positionY,
-          width: (panel as any).panelWidth,
-          height: (panel as any).panelHeight,
-        };
-        
-        // Set docked attribute, clear floating
-        (panel as any).docked = side;
-        (panel as any).floating = false;
-        
-        // Move panel to appropriate container
-        const sidebar = this._getSidebar(side);
-        if (sidebar && typeof (sidebar as any).insertPanelAt === 'function' && this._pendingDropIndex !== null) {
-          // Insert at calculated drop index
-          panel.removeAttribute('slot');
-          (sidebar as any).insertPanelAt(panel, this._pendingDropIndex);
-        } else if (sidebar) {
-          // Fallback: append to sidebar
-          panel.removeAttribute('slot');
-          sidebar.appendChild(panel);
-        } else {
-          // No sidebar - dock directly to workspace slot
-          panel.slot = side;
-          this.appendChild(panel);
-        }
+      // Snap to edge
+      switch (edge) {
+        case 'left':
+          (panel as any).positionX = 0;
+          break;
+        case 'right':
+          (panel as any).positionX = this._bounds.width - panelWidth;
+          break;
+        case 'top':
+          (panel as any).positionY = 0;
+          break;
       }
-    } else if (this.autoDock && panel && (panel as any).docked) {
-      // Dropping outside gravity zones while docked = undock
-      const x = e.detail?.x ?? 100;
-      const y = e.detail?.y ?? 100;
       
-      this.dispatchEvent(new CustomEvent('panel-undock', {
-        detail: { panelId, x, y },
-        bubbles: true,
-        composed: true,
-      }));
-      
-      (panel as any).docked = '';
-      (panel as any).floating = true;
-      (panel as any).positionX = x;
-      (panel as any).positionY = y;
-      
-      // Move panel back to workspace with floating slot
-      panel.slot = 'floating';
-      this.appendChild(panel);
+      // Set snap-edge attribute for persistence
+      (panel as any).snapEdge = edge;
+    } else {
+      // Clear snap-edge if dropped freely
+      (panel as any).snapEdge = '';
     }
     
-    this._clearSidebarDropIndicators();
-    this._dockPreview = null;
+    this._snapPreview = null;
+    this._emitLayoutChange();
   };
-
-  private _findPanelById(panelId: string): HTMLElement | null {
-    const allPanels = this.querySelectorAll('tui-panel');
-    for (const panel of allPanels) {
-      if (panel.id === panelId || (panel as any).title === panelId) {
-        return panel as HTMLElement;
-      }
-    }
-    return null;
-  }
-
-  private _getSidebar(side: 'left' | 'right' | 'top' | 'bottom'): HTMLElement | null {
-    const slot = this.shadowRoot?.querySelector(`slot[name="${side}"]`) as HTMLSlotElement;
-    if (!slot) return null;
-    
-    const elements = slot.assignedElements();
-    for (const el of elements) {
-      if (el.tagName.toLowerCase() === 'tui-sidebar') {
-        return el as HTMLElement;
-      }
-    }
-    
-    return null;
-  }
 
   private _handlePanelResize = (e: CustomEvent): void => {
     const panel = e.target as HTMLElement;
@@ -493,27 +345,14 @@ export class Workspace extends LitElement {
   render() {
     return html`
       <div class="workspace">
-        <div class="sidebar-top">
-          <slot name="top"></slot>
-        </div>
-        <div class="sidebar-left">
-          <slot name="left"></slot>
-        </div>
         <div class="main-area">
           <slot name="main"></slot>
         </div>
-        <div class="sidebar-right">
-          <slot name="right"></slot>
-        </div>
-        <div class="sidebar-bottom">
-          <slot name="bottom"></slot>
-        </div>
-        <!-- Floating layer at workspace level to overlay entire workspace including sidebars -->
         <div class="floating-layer">
           <slot name="floating" @slotchange=${this._onFloatingSlotChange}></slot>
         </div>
-        ${this._dockPreview ? html`
-          <div class="dock-preview ${this._dockPreview}"></div>
+        ${this._snapPreview ? html`
+          <div class="snap-preview ${this._snapPreview}"></div>
         ` : ''}
       </div>
     `;
