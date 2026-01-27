@@ -115,4 +115,25 @@ describe('tui-panel', () => {
     expect(el.panelWidth).to.equal(300);
     expect(el.panelHeight).to.equal(200);
   });
+
+  it('emits panel-resize event during resize', async () => {
+    const el = await fixture(html`<tui-panel title="Test" draggable resizable panel-width="200" panel-height="150">Content</tui-panel>`);
+    let resizeEvent = null;
+    el.addEventListener('panel-resize', (e) => { resizeEvent = e.detail; });
+    
+    const handle = el.shadowRoot.querySelector('.resize-handle');
+    
+    // Simulate resize start
+    handle.dispatchEvent(new PointerEvent('pointerdown', { clientX: 200, clientY: 150, bubbles: true }));
+    
+    // Simulate resize move
+    document.dispatchEvent(new PointerEvent('pointermove', { clientX: 250, clientY: 200 }));
+    
+    // Simulate resize end
+    document.dispatchEvent(new PointerEvent('pointerup', {}));
+    
+    expect(resizeEvent).to.exist;
+    expect(resizeEvent.width).to.be.a('number');
+    expect(resizeEvent.height).to.be.a('number');
+  });
 });

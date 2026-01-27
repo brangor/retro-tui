@@ -114,6 +114,13 @@ export class Panel extends LitElement {
   private _dragOffsetX = 0;
   private _dragOffsetY = 0;
 
+  // Private resize state
+  private _isResizing = false;
+  private _resizeStartX = 0;
+  private _resizeStartY = 0;
+  private _resizeStartWidth = 0;
+  private _resizeStartHeight = 0;
+
   static styles = [
     sharedStyles,
     css`
@@ -480,6 +487,8 @@ export class Panel extends LitElement {
     this.removeEventListener('click', this._handleClick);
     document.removeEventListener('pointermove', this._onDragMove);
     document.removeEventListener('pointerup', this._onDragEnd);
+    document.removeEventListener('pointermove', this._onResizeMove);
+    document.removeEventListener('pointerup', this._onResizeEnd);
   }
 
   toggle(): void {
@@ -547,6 +556,56 @@ export class Panel extends LitElement {
     document.removeEventListener('pointerup', this._onDragEnd);
   };
 
+  private _onResizeStart = (e: PointerEvent): void => {
+    if (!this.resizable) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    this._isResizing = true;
+    this._resizeStartX = e.clientX;
+    this._resizeStartY = e.clientY;
+    this._resizeStartWidth = this.panelWidth ?? this.offsetWidth;
+    this._resizeStartHeight = this.panelHeight ?? this.offsetHeight;
+    
+    document.addEventListener('pointermove', this._onResizeMove);
+    document.addEventListener('pointerup', this._onResizeEnd);
+  };
+
+  private _onResizeMove = (e: PointerEvent): void => {
+    if (!this._isResizing) return;
+    
+    const deltaX = e.clientX - this._resizeStartX;
+    const deltaY = e.clientY - this._resizeStartY;
+    
+    let newWidth = this._resizeStartWidth + deltaX;
+    let newHeight = this._resizeStartHeight + deltaY;
+    
+    // Apply constraints
+    newWidth = Math.max(this.minWidth, newWidth);
+    newHeight = Math.max(this.minHeight, newHeight);
+    if (this.maxWidth !== null) newWidth = Math.min(this.maxWidth, newWidth);
+    if (this.maxHeight !== null) newHeight = Math.min(this.maxHeight, newHeight);
+    
+    this.panelWidth = newWidth;
+    this.panelHeight = newHeight;
+    
+    this.dispatchEvent(new CustomEvent('panel-resize', {
+      detail: { 
+        panelId: this.id || this.title,
+        width: this.panelWidth, 
+        height: this.panelHeight 
+      },
+      bubbles: true,
+      composed: true,
+    }));
+  };
+
+  private _onResizeEnd = (): void => {
+    this._isResizing = false;
+    document.removeEventListener('pointermove', this._onResizeMove);
+    document.removeEventListener('pointerup', this._onResizeEnd);
+  };
+
   updated(changedProperties: Map<string, unknown>): void {
     // Position
     if (this.draggable && (changedProperties.has('positionX') || changedProperties.has('positionY'))) {
@@ -599,7 +658,7 @@ export class Panel extends LitElement {
           <slot></slot>
         </div>
         ${this.resizable && this.draggable ? html`
-          <div class="resize-handle"></div>
+          <div class="resize-handle" @pointerdown=${this._onResizeStart}></div>
         ` : ''}
       </div>
     `;
