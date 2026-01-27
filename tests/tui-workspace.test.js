@@ -2,6 +2,7 @@ import { describe, it } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
 import '../src/components/tui-workspace.ts';
 import '../src/components/tui-panel.ts';
+import '../src/components/tui-sidebar.ts';
 
 describe('tui-workspace', () => {
   it('renders without errors', async () => {
@@ -98,5 +99,71 @@ describe('tui-workspace', () => {
     }));
     
     expect(layoutEvent).to.exist;
+  });
+
+  it('renders sidebar slots', async () => {
+    const el = await fixture(html`
+      <tui-workspace>
+        <tui-sidebar slot="left" side="left"></tui-sidebar>
+        <tui-sidebar slot="right" side="right"></tui-sidebar>
+        <div slot="main">Canvas</div>
+      </tui-workspace>
+    `);
+    
+    const leftSlot = el.shadowRoot.querySelector('slot[name="left"]');
+    const rightSlot = el.shadowRoot.querySelector('slot[name="right"]');
+    expect(leftSlot).to.exist;
+    expect(rightSlot).to.exist;
+  });
+
+  it('detects gravity zone on panel drag near left edge', async () => {
+    const el = await fixture(html`
+      <tui-workspace gravity-zone="50">
+        <tui-panel slot="floating" title="Test" draggable position-x="50" position-y="50">Content</tui-panel>
+      </tui-workspace>
+    `);
+    
+    let dockPreviewEvent = null;
+    el.addEventListener('panel-dock-preview', (e) => { dockPreviewEvent = e.detail; });
+    
+    const panel = el.querySelector('tui-panel');
+    
+    // Drag panel near left edge (within gravity zone)
+    panel.dispatchEvent(new CustomEvent('panel-move', {
+      detail: { panelId: 'Test', x: 20, y: 100 },
+      bubbles: true,
+      composed: true,
+    }));
+    
+    expect(dockPreviewEvent).to.exist;
+    expect(dockPreviewEvent.side).to.equal('left');
+  });
+
+  it('emits panel-dock when dropped in gravity zone', async () => {
+    const el = await fixture(html`
+      <tui-workspace gravity-zone="50">
+        <tui-panel slot="floating" title="Test" draggable position-x="20" position-y="100">Content</tui-panel>
+      </tui-workspace>
+    `);
+    
+    // First move into gravity zone to set preview
+    const panel = el.querySelector('tui-panel');
+    panel.dispatchEvent(new CustomEvent('panel-move', {
+      detail: { panelId: 'Test', x: 20, y: 100 },
+      bubbles: true,
+      composed: true,
+    }));
+    
+    let dockEvent = null;
+    el.addEventListener('panel-dock', (e) => { dockEvent = e.detail; });
+    
+    // Simulate drag end in gravity zone
+    el.dispatchEvent(new CustomEvent('panel-drag-end', {
+      detail: { panelId: 'Test', x: 20, y: 100 },
+      bubbles: true,
+    }));
+    
+    expect(dockEvent).to.exist;
+    expect(dockEvent.side).to.equal('left');
   });
 });

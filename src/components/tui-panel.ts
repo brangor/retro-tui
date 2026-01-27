@@ -107,6 +107,9 @@ export class Panel extends LitElement {
   @property({ type: Number, attribute: 'min-height' })
   minHeight = 100;
 
+  @property({ type: String, reflect: true })
+  docked: 'left' | 'right' | 'top' | 'bottom' | '' = '';
+
   // Private drag state
   private _isDragging = false;
   private _dragStartX = 0;
@@ -480,6 +483,33 @@ export class Panel extends LitElement {
       .resize-handle:hover {
         opacity: 1;
       }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         DOCKED STATE
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([docked]) {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        z-index: auto;
+      }
+
+      :host([docked]) .panel {
+        box-shadow: none;
+      }
+
+      :host([docked="left"]),
+      :host([docked="right"]) {
+        width: 100% !important;
+        height: auto;
+      }
+
+      :host([docked="top"]),
+      :host([docked="bottom"]) {
+        width: 100% !important;
+        height: auto;
+      }
     `,
   ];
 
@@ -578,6 +608,16 @@ export class Panel extends LitElement {
     this._isDragging = false;
     document.removeEventListener('pointermove', this._onDragMove);
     document.removeEventListener('pointerup', this._onDragEnd);
+    
+    this.dispatchEvent(new CustomEvent('panel-drag-end', {
+      detail: { 
+        panelId: this.id || this.title,
+        x: this.positionX,
+        y: this.positionY
+      },
+      bubbles: true,
+      composed: true,
+    }));
   };
 
   private _onResizeStart = (e: PointerEvent): void => {

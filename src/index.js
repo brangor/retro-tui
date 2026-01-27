@@ -4,6 +4,7 @@
 // Layout (opinionated compositions)
 export { App } from './components/tui-app.ts';
 export { Workspace } from './components/tui-workspace.ts';
+export { Sidebar } from './components/tui-sidebar.ts';
 
 // Atoms (primitives)
 export { Panel } from './components/tui-panel.ts';

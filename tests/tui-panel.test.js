@@ -152,4 +152,26 @@ describe('tui-panel', () => {
     
     expect(el.collapsed).to.be.true;
   });
+
+  it('reflects docked attribute', async () => {
+    const el = await fixture(html`<tui-panel title="Test" docked="left">Content</tui-panel>`);
+    expect(el.docked).to.equal('left');
+    expect(el.hasAttribute('docked')).to.be.true;
+  });
+
+  it('emits panel-drag-end event when drag completes', async () => {
+    const el = await fixture(html`<tui-panel title="Test" draggable>Content</tui-panel>`);
+    let dragEndEvent = null;
+    el.addEventListener('panel-drag-end', (e) => { dragEndEvent = e.detail; });
+    
+    const header = el.shadowRoot.querySelector('.header');
+    
+    // Simulate drag
+    header.dispatchEvent(new PointerEvent('pointerdown', { clientX: 10, clientY: 10, bubbles: true }));
+    document.dispatchEvent(new PointerEvent('pointermove', { clientX: 50, clientY: 30 }));
+    document.dispatchEvent(new PointerEvent('pointerup', {}));
+    
+    expect(dragEndEvent).to.exist;
+    expect(dragEndEvent.panelId).to.equal('Test');
+  });
 });
