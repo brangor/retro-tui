@@ -1,12 +1,17 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, TemplateResult } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import './tui-button.js';  // Import tui-button for use
+import './tui-button.ts'; // Import tui-button for use
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MENU COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-menu> - Menu bar with dropdown menus
- * 
+ *
  * @slot - Menu items (tui-menu-item elements)
- * 
+ *
  * Keyboard navigation:
  * - Arrow Left/Right: move between menu items
  * - Arrow Down/Enter: open dropdown
@@ -14,10 +19,10 @@ import './tui-button.js';  // Import tui-button for use
  * - Escape: close dropdown
  * - Alt+letter: hotkey access
  */
+@customElement('tui-menu')
 export class Menu extends LitElement {
-  static properties = {
-    _openMenu: { state: true },
-  };
+  @state()
+  private _openMenu: MenuItem | null = null;
 
   static styles = [
     sharedStyles,
@@ -29,31 +34,36 @@ export class Menu extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this._openMenu = null;
-  }
-
   render() {
     return html`<slot></slot>`;
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// MENU ITEM COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
+
 /**
  * <tui-menu-item> - Single menu with dropdown
- * 
+ *
  * Uses <tui-button variant="menu"> for the trigger.
- * 
+ *
  * @attr {string} label - Menu label
  * @attr {string} hotkey - Hotkey letter (underlined)
  * @slot - Dropdown content (tui-menu-action elements)
  */
+@customElement('tui-menu-item')
 export class MenuItem extends LitElement {
-  static properties = {
-    label: { type: String },
-    hotkey: { type: String },
-    _open: { state: true },
-  };
+  @property({ type: String })
+  label = '';
+
+  @property({ type: String })
+  hotkey = '';
+
+  @state()
+  private _open = false;
+
+  private _outsideClickHandler: ((e: MouseEvent) => void) | null = null;
 
   static styles = [
     sharedStyles,
@@ -92,44 +102,39 @@ export class MenuItem extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.label = '';
-    this.hotkey = '';
-    this._open = false;
-  }
-
   connectedCallback() {
     super.connectedCallback();
-    
+
     // Close when clicking outside
-    this._outsideClickHandler = (e) => {
-      if (this._open && !this.contains(e.target)) {
+    this._outsideClickHandler = (e: MouseEvent) => {
+      if (this._open && !this.contains(e.target as Node)) {
         this._close();
       }
     };
     document.addEventListener('click', this._outsideClickHandler);
-    
+
     // Keyboard navigation
     this.addEventListener('keydown', this._handleKeydown.bind(this));
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener('click', this._outsideClickHandler);
+    if (this._outsideClickHandler) {
+      document.removeEventListener('click', this._outsideClickHandler);
+    }
   }
 
-  _toggle() {
+  private _toggle() {
     this._open = !this._open;
     this.classList.toggle('open', this._open);
   }
 
-  _close() {
+  private _close() {
     this._open = false;
     this.classList.remove('open');
   }
 
-  _handleKeydown(e) {
+  private _handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape') {
       this._close();
       e.preventDefault();
@@ -144,7 +149,7 @@ export class MenuItem extends LitElement {
 
   render() {
     // Build label with hotkey highlighting
-    let labelHtml = this.label;
+    let labelHtml: string | TemplateResult = this.label;
     if (this.hotkey && this.label.toLowerCase().includes(this.hotkey.toLowerCase())) {
       const idx = this.label.toLowerCase().indexOf(this.hotkey.toLowerCase());
       const before = this.label.slice(0, idx);
@@ -154,8 +159,8 @@ export class MenuItem extends LitElement {
     }
 
     return html`
-      <tui-button 
-        variant="menu" 
+      <tui-button
+        variant="menu"
         ?selected=${this._open}
         @click=${this._toggle}
       >
@@ -168,20 +173,28 @@ export class MenuItem extends LitElement {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// MENU ACTION COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
+
 /**
  * <tui-menu-action> - Single menu action/item
- * 
+ *
  * @attr {string} label - Action label
  * @attr {string} shortcut - Keyboard shortcut hint
  * @attr {boolean} danger - Style as destructive action
  * @fires action - When activated
  */
+@customElement('tui-menu-action')
 export class MenuAction extends LitElement {
-  static properties = {
-    label: { type: String },
-    shortcut: { type: String },
-    danger: { type: Boolean },
-  };
+  @property({ type: String })
+  label = '';
+
+  @property({ type: String })
+  shortcut = '';
+
+  @property({ type: Boolean, reflect: true })
+  danger = false;
 
   static styles = [
     sharedStyles,
@@ -231,18 +244,13 @@ export class MenuAction extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.label = '';
-    this.shortcut = '';
-    this.danger = false;
-  }
-
-  _handleClick() {
-    this.dispatchEvent(new CustomEvent('action', {
-      bubbles: true,
-      composed: true,
-    }));
+  private _handleClick() {
+    this.dispatchEvent(
+      new CustomEvent('action', {
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   render() {
@@ -255,9 +263,14 @@ export class MenuAction extends LitElement {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// MENU DIVIDER COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
+
 /**
  * <tui-menu-divider> - Divider between menu items
  */
+@customElement('tui-menu-divider')
 export class MenuDivider extends LitElement {
   static styles = css`
     :host {
@@ -273,15 +286,15 @@ export class MenuDivider extends LitElement {
   }
 }
 
-if (!customElements.get('tui-menu')) {
-  customElements.define('tui-menu', Menu);
-}
-if (!customElements.get('tui-menu-item')) {
-  customElements.define('tui-menu-item', MenuItem);
-}
-if (!customElements.get('tui-menu-action')) {
-  customElements.define('tui-menu-action', MenuAction);
-}
-if (!customElements.get('tui-menu-divider')) {
-  customElements.define('tui-menu-divider', MenuDivider);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-menu': Menu;
+    'tui-menu-item': MenuItem;
+    'tui-menu-action': MenuAction;
+    'tui-menu-divider': MenuDivider;
+  }
 }

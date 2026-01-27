@@ -1,6 +1,22 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { ansiToHtml } from '../utils/ansi.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+interface OutputLine {
+  id: number;
+  text: string;
+  html: string;
+  timestamp: string | null;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-output> - Scrolling log output with ANSI color support
@@ -12,13 +28,19 @@ import { ansiToHtml } from '../utils/ansi.js';
  * @method append(text) - Add a line of text
  * @method clear() - Clear all output
  */
+@customElement('tui-output')
 export class Output extends LitElement {
-  static properties = {
-    maxLines: { type: Number, attribute: 'max-lines' },
-    autoscroll: { type: Boolean },
-    timestamps: { type: Boolean },
-    _lines: { state: true },
-  };
+  @property({ type: Number, attribute: 'max-lines' })
+  maxLines = 500;
+
+  @property({ type: Boolean })
+  autoscroll = true;
+
+  @property({ type: Boolean })
+  timestamps = false;
+
+  @state()
+  private _lines: OutputLine[] = [];
 
   static styles = [
     sharedStyles,
@@ -74,24 +96,16 @@ export class Output extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.maxLines = 500;
-    this.autoscroll = true;
-    this.timestamps = false;
-    this._lines = [];
-  }
-
   /**
    * Append a line of text (supports ANSI codes)
-   * @param {string} text - Text to append
+   * @param text - Text to append
    */
-  append(text) {
+  append(text: string): void {
     const timestamp = this.timestamps 
       ? new Date().toLocaleTimeString('en-US', { hour12: false })
       : null;
     
-    const newLines = text.split('\n').map(line => ({
+    const newLines: OutputLine[] = text.split('\n').map(line => ({
       id: Date.now() + Math.random(),
       text: line,
       html: ansiToHtml(line),
@@ -108,11 +122,11 @@ export class Output extends LitElement {
   /**
    * Clear all output
    */
-  clear() {
+  clear(): void {
     this._lines = [];
   }
 
-  scrollToBottom() {
+  private scrollToBottom(): void {
     const output = this.shadowRoot?.querySelector('.output');
     if (output) {
       output.scrollTop = output.scrollHeight;
@@ -136,6 +150,12 @@ export class Output extends LitElement {
   }
 }
 
-if (!customElements.get('tui-output')) {
-  customElements.define('tui-output', Output);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-output': Output;
+  }
 }

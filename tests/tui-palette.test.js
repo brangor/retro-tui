@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
-import '../src/components/tui-palette.js';
+import '../src/components/tui-palette.ts';
 
 describe('tui-palette', () => {
   it('renders without errors', async () => {

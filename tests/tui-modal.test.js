@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
-import '../src/components/tui-modal.js';
+import '../src/components/tui-modal.ts';
 
 describe('tui-modal', () => {
   it('renders without errors', async () => {

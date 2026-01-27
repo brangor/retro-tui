@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
-import '../src/components/tui-panel.js';
+import '../src/components/tui-panel.ts';
 
 describe('tui-panel', () => {
   it('renders without errors', async () => {

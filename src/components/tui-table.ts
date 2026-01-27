@@ -1,5 +1,17 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type BorderStyle = 'single' | 'double' | 'heavy' | 'none';
+type RowData = Record<string, unknown>;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-table> - ASCII-bordered data table
@@ -8,12 +20,16 @@ import { sharedStyles } from '../styles/shared.js';
  * 
  * @method setData(columns, rows) - Set table data
  */
+@customElement('tui-table')
 export class Table extends LitElement {
-  static properties = {
-    border: { type: String },
-    _columns: { state: true },
-    _rows: { state: true },
-  };
+  @property({ type: String })
+  border: BorderStyle = 'single';
+
+  @state()
+  private _columns: string[] = [];
+
+  @state()
+  private _rows: RowData[] = [];
 
   static styles = [
     sharedStyles,
@@ -71,29 +87,22 @@ export class Table extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.border = 'single';
-    this._columns = [];
-    this._rows = [];
-  }
-
   /**
    * Set table data
-   * @param {string[]} columns - Column headers
-   * @param {Array<Record<string, any>>} rows - Row data
+   * @param columns - Column headers
+   * @param rows - Row data
    */
-  setData(columns, rows) {
+  setData(columns: string[], rows: RowData[]): void {
     this._columns = columns;
     this._rows = rows;
   }
 
   /**
    * Add or update a row by key
-   * @param {string} key - Row identifier (first column value)
-   * @param {Record<string, any>} data - Row data
+   * @param key - Row identifier (first column value)
+   * @param data - Row data
    */
-  upsertRow(key, data) {
+  upsertRow(key: string, data: RowData): void {
     const existingIndex = this._rows.findIndex(r => r[this._columns[0]] === key);
     if (existingIndex >= 0) {
       this._rows = [
@@ -106,7 +115,7 @@ export class Table extends LitElement {
     }
   }
 
-  getCellClass(value) {
+  private getCellClass(value: unknown): string {
     if (typeof value === 'number') return 'number';
     if (value === '✓' || value === 'OK' || value === 'online') return 'status-ok';
     if (value === '⚠' || value === 'WARN' || value === 'degraded') return 'status-warn';
@@ -136,6 +145,12 @@ export class Table extends LitElement {
   }
 }
 
-if (!customElements.get('tui-table')) {
-  customElements.define('tui-table', Table);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-table': Table;
+  }
 }

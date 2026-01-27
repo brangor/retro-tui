@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
-import '../src/components/tui-statusbar.js';
+import '../src/components/tui-statusbar.ts';
 
 describe('tui-statusbar', () => {
   it('renders without errors', async () => {

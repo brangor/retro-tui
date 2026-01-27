@@ -1,5 +1,18 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type ButtonVariant = 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu';
+type ButtonSize = 'sm' | 'md' | 'lg';
+type SelectionStyle = 'invert' | 'border';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-button> - Terminal-styled button
@@ -21,25 +34,25 @@ import { sharedStyles } from '../styles/shared.js';
  * @cssprop [--tui-button-border-color] - Override border color
  * @cssprop [--selection-style] - Inherited selection style (invert | border)
  */
+@customElement('tui-button')
 export class Button extends LitElement {
-  static properties = {
-    variant: { type: String, reflect: true },
-    size: { type: String, reflect: true },
-    selectionStyle: { type: String, attribute: 'selection-style' },
-    selected: { type: Boolean, reflect: true },
-    disabled: { type: Boolean, reflect: true },
-    block: { type: Boolean, reflect: true },
-  };
+  @property({ reflect: true })
+  variant: ButtonVariant = 'default';
 
-  constructor() {
-    super();
-    this.variant = 'default';
-    this.size = 'md';
-    this.selectionStyle = undefined;
-    this.selected = false;
-    this.disabled = false;
-    this.block = false;
-  }
+  @property({ reflect: true })
+  size: ButtonSize = 'md';
+
+  @property({ attribute: 'selection-style' })
+  selectionStyle?: SelectionStyle;
+
+  @property({ type: Boolean, reflect: true })
+  selected = false;
+
+  @property({ type: Boolean, reflect: true })
+  disabled = false;
+
+  @property({ type: Boolean, reflect: true })
+  block = false;
 
   static styles = [
     sharedStyles,
@@ -299,4 +312,12 @@ export class Button extends LitElement {
   }
 }
 
-customElements.define('tui-button', Button);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-button': Button;
+  }
+}

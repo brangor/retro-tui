@@ -1,5 +1,16 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type Palettes = Record<string, string[]>;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-palette> - Tabbed character picker
@@ -17,13 +28,19 @@ import { sharedStyles } from '../styles/shared.js';
  * @fires char-select - When character is clicked
  *   detail: { char: string }
  */
+@customElement('tui-palette')
 export class Palette extends LitElement {
-  static properties = {
-    palettes: { type: Object },
-    currentPalette: { type: String, attribute: 'current-palette' },
-    selectedChar: { type: String, attribute: 'selected-char' },
-    columns: { type: Number },
-  };
+  @property({ type: Object })
+  palettes: Palettes = {};
+
+  @property({ type: String, attribute: 'current-palette' })
+  currentPalette = '';
+
+  @property({ type: String, attribute: 'selected-char' })
+  selectedChar = '';
+
+  @property({ type: Number })
+  columns = 8;
 
   static styles = [
     sharedStyles,
@@ -96,19 +113,11 @@ export class Palette extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.palettes = {};
-    this.currentPalette = '';
-    this.selectedChar = '';
-    this.columns = 8;
-  }
-
-  get _chars() {
+  private get _chars(): string[] {
     return this.palettes[this.currentPalette] || [];
   }
 
-  _selectPalette(name) {
+  private _selectPalette(name: string): void {
     const firstChar = this.palettes[name]?.[0] || '';
     this.dispatchEvent(new CustomEvent('palette-change', {
       bubbles: true,
@@ -117,7 +126,7 @@ export class Palette extends LitElement {
     }));
   }
 
-  _selectChar(char) {
+  private _selectChar(char: string): void {
     this.dispatchEvent(new CustomEvent('char-select', {
       bubbles: true,
       composed: true,
@@ -149,6 +158,12 @@ export class Palette extends LitElement {
   }
 }
 
-if (!customElements.get('tui-palette')) {
-  customElements.define('tui-palette', Palette);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-palette': Palette;
+  }
 }

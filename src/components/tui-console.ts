@@ -1,6 +1,23 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { ansiToHtml } from '../utils/ansi.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+interface ConsoleLine {
+  id: number;
+  text: string;
+  html: string;
+  type: 'output' | 'command';
+  prompt?: string;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-console> - Interactive command console with history
@@ -13,14 +30,24 @@ import { ansiToHtml } from '../utils/ansi.js';
  * @method print(text) - Print output to console
  * @method clear() - Clear console output
  */
+@customElement('tui-console')
 export class Console extends LitElement {
-  static properties = {
-    prompt: { type: String },
-    historySize: { type: Number, attribute: 'history-size' },
-    _lines: { state: true },
-    _inputValue: { state: true },
-    _historyIndex: { state: true },
-  };
+  @property({ type: String })
+  prompt = '❯ ';
+
+  @property({ type: Number, attribute: 'history-size' })
+  historySize = 100;
+
+  @state()
+  private _lines: ConsoleLine[] = [];
+
+  @state()
+  private _inputValue = '';
+
+  @state()
+  private _historyIndex = -1;
+
+  private _history: string[] = [];
 
   static styles = [
     sharedStyles,
@@ -98,22 +125,12 @@ export class Console extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.prompt = '❯ ';
-    this.historySize = 100;
-    this._lines = [];
-    this._inputValue = '';
-    this._history = [];
-    this._historyIndex = -1;
-  }
-
   /**
    * Print output to console
-   * @param {string} text - Text to print (supports ANSI codes)
+   * @param text - Text to print (supports ANSI codes)
    */
-  print(text) {
-    const newLines = text.split('\n').map(line => ({
+  print(text: string): void {
+    const newLines: ConsoleLine[] = text.split('\n').map(line => ({
       id: Date.now() + Math.random(),
       text: line,
       html: ansiToHtml(line),
@@ -126,23 +143,23 @@ export class Console extends LitElement {
   /**
    * Clear console output
    */
-  clear() {
+  clear(): void {
     this._lines = [];
   }
 
-  scrollToBottom() {
+  private scrollToBottom(): void {
     const output = this.shadowRoot?.querySelector('.output');
     if (output) {
       output.scrollTop = output.scrollHeight;
     }
   }
 
-  focusInput() {
+  private focusInput(): void {
     const input = this.shadowRoot?.querySelector('input');
     input?.focus();
   }
 
-  handleKeydown(e) {
+  private handleKeydown(e: KeyboardEvent): void {
     switch (e.key) {
       case 'Enter':
         this.submitCommand();
@@ -171,7 +188,7 @@ export class Console extends LitElement {
     }
   }
 
-  submitCommand() {
+  private submitCommand(): void {
     const cmd = this._inputValue.trim();
     if (!cmd) return;
 
@@ -201,7 +218,7 @@ export class Console extends LitElement {
     this.updateComplete.then(() => this.scrollToBottom());
   }
 
-  navigateHistory(direction) {
+  private navigateHistory(direction: number): void {
     const newIndex = this._historyIndex + direction;
     
     if (newIndex < 0) {
@@ -211,6 +228,10 @@ export class Console extends LitElement {
       this._historyIndex = newIndex;
       this._inputValue = this._history[this._history.length - 1 - newIndex];
     }
+  }
+
+  private handleInput(e: Event): void {
+    this._inputValue = (e.target as HTMLInputElement).value;
   }
 
   render() {
@@ -228,7 +249,7 @@ export class Console extends LitElement {
           <input
             type="text"
             .value=${this._inputValue}
-            @input=${e => this._inputValue = e.target.value}
+            @input=${this.handleInput}
             @keydown=${this.handleKeydown}
             autocomplete="off"
             spellcheck="false"
@@ -239,6 +260,12 @@ export class Console extends LitElement {
   }
 }
 
-if (!customElements.get('tui-console')) {
-  customElements.define('tui-console', Console);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-console': Console;
+  }
 }

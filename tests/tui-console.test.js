@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
-import '../src/components/tui-console.js';
+import '../src/components/tui-console.ts';
 
 describe('tui-console', () => {
   it('renders without errors', async () => {

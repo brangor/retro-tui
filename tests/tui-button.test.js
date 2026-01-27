@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
-import '../src/components/tui-button.js';
+import '../src/components/tui-button.ts';
 
 describe('tui-button', () => {
   it('renders without errors', async () => {

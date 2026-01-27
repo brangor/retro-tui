@@ -1,5 +1,16 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type FocusContext = 'toolbar' | 'workspace' | 'sidebar' | 'menu';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-app> - Opinionated app shell layout
@@ -26,13 +37,19 @@ import { sharedStyles } from '../styles/shared.js';
  * @attr {string} title - App title displayed in header
  * @attr {string} subtitle - Subtitle shown after title
  */
+@customElement('tui-app')
 export class App extends LitElement {
-  static properties = {
-    title: { type: String },
-    subtitle: { type: String },
-    _focusContext: { state: true },
-    _menuOpen: { state: true },
-  };
+  @property({ type: String, reflect: true })
+  title = 'TUI';
+
+  @property({ type: String, reflect: true })
+  subtitle = '';
+
+  @state()
+  private _focusContext: FocusContext = 'workspace';
+
+  @state()
+  private _menuOpen = false;
 
   static styles = [
     sharedStyles,
@@ -217,14 +234,6 @@ export class App extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.title = 'TUI';
-    this.subtitle = '';
-    this._focusContext = 'workspace'; // toolbar | workspace | sidebar | menu
-    this._menuOpen = false;
-  }
-
   connectedCallback() {
     super.connectedCallback();
     
@@ -238,7 +247,7 @@ export class App extends LitElement {
     });
   }
 
-  _handleGlobalKeydown(e) {
+  private _handleGlobalKeydown(e: KeyboardEvent) {
     // Escape retreats
     if (e.key === 'Escape') {
       if (this._menuOpen) {
@@ -296,6 +305,12 @@ export class App extends LitElement {
   }
 }
 
-if (!customElements.get('tui-app')) {
-  customElements.define('tui-app', App);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-app': App;
+  }
 }

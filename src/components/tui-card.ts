@@ -1,5 +1,18 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type CardRank = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'X' | 'J' | 'Q' | 'K' | 'A' | '';
+type CardSuit = '♥' | '♠' | '♦' | '♣' | '';
+type CardSize = 'sm' | 'md' | 'lg';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-card> - Playing card with terminal box-draw aesthetic
@@ -23,15 +36,25 @@ import { sharedStyles } from '../styles/shared.js';
  * 
  * @slot - Custom content (overrides rank/suit display)
  */
+@customElement('tui-card')
 export class Card extends LitElement {
-  static properties = {
-    rank: { type: String },
-    suit: { type: String },
-    faceDown: { type: Boolean, attribute: 'face-down', reflect: true },
-    selected: { type: Boolean, reflect: true },
-    disabled: { type: Boolean, reflect: true },
-    size: { type: String, reflect: true },
-  };
+  @property({ type: String })
+  rank: CardRank = '';
+
+  @property({ type: String })
+  suit: CardSuit = '';
+
+  @property({ type: Boolean, attribute: 'face-down', reflect: true })
+  faceDown = false;
+
+  @property({ type: Boolean, reflect: true })
+  selected = false;
+
+  @property({ type: Boolean, reflect: true })
+  disabled = false;
+
+  @property({ type: String, reflect: true })
+  size: CardSize = 'md';
 
   static styles = [
     sharedStyles,
@@ -247,21 +270,11 @@ export class Card extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.rank = '';
-    this.suit = '';
-    this.faceDown = false;
-    this.selected = false;
-    this.disabled = false;
-    this.size = 'md';
-  }
-
-  get isRed() {
+  get isRed(): boolean {
     return this.suit === '♥' || this.suit === '♦';
   }
 
-  _handleClick() {
+  private _handleClick(): void {
     if (this.disabled) return;
     
     this.dispatchEvent(new CustomEvent('card-click', {
@@ -304,6 +317,12 @@ export class Card extends LitElement {
   }
 }
 
-if (!customElements.get('tui-card')) {
-  customElements.define('tui-card', Card);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-card': Card;
+  }
 }

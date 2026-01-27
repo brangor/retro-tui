@@ -1,34 +1,65 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import './tui-button.js';  // Import tui-button for use
+import './tui-button.ts'; // Import tui-button for use
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type ToolbarOrientation = 'vertical' | 'horizontal';
+type ButtonSize = 'sm' | 'md' | 'lg';
+type SelectionStyle = 'invert' | 'border';
+
+interface ToolDefinition {
+  id: string;
+  icon?: string;
+  name?: string;
+  key?: string;
+  divider?: boolean;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TOOLBAR COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-toolbar> - Tool button group with terminal aesthetic
- * 
+ *
  * Uses <tui-button variant="icon"> internally for consistent styling.
  * Supports vertical (default) or horizontal orientation.
  * Emits tool-select event when a tool is clicked.
- * 
+ *
  * @attr {string} orientation - 'vertical' | 'horizontal'
  * @attr {string} selected - Currently selected tool id
  * @attr {string} size - Button size: 'sm' | 'md' | 'lg'
  * @attr {string} selection-style - Selection feedback: 'invert' | 'border'
  * @attr {boolean} show-hotkeys - Show keyboard shortcuts next to tools (default: true)
- * 
+ *
  * @fires tool-select - When a tool button is clicked
  *   detail: { tool: string }
- * 
+ *
  * @slot - Tool buttons (or use .tools property)
  */
+@customElement('tui-toolbar')
 export class Toolbar extends LitElement {
-  static properties = {
-    orientation: { type: String, reflect: true },
-    selected: { type: String },
-    size: { type: String, reflect: true },
-    selectionStyle: { type: String, attribute: 'selection-style' },
-    tools: { type: Array },
-    showHotkeys: { type: Boolean, attribute: 'show-hotkeys' },
-  };
+  @property({ reflect: true })
+  orientation: ToolbarOrientation = 'vertical';
+
+  @property()
+  selected = '';
+
+  @property({ reflect: true })
+  size: ButtonSize = 'md';
+
+  @property({ attribute: 'selection-style' })
+  selectionStyle: SelectionStyle | '' = '';
+
+  @property({ type: Array })
+  tools: ToolDefinition[] = [];
+
+  @property({ type: Boolean, attribute: 'show-hotkeys' })
+  showHotkeys = true;
 
   static styles = [
     sharedStyles,
@@ -112,30 +143,22 @@ export class Toolbar extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.orientation = 'vertical';
-    this.selected = '';
-    this.size = 'md';
-    this.selectionStyle = '';
-    this.tools = [];
-    this.showHotkeys = true;
-  }
-
-  updated(changedProperties) {
+  updated(changedProperties: Map<string, unknown>) {
     // Update CSS custom property when selection-style changes
     if (changedProperties.has('selectionStyle') && this.selectionStyle) {
       this.style.setProperty('--toolbar-selection-style', this.selectionStyle);
     }
   }
 
-  _handleClick(toolId) {
+  private _handleClick(toolId: string) {
     this.selected = toolId;
-    this.dispatchEvent(new CustomEvent('tool-select', {
-      bubbles: true,
-      composed: true,
-      detail: { tool: toolId }
-    }));
+    this.dispatchEvent(
+      new CustomEvent('tool-select', {
+        bubbles: true,
+        composed: true,
+        detail: { tool: toolId },
+      })
+    );
   }
 
   render() {
@@ -143,13 +166,15 @@ export class Toolbar extends LitElement {
     if (this.tools && this.tools.length > 0) {
       return html`
         <div class="toolbar">
-          ${this.tools.map(tool => {
+          ${this.tools.map((tool) => {
             if (tool.divider) {
               return html`<div class="divider"></div>`;
             }
             return html`
               <div class="tool-item">
-                ${this.showHotkeys && tool.key ? html`<span class="hotkey">${tool.key}</span>` : ''}
+                ${this.showHotkeys && tool.key
+                  ? html`<span class="hotkey">${tool.key}</span>`
+                  : ''}
                 <tui-button
                   variant="icon"
                   size=${this.size}
@@ -176,27 +201,33 @@ export class Toolbar extends LitElement {
   }
 }
 
-if (!customElements.get('tui-toolbar')) {
-  customElements.define('tui-toolbar', Toolbar);
-}
+// ═══════════════════════════════════════════════════════════════════════════════
+// TOOL COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-tool> - Individual tool button for use in slots
- * 
+ *
  * Wraps <tui-button variant="icon"> for use inside <tui-toolbar> slots.
- * 
+ *
  * @attr {string} tool-id - Tool identifier
  * @attr {string} icon - Icon character to display
  * @attr {boolean} active - Whether this tool is active
  * @attr {string} size - Button size: 'sm' | 'md' | 'lg'
  */
+@customElement('tui-tool')
 export class Tool extends LitElement {
-  static properties = {
-    toolId: { type: String, attribute: 'tool-id' },
-    icon: { type: String },
-    active: { type: Boolean, reflect: true },
-    size: { type: String },
-  };
+  @property({ attribute: 'tool-id' })
+  toolId = '';
+
+  @property()
+  icon = '';
+
+  @property({ type: Boolean, reflect: true })
+  active = false;
+
+  @property()
+  size: ButtonSize = 'md';
 
   static styles = css`
     :host {
@@ -204,20 +235,14 @@ export class Tool extends LitElement {
     }
   `;
 
-  constructor() {
-    super();
-    this.toolId = '';
-    this.icon = '';
-    this.active = false;
-    this.size = 'md';
-  }
-
-  _handleClick() {
-    this.dispatchEvent(new CustomEvent('tool-select', {
-      bubbles: true,
-      composed: true,
-      detail: { tool: this.toolId }
-    }));
+  private _handleClick() {
+    this.dispatchEvent(
+      new CustomEvent('tool-select', {
+        bubbles: true,
+        composed: true,
+        detail: { tool: this.toolId },
+      })
+    );
   }
 
   render() {
@@ -234,6 +259,13 @@ export class Tool extends LitElement {
   }
 }
 
-if (!customElements.get('tui-tool')) {
-  customElements.define('tui-tool', Tool);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-toolbar': Toolbar;
+    'tui-tool': Tool;
+  }
 }

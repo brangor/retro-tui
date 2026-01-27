@@ -1,5 +1,18 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type PanelColor = 'primary' | 'secondary' | 'error' | 'success' | 'info' | 'cyan' | 'green' | 'magenta' | 'yellow' | 'red' | '';
+type PanelVariant = 'bright' | 'classic';
+type SelectionStyle = 'invert' | 'border' | '';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-panel> - Collapsible panel with terminal aesthetic
@@ -32,18 +45,34 @@ import { sharedStyles } from '../styles/shared.js';
  * 
  * @cssprop [--selection-style] - Inherited selection style for child components
  */
+@customElement('tui-panel')
 export class Panel extends LitElement {
-  static properties = {
-    title: { type: String },
-    color: { type: String },
-    variant: { type: String, reflect: true },
-    selectionStyle: { type: String, attribute: 'selection-style', reflect: true },
-    collapsible: { type: Boolean },
-    collapsed: { type: Boolean },
-    selected: { type: Boolean, reflect: true },
-    active: { type: Boolean, reflect: true },
-    persistId: { type: String, attribute: 'persist-id' },
-  };
+  @property({ type: String })
+  title = '';
+
+  @property({ type: String })
+  color: PanelColor = '';
+
+  @property({ type: String, reflect: true })
+  variant: PanelVariant = 'bright';
+
+  @property({ type: String, attribute: 'selection-style', reflect: true })
+  selectionStyle: SelectionStyle = '';
+
+  @property({ type: Boolean })
+  collapsible = false;
+
+  @property({ type: Boolean })
+  collapsed = false;
+
+  @property({ type: Boolean, reflect: true })
+  selected = false;
+
+  @property({ type: Boolean, reflect: true })
+  active = false;
+
+  @property({ type: String, attribute: 'persist-id' })
+  persistId = '';
 
   static styles = [
     sharedStyles,
@@ -315,20 +344,15 @@ export class Panel extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.title = '';
-    this.color = '';
-    this.variant = 'bright'; // 'bright' or 'classic'
-    this.selectionStyle = ''; // 'invert' or 'border' - inherits from CSS if not set
-    this.collapsible = false;
-    this.collapsed = false;
-    this.selected = false;
-    this.active = false;
-    this.persistId = '';
-  }
+  private _handleClick = (): void => {
+    this.dispatchEvent(new CustomEvent('focus-request', {
+      bubbles: true,
+      composed: true,
+      detail: { panel: this }
+    }));
+  };
 
-  connectedCallback() {
+  connectedCallback(): void {
     super.connectedCallback();
     
     // Restore collapse state from localStorage
@@ -343,26 +367,18 @@ export class Panel extends LitElement {
     this.addEventListener('click', this._handleClick);
   }
 
-  disconnectedCallback() {
+  disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('click', this._handleClick);
   }
 
-  _handleClick = () => {
-    this.dispatchEvent(new CustomEvent('focus-request', {
-      bubbles: true,
-      composed: true,
-      detail: { panel: this }
-    }));
-  };
-
-  toggle() {
+  toggle(): void {
     if (this.collapsible) {
       this.collapsed = !this.collapsed;
       
       // Persist collapse state
       if (this.persistId) {
-        localStorage.setItem(`tui-panel-${this.persistId}`, this.collapsed);
+        localStorage.setItem(`tui-panel-${this.persistId}`, String(this.collapsed));
       }
 
       this.dispatchEvent(new CustomEvent('toggle', {
@@ -395,6 +411,12 @@ export class Panel extends LitElement {
   }
 }
 
-if (!customElements.get('tui-panel')) {
-  customElements.define('tui-panel', Panel);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-panel': Panel;
+  }
 }

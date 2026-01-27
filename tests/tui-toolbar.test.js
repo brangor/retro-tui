@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
-import '../src/components/tui-toolbar.js';
+import '../src/components/tui-toolbar.ts';
 
 describe('tui-toolbar', () => {
   it('renders without errors', async () => {

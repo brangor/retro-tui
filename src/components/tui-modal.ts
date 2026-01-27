@@ -1,5 +1,10 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-modal> - Modal dialog with terminal aesthetic
@@ -18,12 +23,18 @@ import { sharedStyles } from '../styles/shared.js';
  * @slot - Modal content
  * @slot footer - Footer content (buttons, etc.)
  */
+@customElement('tui-modal')
 export class Modal extends LitElement {
-  static properties = {
-    title: { type: String },
-    open: { type: Boolean, reflect: true },
-    closable: { type: Boolean },
-  };
+  @property({ type: String, reflect: true })
+  title = '';
+
+  @property({ type: Boolean, reflect: true })
+  open = false;
+
+  @property({ type: Boolean })
+  closable = true;
+
+  private _boundKeyHandler = this._handleKeydown.bind(this);
 
   static styles = [
     sharedStyles,
@@ -160,14 +171,6 @@ export class Modal extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.title = '';
-    this.open = false;
-    this.closable = true;
-    this._boundKeyHandler = this._handleKeydown.bind(this);
-  }
-
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener('keydown', this._boundKeyHandler);
@@ -178,7 +181,7 @@ export class Modal extends LitElement {
     document.removeEventListener('keydown', this._boundKeyHandler);
   }
 
-  _handleKeydown(e) {
+  private _handleKeydown(e: KeyboardEvent) {
     if (this.open && e.key === 'Escape' && this.closable) {
       this.close();
       e.preventDefault();
@@ -186,7 +189,7 @@ export class Modal extends LitElement {
     }
   }
 
-  _handleOverlayClick(e) {
+  private _handleOverlayClick(e: MouseEvent) {
     if (e.target === e.currentTarget && this.closable) {
       this.close();
     }
@@ -230,6 +233,12 @@ export class Modal extends LitElement {
   }
 }
 
-if (!customElements.get('tui-modal')) {
-  customElements.define('tui-modal', Modal);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-modal': Modal;
+  }
 }

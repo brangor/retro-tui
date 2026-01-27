@@ -1,5 +1,31 @@
 import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type ToastPosition = 'bottom' | 'top' | 'bottom-right';
+type ToastType = 'info' | 'success' | 'warning' | 'error' | null;
+
+interface ToastItem {
+  message: string;
+  type: ToastType;
+  title: string;
+  duration: number;
+  simple: boolean;
+}
+
+interface ToastOptions {
+  type?: ToastType;
+  title?: string;
+  duration?: number;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * <tui-toast> - Terminal-styled toast notifications
@@ -14,13 +40,19 @@ import { sharedStyles } from '../styles/shared.js';
  * 
  * @attr {string} position - 'bottom' | 'top' | 'bottom-right'
  */
+@customElement('tui-toast')
 export class Toast extends LitElement {
-  static properties = {
-    position: { type: String, reflect: true },
-    _queue: { state: true },
-    _current: { state: true },
-    _visible: { state: true },
-  };
+  @property({ type: String, reflect: true })
+  position: ToastPosition = 'bottom';
+
+  @state()
+  private _queue: ToastItem[] = [];
+
+  @state()
+  private _current: ToastItem | null = null;
+
+  @state()
+  private _visible = false;
 
   static styles = [
     sharedStyles,
@@ -156,24 +188,13 @@ export class Toast extends LitElement {
     `,
   ];
 
-  constructor() {
-    super();
-    this.position = 'bottom';
-    this._queue = [];
-    this._current = null;
-    this._visible = false;
-  }
-
   /**
    * Show a toast message
-   * @param {string} message - The message to display
-   * @param {Object} options - Toast options
-   * @param {string} options.type - 'info' | 'success' | 'warning' | 'error' | null (simple)
-   * @param {string} options.title - Header text (omit for simple toast)
-   * @param {number} options.duration - Display duration in ms (default: 2500)
+   * @param message - The message to display
+   * @param options - Toast options
    */
-  show(message, options = {}) {
-    const toast = {
+  show(message: string, options: ToastOptions = {}) {
+    const toast: ToastItem = {
       message,
       type: options.type || null,
       title: options.title || this._getDefaultTitle(options.type),
@@ -181,14 +202,14 @@ export class Toast extends LitElement {
       simple: !options.type && !options.title,
     };
 
-    this._queue.push(toast);
+    this._queue = [...this._queue, toast];
     
     if (!this._current) {
       this._showNext();
     }
   }
 
-  _getDefaultTitle(type) {
+  private _getDefaultTitle(type?: ToastType): string {
     switch (type) {
       case 'success': return 'Success';
       case 'error': return 'Error';
@@ -198,13 +219,15 @@ export class Toast extends LitElement {
     }
   }
 
-  async _showNext() {
+  private async _showNext() {
     if (this._queue.length === 0) {
       this._current = null;
       return;
     }
 
-    this._current = this._queue.shift();
+    const [next, ...rest] = this._queue;
+    this._queue = rest;
+    this._current = next;
     this._visible = false;
     
     // Trigger reflow then animate in
@@ -214,7 +237,7 @@ export class Toast extends LitElement {
     });
 
     // Wait for duration then animate out
-    await new Promise(resolve => setTimeout(resolve, this._current.duration));
+    await new Promise(resolve => setTimeout(resolve, this._current!.duration));
     
     this._visible = false;
     
@@ -246,16 +269,25 @@ export class Toast extends LitElement {
   }
 }
 
-if (!customElements.get('tui-toast')) {
-  customElements.define('tui-toast', Toast);
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPE AUGMENTATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-toast': Toast;
+  }
 }
 
-// Singleton helper for easy access
-let _toastInstance = null;
+// ═══════════════════════════════════════════════════════════════════════════════
+// SINGLETON HELPER
+// ═══════════════════════════════════════════════════════════════════════════════
 
-export function tuiToast(message, options) {
+let _toastInstance: Toast | null = null;
+
+export function tuiToast(message: string, options?: ToastOptions) {
   if (!_toastInstance) {
-    _toastInstance = document.createElement('tui-toast');
+    _toastInstance = document.createElement('tui-toast') as Toast;
     document.body.appendChild(_toastInstance);
   }
   _toastInstance.show(message, options);
