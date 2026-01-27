@@ -208,14 +208,22 @@ export class Workspace extends LitElement {
       }));
     }
     
-    // Constrain to bounds
-    const constrainedX = Math.max(0, Math.min(x, this._bounds.width - panelWidth));
-    const constrainedY = Math.max(0, Math.min(y, this._bounds.height - panelHeight));
-    
-    // Update panel position if constrained
-    if (constrainedX !== x || constrainedY !== y) {
-      (panel as any).positionX = constrainedX;
-      (panel as any).positionY = constrainedY;
+    // Constrain to bounds (only if bounds are valid)
+    if (this._bounds.width > 0 && this._bounds.height > 0) {
+      const maxX = this._bounds.width - panelWidth;
+      const maxY = this._bounds.height - panelHeight;
+      
+      // Only constrain if bounds can fit the panel
+      if (maxX > 0 && maxY > 0) {
+        const constrainedX = Math.max(0, Math.min(x, maxX));
+        const constrainedY = Math.max(0, Math.min(y, maxY));
+        
+        // Update panel position if constrained
+        if (constrainedX !== x || constrainedY !== y) {
+          (panel as any).positionX = constrainedX;
+          (panel as any).positionY = constrainedY;
+        }
+      }
     }
     
     this._emitLayoutChange();
@@ -285,6 +293,9 @@ export class Workspace extends LitElement {
   }
 
   private _constrainAllPanels(): void {
+    // Don't constrain if bounds aren't set yet
+    if (this._bounds.width <= 0 || this._bounds.height <= 0) return;
+    
     const panels = this._getFloatingPanels();
     for (const panel of panels) {
       if (!panel.hasAttribute('draggable')) continue;
@@ -294,8 +305,15 @@ export class Workspace extends LitElement {
       const panelWidth = (panel as any).panelWidth ?? panel.offsetWidth ?? 100;
       const panelHeight = (panel as any).panelHeight ?? panel.offsetHeight ?? 100;
       
-      const constrainedX = Math.max(0, Math.min(x, this._bounds.width - panelWidth));
-      const constrainedY = Math.max(0, Math.min(y, this._bounds.height - panelHeight));
+      // Only constrain if panel would actually be outside bounds
+      const maxX = this._bounds.width - panelWidth;
+      const maxY = this._bounds.height - panelHeight;
+      
+      // Skip constraint if bounds are too small to fit the panel
+      if (maxX < 0 || maxY < 0) continue;
+      
+      const constrainedX = Math.max(0, Math.min(x, maxX));
+      const constrainedY = Math.max(0, Math.min(y, maxY));
       
       if (constrainedX !== x) (panel as any).positionX = constrainedX;
       if (constrainedY !== y) (panel as any).positionY = constrainedY;
