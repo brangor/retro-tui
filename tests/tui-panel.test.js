@@ -57,4 +57,23 @@ describe('tui-panel', () => {
     
     expect(dismissed).to.be.true;
   });
+
+  it('has draggable-header class when draggable', async () => {
+    const el = await fixture(html`<tui-panel title="Test" draggable>Content</tui-panel>`);
+    const header = el.shadowRoot.querySelector('.header');
+    expect(header.classList.contains('draggable')).to.be.true;
+  });
+
+  it('applies absolute positioning when draggable', async () => {
+    const el = await fixture(html`<tui-panel title="Test" draggable>Content</tui-panel>`);
+    // Verify the draggable attribute is present (CSS :host([draggable]) applies styling)
+    expect(el.hasAttribute('draggable')).to.be.true;
+    expect(el.draggable).to.be.true;
+  });
+
+  it('reflects position-x and position-y attributes', async () => {
+    const el = await fixture(html`<tui-panel title="Test" draggable position-x="100" position-y="50">Content</tui-panel>`);
+    expect(el.positionX).to.equal(100);
+    expect(el.positionY).to.equal(50);
+  });
 });

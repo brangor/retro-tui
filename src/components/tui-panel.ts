@@ -77,6 +77,15 @@ export class Panel extends LitElement {
   @property({ type: Boolean, reflect: true })
   dismissable = false;
 
+  @property({ type: Boolean, reflect: true })
+  draggable = false;
+
+  @property({ type: Number, attribute: 'position-x' })
+  positionX = 0;
+
+  @property({ type: Number, attribute: 'position-y' })
+  positionY = 0;
+
   static styles = [
     sharedStyles,
     css`
@@ -368,6 +377,23 @@ export class Panel extends LitElement {
       .collapsed {
         box-shadow: 2px 2px 0 rgba(255,255,255,0.03);
       }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         DRAGGABLE POSITIONING
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([draggable]) {
+        position: absolute;
+        z-index: 100;
+      }
+
+      .header.draggable {
+        cursor: grab;
+      }
+
+      .header.draggable:active {
+        cursor: grabbing;
+      }
     `,
   ];
 
@@ -424,12 +450,19 @@ export class Panel extends LitElement {
     }));
   }
 
+  updated(changedProperties: Map<string, unknown>): void {
+    if (this.draggable && (changedProperties.has('positionX') || changedProperties.has('positionY'))) {
+      this.style.left = `${this.positionX}px`;
+      this.style.top = `${this.positionY}px`;
+    }
+  }
+
   render() {
     return html`
       <div class="panel ${this.collapsed ? 'collapsed' : ''}">
         <div 
-          class="header ${this.collapsible ? 'clickable' : ''}"
-          @click=${this.toggle}
+          class="header ${this.collapsible ? 'clickable' : ''} ${this.draggable ? 'draggable' : ''}"
+          @click=${this.collapsible && !this.draggable ? this.toggle : undefined}
         >
           ${this.collapsible ? html`
             <button class="toggle" aria-label="Toggle panel">
