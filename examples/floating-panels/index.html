@@ -14,16 +14,14 @@
       min-height: 100vh;
     }
     
-    .workspace {
-      position: relative;
+    tui-workspace {
       width: 100vw;
       height: 100vh;
-      overflow: hidden;
     }
     
     .canvas {
-      position: absolute;
-      inset: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -50,6 +48,7 @@
       color: var(--text-muted);
       max-height: 80px;
       overflow-y: auto;
+      z-index: 200;
     }
     
     .event-log-title {
@@ -59,13 +58,14 @@
   </style>
 </head>
 <body>
-  <div class="workspace">
-    <div class="canvas">
+  <tui-workspace id="workspace">
+    <div slot="main" class="canvas">
       <div>[ Canvas Area ]</div>
-      <div class="canvas-hint">Drag panels by title bar • Resize from corner • Collapse/dismiss with buttons</div>
+      <div class="canvas-hint">Panels constrained to workspace bounds • Drag • Resize • Collapse • Dismiss</div>
     </div>
     
     <tui-panel 
+      slot="floating"
       id="colors-panel"
       title="Colors" 
       color="primary"
@@ -91,6 +91,7 @@
     </tui-panel>
     
     <tui-panel 
+      slot="floating"
       id="tools-panel"
       title="Tools" 
       color="secondary"
@@ -112,6 +113,7 @@
     </tui-panel>
     
     <tui-panel 
+      slot="floating"
       id="layers-panel"
       title="Layers" 
       color="info"
@@ -139,17 +141,19 @@
         </div>
       </div>
     </tui-panel>
-    
-    <div class="event-log">
-      <div class="event-log-title">Event Log</div>
-      <div id="log-content">Events will appear here...</div>
-    </div>
+  </tui-workspace>
+  
+  <div class="event-log">
+    <div class="event-log-title">Event Log</div>
+    <div id="log-content">Events will appear here...</div>
   </div>
 
   <script type="module">
+    import '../../src/components/tui-workspace.ts';
     import '../../src/components/tui-panel.ts';
     
     const logContent = document.getElementById('log-content');
+    const workspace = document.getElementById('workspace');
     const maxLogLines = 5;
     const logLines = [];
     
@@ -159,16 +163,17 @@
       logContent.textContent = logLines.join('\n');
     }
     
-    // Log events for debugging
+    // Workspace events
+    workspace.addEventListener('layout-change', e => {
+      log(`layout: ${e.detail.panels.length} panels`);
+    });
+    
+    workspace.addEventListener('bounds-change', e => {
+      log(`bounds: ${Math.round(e.detail.bounds.width)}×${Math.round(e.detail.bounds.height)}`);
+    });
+    
+    // Panel events
     document.querySelectorAll('tui-panel').forEach(panel => {
-      panel.addEventListener('panel-move', e => {
-        log(`move: ${e.detail.panelId} → (${Math.round(e.detail.x)}, ${Math.round(e.detail.y)})`);
-      });
-      
-      panel.addEventListener('panel-resize', e => {
-        log(`resize: ${e.detail.panelId} → ${Math.round(e.detail.width)}×${Math.round(e.detail.height)}`);
-      });
-      
       panel.addEventListener('panel-dismiss', e => {
         log(`dismiss: ${e.detail.panelId}`);
         e.target.style.display = 'none';
@@ -179,7 +184,7 @@
       });
     });
     
-    log('Demo ready. Try dragging, resizing, collapsing, or dismissing panels.');
+    log('Workspace demo ready. Panels are constrained to workspace bounds.');
   </script>
 </body>
 </html>
