@@ -62,7 +62,7 @@ export class Panel extends LitElement {
   @property({ type: Boolean })
   collapsible = false;
 
-  @property({ type: Boolean })
+  @property({ type: Boolean, reflect: true })
   collapsed = false;
 
   @property({ type: Boolean, reflect: true })
@@ -144,6 +144,11 @@ export class Panel extends LitElement {
         --selection-style: var(--parent-selection-style, invert);
         
         display: block;
+      }
+
+      /* Hidden panels (dismissed) */
+      :host([hidden]) {
+        display: none !important;
       }
       
       /* When selection-style attribute is set, override and pass to children */
@@ -540,6 +545,28 @@ export class Panel extends LitElement {
         width: 100% !important;
         height: auto;
       }
+
+      /* Collapsed docked panels shrink to header only */
+      :host([docked][collapsed]) {
+        height: auto !important;
+        min-height: 0 !important;
+      }
+
+      :host([docked][collapsed]) .panel {
+        height: auto;
+        min-height: 0;
+      }
+
+      /* Collapsed floating panels also shrink to header only */
+      :host([floating][collapsed]) {
+        height: auto !important;
+        min-height: 0 !important;
+      }
+
+      :host([floating][collapsed]) .panel {
+        height: auto;
+        min-height: 0;
+      }
     `,
   ];
 
@@ -607,11 +634,19 @@ export class Panel extends LitElement {
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
     
-    this.dispatchEvent(new CustomEvent('panel-dismiss', {
+    const event = new CustomEvent('panel-dismiss', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
       composed: true,
-    }));
+      cancelable: true,  // Allow preventing default
+    });
+    
+    const notCancelled = this.dispatchEvent(event);
+    
+    // Hide the panel unless the event was cancelled
+    if (notCancelled) {
+      this.hidden = true;
+    }
   }
 
   /**
@@ -646,6 +681,12 @@ export class Panel extends LitElement {
   private _onDragStart = (e: PointerEvent): void => {
     // Allow drag for both floating and docked panels (docked can be undocked via drag)
     if (!this.floating && !this.docked) return;
+    
+    // Don't start drag if clicking on a control button (collapse, dismiss)
+    const target = e.target as HTMLElement;
+    if (target.closest('.collapse-btn') || target.closest('.dismiss-btn')) {
+      return;
+    }
     
     e.preventDefault();
     this._isDragging = true;
@@ -692,7 +733,8 @@ export class Panel extends LitElement {
       detail: { 
         panelId: this.id || this.title,
         x: this.positionX, 
-        y: this.positionY 
+        y: this.positionY,
+        cursorY: e.clientY  // For drop index calculation
       },
       bubbles: true,
       composed: true,
@@ -792,12 +834,17 @@ export class Panel extends LitElement {
       }
     }
     
-    // Sizing
+    // Sizing - don't apply height when collapsed (let CSS handle it)
     if (changedProperties.has('panelWidth') && this.panelWidth !== null) {
       this.style.width = `${this.panelWidth}px`;
     }
-    if (changedProperties.has('panelHeight') && this.panelHeight !== null) {
-      this.style.height = `${this.panelHeight}px`;
+    if (changedProperties.has('panelHeight') || changedProperties.has('collapsed')) {
+      if (this.collapsed) {
+        // When collapsed, clear inline height so CSS can control it
+        this.style.height = '';
+      } else if (this.panelHeight !== null) {
+        this.style.height = `${this.panelHeight}px`;
+      }
     }
     if (changedProperties.has('maxWidth') && this.maxWidth !== null) {
       this.style.maxWidth = `${this.maxWidth}px`;
@@ -808,8 +855,10 @@ export class Panel extends LitElement {
     if (changedProperties.has('minWidth')) {
       this.style.minWidth = `${this.minWidth}px`;
     }
-    if (changedProperties.has('minHeight')) {
+    if (changedProperties.has('minHeight') && !this.collapsed) {
       this.style.minHeight = `${this.minHeight}px`;
+    } else if (this.collapsed && changedProperties.has('collapsed')) {
+      this.style.minHeight = '';
     }
   }
 

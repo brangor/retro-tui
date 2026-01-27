@@ -36,6 +36,9 @@ export class Workspace extends LitElement {
   @state()
   private _dockPreview: string | null = null;
 
+  @state()
+  private _pendingDropIndex: number | null = null;
+
   private _resizeObserver: ResizeObserver | null = null;
 
   get bounds(): DOMRect {
@@ -142,6 +145,7 @@ export class Workspace extends LitElement {
         min-height: 0;
       }
 
+      /* Floating layer covers entire workspace (not just main-area) */
       .floating-layer {
         position: absolute;
         inset: 0;
@@ -153,7 +157,7 @@ export class Workspace extends LitElement {
         pointer-events: auto;
       }
 
-      /* Dock preview overlay */
+      /* Dock preview overlay - covers entire workspace */
       .dock-preview {
         position: absolute;
         background: var(--color-info, #8be9fd);
@@ -251,13 +255,26 @@ export class Workspace extends LitElement {
     // Only handle floating or docked panels (docked panels can be dragged to undock)
     if (!isFloating && !isDocked) return;
     
-    const { x, y } = e.detail;
+    const { x, y, cursorY } = e.detail;
     const panelWidth = (panel as any).panelWidth ?? panel.offsetWidth ?? 100;
     const panelHeight = (panel as any).panelHeight ?? panel.offsetHeight ?? 100;
     
     // Check gravity zones
     const gravityZone = this._detectGravityZone(x, y, panelWidth, panelHeight);
     this._dockPreview = gravityZone;
+    
+    // Update sidebar drop indicator if in gravity zone
+    if (gravityZone === 'left' || gravityZone === 'right') {
+      const sidebar = this._getSidebar(gravityZone as 'left' | 'right');
+      if (sidebar && typeof (sidebar as any).calculateDropIndex === 'function') {
+        const dropIndex = (sidebar as any).calculateDropIndex(cursorY ?? y);
+        (sidebar as any).showDropIndicator?.(dropIndex);
+        this._pendingDropIndex = dropIndex;
+      }
+    } else {
+      // Clear any active drop indicators
+      this._clearSidebarDropIndicators();
+    }
     
     if (gravityZone) {
       this.dispatchEvent(new CustomEvent('panel-dock-preview', {
@@ -288,6 +305,14 @@ export class Workspace extends LitElement {
     this._emitLayoutChange();
   };
 
+  private _clearSidebarDropIndicators(): void {
+    const leftSidebar = this._getSidebar('left');
+    const rightSidebar = this._getSidebar('right');
+    if (leftSidebar) (leftSidebar as any).hideDropIndicator?.();
+    if (rightSidebar) (rightSidebar as any).hideDropIndicator?.();
+    this._pendingDropIndex = null;
+  }
+
   private _handlePanelDragEnd = (e: CustomEvent): void => {
     const panelId = e.detail?.panelId;
     const panel = panelId ? this._findPanelById(panelId) : null;
@@ -297,7 +322,7 @@ export class Workspace extends LitElement {
       const side = this._dockPreview as 'left' | 'right' | 'top' | 'bottom';
       
       this.dispatchEvent(new CustomEvent('panel-dock', {
-        detail: { panelId, side },
+        detail: { panelId, side, index: this._pendingDropIndex },
         bubbles: true,
         composed: true,
       }));
@@ -318,8 +343,12 @@ export class Workspace extends LitElement {
         
         // Move panel to appropriate container
         const sidebar = this._getSidebar(side);
-        if (sidebar) {
-          // Append to sidebar (no slot needed, sidebar is the parent)
+        if (sidebar && typeof (sidebar as any).insertPanelAt === 'function' && this._pendingDropIndex !== null) {
+          // Insert at calculated drop index
+          panel.removeAttribute('slot');
+          (sidebar as any).insertPanelAt(panel, this._pendingDropIndex);
+        } else if (sidebar) {
+          // Fallback: append to sidebar
           panel.removeAttribute('slot');
           sidebar.appendChild(panel);
         } else {
@@ -349,6 +378,7 @@ export class Workspace extends LitElement {
       this.appendChild(panel);
     }
     
+    this._clearSidebarDropIndicators();
     this._dockPreview = null;
   };
 
@@ -471,12 +501,6 @@ export class Workspace extends LitElement {
         </div>
         <div class="main-area">
           <slot name="main"></slot>
-          <div class="floating-layer">
-            <slot name="floating" @slotchange=${this._onFloatingSlotChange}></slot>
-          </div>
-          ${this._dockPreview ? html`
-            <div class="dock-preview ${this._dockPreview}"></div>
-          ` : ''}
         </div>
         <div class="sidebar-right">
           <slot name="right"></slot>
@@ -484,6 +508,13 @@ export class Workspace extends LitElement {
         <div class="sidebar-bottom">
           <slot name="bottom"></slot>
         </div>
+        <!-- Floating layer at workspace level to overlay entire workspace including sidebars -->
+        <div class="floating-layer">
+          <slot name="floating" @slotchange=${this._onFloatingSlotChange}></slot>
+        </div>
+        ${this._dockPreview ? html`
+          <div class="dock-preview ${this._dockPreview}"></div>
+        ` : ''}
       </div>
     `;
   }

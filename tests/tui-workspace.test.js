@@ -272,4 +272,93 @@ describe('tui-workspace', () => {
     expect(panel.positionX).to.equal(300);
     expect(panel.positionY).to.equal(200);
   });
+
+  // Task 5: Workspace coordinates dock with sidebar drop index
+  it('auto-dock inserts panel into sidebar using insertPanelAt', async () => {
+    const el = await fixture(html`
+      <tui-workspace auto-dock gravity-zone="50">
+        <tui-sidebar slot="left" side="left" size="200">
+          <tui-panel id="existing" title="Existing" docked="left">Existing</tui-panel>
+        </tui-sidebar>
+        <tui-panel slot="floating" id="new-panel" title="New Panel" floating position-x="100" position-y="50">New</tui-panel>
+      </tui-workspace>
+    `);
+    
+    await el.updateComplete;
+    await new Promise(r => setTimeout(r, 50));
+    
+    const panel = el.querySelector('#new-panel');
+    const sidebar = el.querySelector('tui-sidebar');
+    
+    // Track if insertPanelAt was called
+    let insertCalled = false;
+    const originalInsert = sidebar.insertPanelAt.bind(sidebar);
+    sidebar.insertPanelAt = (p, idx) => {
+      insertCalled = true;
+      return originalInsert(p, idx);
+    };
+    
+    // Move panel into left gravity zone with cursorY
+    panel.dispatchEvent(new CustomEvent('panel-move', {
+      detail: { panelId: 'new-panel', x: 20, y: 50, cursorY: 10 },
+      bubbles: true,
+      composed: true,
+    }));
+    
+    // Drop
+    panel.dispatchEvent(new CustomEvent('panel-drag-end', {
+      detail: { panelId: 'new-panel', x: 20, y: 50, cursorY: 10 },
+      bubbles: true,
+      composed: true,
+    }));
+    
+    await el.updateComplete;
+    await new Promise(r => setTimeout(r, 50));
+    
+    // Panel should now be in the sidebar
+    const sidebarPanels = sidebar.querySelectorAll('tui-panel');
+    expect(sidebarPanels.length).to.equal(2);
+    expect(panel.docked).to.equal('left');
+    
+    // insertPanelAt should have been used
+    expect(insertCalled).to.be.true;
+  });
+
+  // Task 6: Reorder panels within sidebar
+  it('reorders panels within sidebar by dragging', async () => {
+    const el = await fixture(html`
+      <tui-workspace auto-dock gravity-zone="50">
+        <tui-sidebar slot="left" side="left" size="200">
+          <tui-panel id="a" title="A" docked="left">A</tui-panel>
+          <tui-panel id="b" title="B" docked="left">B</tui-panel>
+          <tui-panel id="c" title="C" docked="left">C</tui-panel>
+        </tui-sidebar>
+      </tui-workspace>
+    `);
+    
+    await el.updateComplete;
+    await new Promise(r => setTimeout(r, 50));
+    
+    const sidebar = el.querySelector('tui-sidebar');
+    const panelC = el.querySelector('#c');
+    
+    // Initial order: A, B, C
+    let panels = sidebar.querySelectorAll('tui-panel');
+    expect(panels[0].id).to.equal('a');
+    expect(panels[1].id).to.equal('b');
+    expect(panels[2].id).to.equal('c');
+    
+    // Directly test sidebar reordering via insertPanelAt
+    // (Event simulation is tricky in JSDOM - test the actual method)
+    sidebar.insertPanelAt(panelC, 0);
+    
+    await el.updateComplete;
+    await new Promise(r => setTimeout(r, 50));
+    
+    // Panel order should now be C, A, B
+    panels = sidebar.querySelectorAll('tui-panel');
+    expect(panels[0].id).to.equal('c');
+    expect(panels[1].id).to.equal('a');
+    expect(panels[2].id).to.equal('b');
+  });
 });

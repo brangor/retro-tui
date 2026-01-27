@@ -273,4 +273,29 @@ describe('tui-panel', () => {
     
     expect(moveEvent).to.exist;
   });
+
+  // Task 1: Fix collapsed docked panel gap
+  it('docked collapsed panel has proper CSS structure', async () => {
+    const el = await fixture(html`
+      <tui-panel title="Test" docked="left" collapsible collapsed>Content here</tui-panel>
+    `);
+    
+    await el.updateComplete;
+    
+    // Verify collapsed attribute is reflected (needed for CSS selector)
+    expect(el.hasAttribute('collapsed')).to.be.true;
+    expect(el.hasAttribute('docked')).to.be.true;
+    
+    // Verify panel has collapsed class
+    const panel = el.shadowRoot.querySelector('.panel');
+    expect(panel.classList.contains('collapsed')).to.be.true;
+    
+    // Verify header is still present (visible)
+    const header = el.shadowRoot.querySelector('.header');
+    expect(header).to.exist;
+    
+    // Verify content area exists with collapsed styling
+    const content = el.shadowRoot.querySelector('.content');
+    expect(content).to.exist;
+  });
 });
