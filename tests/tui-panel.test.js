@@ -136,4 +136,20 @@ describe('tui-panel', () => {
     expect(resizeEvent.width).to.be.a('number');
     expect(resizeEvent.height).to.be.a('number');
   });
+
+  it('shows collapse button in header controls when collapsible', async () => {
+    const el = await fixture(html`<tui-panel title="Test" collapsible>Content</tui-panel>`);
+    const collapseBtn = el.shadowRoot.querySelector('.header-controls .collapse-btn');
+    expect(collapseBtn).to.exist;
+  });
+
+  it('collapse button toggles collapsed state', async () => {
+    const el = await fixture(html`<tui-panel title="Test" collapsible>Content</tui-panel>`);
+    expect(el.collapsed).to.be.false;
+    
+    const collapseBtn = el.shadowRoot.querySelector('.header-controls .collapse-btn');
+    collapseBtn.click();
+    
+    expect(el.collapsed).to.be.true;
+  });
 });

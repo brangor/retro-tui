@@ -374,6 +374,22 @@ export class Panel extends LitElement {
         color: var(--color-error, #ff5555);
       }
 
+      .collapse-btn {
+        background: none;
+        border: none;
+        color: inherit;
+        font-family: inherit;
+        font-size: 0.75rem;
+        cursor: pointer;
+        padding: 0 2px;
+        opacity: 0.7;
+        line-height: 1;
+      }
+
+      .collapse-btn:hover {
+        opacity: 1;
+      }
+
       .title {
         display: flex;
         align-items: center;
@@ -606,6 +622,16 @@ export class Panel extends LitElement {
     document.removeEventListener('pointerup', this._onResizeEnd);
   };
 
+  private _onCollapseClick = (e: Event): void => {
+    e.stopPropagation();
+    this.toggle();
+  };
+
+  private _onDismissClick = (e: Event): void => {
+    e.stopPropagation();
+    this.dismiss();
+  };
+
   updated(changedProperties: Map<string, unknown>): void {
     // Position
     if (this.draggable && (changedProperties.has('positionX') || changedProperties.has('positionY'))) {
@@ -638,19 +664,18 @@ export class Panel extends LitElement {
     return html`
       <div class="panel ${this.collapsed ? 'collapsed' : ''}">
         <div 
-          class="header ${this.collapsible ? 'clickable' : ''} ${this.draggable ? 'draggable' : ''}"
-          @click=${this.collapsible && !this.draggable ? this.toggle : undefined}
+          class="header ${this.draggable ? 'draggable' : ''}"
           @pointerdown=${this.draggable ? this._onDragStart : undefined}
         >
-          ${this.collapsible ? html`
-            <button class="toggle" aria-label="Toggle panel">
-              ${this.collapsed ? '▸' : '▾'}
-            </button>
-          ` : ''}
           <span class="title">${this.title}</span>
           <div class="header-controls">
+            ${this.collapsible ? html`
+              <button class="collapse-btn" aria-label="Toggle panel" @click=${this._onCollapseClick}>
+                ${this.collapsed ? '▸' : '▾'}
+              </button>
+            ` : ''}
             ${this.dismissable ? html`
-              <button class="dismiss-btn" aria-label="Dismiss panel" @click=${this.dismiss}>×</button>
+              <button class="dismiss-btn" aria-label="Dismiss panel" @click=${this._onDismissClick}>×</button>
             ` : ''}
           </div>
         </div>
