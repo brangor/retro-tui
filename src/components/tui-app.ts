@@ -6,7 +6,7 @@ import { sharedStyles } from '../styles/shared.js';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-type FocusContext = 'workspace' | 'sidebar' | 'menu';
+type FocusContext = 'workspace' | 'menu';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
@@ -18,18 +18,16 @@ type FocusContext = 'workspace' | 'sidebar' | 'menu';
  * Chrome-only layout providing:
  * - Header with menu bar
  * - Workspace (center, primary focus)
- * - Sidebar (right, collapsible)
  * - Status bar (bottom)
  * 
  * Focus Contexts:
- * - Tab cycles between: workspace → sidebar
+ * - Tab cycles through focusable elements
  * - Arrow keys navigate within current context
  * - Escape retreats (close menu → close modal → nothing)
  * 
  * @slot header - App title/branding (optional)
  * @slot menu - Menu bar items
- * @slot main - Primary workspace content
- * @slot sidebar - Right sidebar panels (optional)
+ * @slot main - Primary workspace content (typically tui-workspace with floating panels)
  * @slot status - Status bar content (optional)
  * 
  * @attr {string} title - App title displayed in header
@@ -142,21 +140,6 @@ export class App extends LitElement {
         display: flex;
       }
 
-      /* Sidebar slot - fixed width, only shown when has content */
-      .sidebar-area {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-md);
-        width: 280px;
-        flex-shrink: 0;
-      }
-
-      /* Hide sidebar when empty - use :has() for reliable detection */
-      .sidebar-area:not(:has(::slotted(*))) {
-        display: none;
-        width: 0;
-      }
-
       /* ═══════════════════════════════════════════════════════════════════
          STATUS BAR - Unified terminal aesthetic
          ═══════════════════════════════════════════════════════════════════ */
@@ -207,15 +190,13 @@ export class App extends LitElement {
          FOCUS CONTEXT INDICATORS
          ═══════════════════════════════════════════════════════════════════ */
 
-      .workspace-area:focus-within,
-      .sidebar-area:focus-within {
+      .workspace-area:focus-within {
         outline: 1px dashed var(--color-primary);
         outline-offset: 2px;
       }
 
       /* Hide focus outline when using mouse */
-      :host(.using-mouse) .workspace-area:focus-within,
-      :host(.using-mouse) .sidebar-area:focus-within {
+      :host(.using-mouse) .workspace-area:focus-within {
         outline: none;
       }
     `,
@@ -274,10 +255,6 @@ export class App extends LitElement {
       <div class="container">
         <div class="workspace-area" data-focus-context="workspace">
           <slot name="main"></slot>
-        </div>
-        
-        <div class="sidebar-area" data-focus-context="sidebar">
-          <slot name="sidebar"></slot>
         </div>
       </div>
 
