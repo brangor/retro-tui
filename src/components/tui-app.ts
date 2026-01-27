@@ -6,7 +6,7 @@ import { sharedStyles } from '../styles/shared.js';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-type FocusContext = 'toolbar' | 'workspace' | 'sidebar' | 'menu';
+type FocusContext = 'workspace' | 'sidebar' | 'menu';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
@@ -15,21 +15,19 @@ type FocusContext = 'toolbar' | 'workspace' | 'sidebar' | 'menu';
 /**
  * <tui-app> - Opinionated app shell layout
  * 
- * Implements the GridSketch layout pattern:
+ * Chrome-only layout providing:
  * - Header with menu bar
- * - Tools panel (left, compact)
  * - Workspace (center, primary focus)
  * - Sidebar (right, collapsible)
  * - Status bar (bottom)
  * 
  * Focus Contexts:
- * - Tab cycles between: toolbar → workspace → sidebar
+ * - Tab cycles between: workspace → sidebar
  * - Arrow keys navigate within current context
  * - Escape retreats (close menu → close modal → nothing)
  * 
  * @slot header - App title/branding (optional)
  * @slot menu - Menu bar items
- * @slot toolbar - Left toolbar (optional)
  * @slot main - Primary workspace content
  * @slot sidebar - Right sidebar panels (optional)
  * @slot status - Status bar content (optional)
@@ -130,42 +128,33 @@ export class App extends LitElement {
 
       .container {
         display: flex;
-        gap: 0.75rem;
         flex: 1;
         padding: 0.75rem var(--spacing-md);
         min-height: 0;
+        gap: 0;
       }
 
-      /* Toolbar slot - left side, shrink to fit */
-      .toolbar-area {
-        flex-shrink: 0;
-        align-self: flex-start;
-      }
-
-      .toolbar-area:empty {
-        display: none;
-      }
-
-      /* Workspace slot - center, grows */
+      /* Workspace slot - grows to fill all available space */
       .workspace-area {
         flex: 1;
         min-width: 0;
+        min-height: 0;
         display: flex;
-        align-self: flex-start;
       }
 
-      /* Sidebar slot - right side, fixed width */
+      /* Sidebar slot - fixed width, only shown when has content */
       .sidebar-area {
         display: flex;
         flex-direction: column;
         gap: var(--spacing-md);
         width: 280px;
         flex-shrink: 0;
-        margin-left: auto;
       }
 
-      .sidebar-area:empty {
+      /* Hide sidebar when empty - use :has() for reliable detection */
+      .sidebar-area:not(:has(::slotted(*))) {
         display: none;
+        width: 0;
       }
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -218,7 +207,6 @@ export class App extends LitElement {
          FOCUS CONTEXT INDICATORS
          ═══════════════════════════════════════════════════════════════════ */
 
-      .toolbar-area:focus-within,
       .workspace-area:focus-within,
       .sidebar-area:focus-within {
         outline: 1px dashed var(--color-primary);
@@ -226,7 +214,6 @@ export class App extends LitElement {
       }
 
       /* Hide focus outline when using mouse */
-      :host(.using-mouse) .toolbar-area:focus-within,
       :host(.using-mouse) .workspace-area:focus-within,
       :host(.using-mouse) .sidebar-area:focus-within {
         outline: none;
@@ -285,10 +272,6 @@ export class App extends LitElement {
       </header>
 
       <div class="container">
-        <div class="toolbar-area" data-focus-context="toolbar">
-          <slot name="toolbar"></slot>
-        </div>
-        
         <div class="workspace-area" data-focus-context="workspace">
           <slot name="main"></slot>
         </div>
