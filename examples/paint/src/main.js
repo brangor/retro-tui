@@ -24,7 +24,7 @@
 
 // RetroTUI components
 import '../../../src/index.js';
-import { retroToast } from '../../../src/index.js';
+import { tuiToast } from '../../../src/index.js';
 
 // Data
 import { PALETTES } from './data/colors.js';
@@ -116,9 +116,9 @@ function emit(event, detail = {}) {
     case 'action:undo':
       if (popHistory()) {
         renderCanvas(el.canvas, state.grid, state.cursorX, state.cursorY, state.width);
-        retroToast('Undo');
+        tuiToast('Undo');
       } else {
-        retroToast('Nothing to undo', { type: 'warning' });
+        tuiToast('Nothing to undo', { type: 'warning' });
       }
       break;
       
@@ -126,7 +126,7 @@ function emit(event, detail = {}) {
       saveHistory();
       initGrid();
       renderCanvas(el.canvas, state.grid, state.cursorX, state.cursorY, state.width);
-      retroToast('Canvas cleared');
+      tuiToast('Canvas cleared');
       break;
   }
 }
