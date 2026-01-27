@@ -86,6 +86,27 @@ export class Panel extends LitElement {
   @property({ type: Number, attribute: 'position-y' })
   positionY = 0;
 
+  @property({ type: Boolean, reflect: true })
+  resizable = false;
+
+  @property({ type: Number, attribute: 'panel-width' })
+  panelWidth: number | null = null;
+
+  @property({ type: Number, attribute: 'panel-height' })
+  panelHeight: number | null = null;
+
+  @property({ type: Number, attribute: 'max-width' })
+  maxWidth: number | null = null;
+
+  @property({ type: Number, attribute: 'max-height' })
+  maxHeight: number | null = null;
+
+  @property({ type: Number, attribute: 'min-width' })
+  minWidth = 150;
+
+  @property({ type: Number, attribute: 'min-height' })
+  minHeight = 100;
+
   // Private drag state
   private _isDragging = false;
   private _dragStartX = 0;
@@ -401,6 +422,33 @@ export class Panel extends LitElement {
       .header.draggable:active {
         cursor: grabbing;
       }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         RESIZE HANDLE
+         ═══════════════════════════════════════════════════════════════════ */
+
+      .resize-handle {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 12px;
+        height: 12px;
+        cursor: se-resize;
+        opacity: 0.5;
+      }
+
+      .resize-handle::before {
+        content: '◢';
+        position: absolute;
+        right: 2px;
+        bottom: 0;
+        font-size: 10px;
+        color: var(--panel-color);
+      }
+
+      .resize-handle:hover {
+        opacity: 1;
+      }
     `,
   ];
 
@@ -500,9 +548,30 @@ export class Panel extends LitElement {
   };
 
   updated(changedProperties: Map<string, unknown>): void {
+    // Position
     if (this.draggable && (changedProperties.has('positionX') || changedProperties.has('positionY'))) {
       this.style.left = `${this.positionX}px`;
       this.style.top = `${this.positionY}px`;
+    }
+    
+    // Sizing
+    if (changedProperties.has('panelWidth') && this.panelWidth !== null) {
+      this.style.width = `${this.panelWidth}px`;
+    }
+    if (changedProperties.has('panelHeight') && this.panelHeight !== null) {
+      this.style.height = `${this.panelHeight}px`;
+    }
+    if (changedProperties.has('maxWidth') && this.maxWidth !== null) {
+      this.style.maxWidth = `${this.maxWidth}px`;
+    }
+    if (changedProperties.has('maxHeight') && this.maxHeight !== null) {
+      this.style.maxHeight = `${this.maxHeight}px`;
+    }
+    if (changedProperties.has('minWidth')) {
+      this.style.minWidth = `${this.minWidth}px`;
+    }
+    if (changedProperties.has('minHeight')) {
+      this.style.minHeight = `${this.minHeight}px`;
     }
   }
 
@@ -529,6 +598,9 @@ export class Panel extends LitElement {
         <div class="content">
           <slot></slot>
         </div>
+        ${this.resizable && this.draggable ? html`
+          <div class="resize-handle"></div>
+        ` : ''}
       </div>
     `;
   }
