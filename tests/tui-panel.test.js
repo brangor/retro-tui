@@ -34,4 +34,27 @@ describe('tui-panel', () => {
     el.toggle();
     expect(el.collapsed).to.be.true;
   });
+
+  it('shows dismiss button when dismissable', async () => {
+    const el = await fixture(html`<tui-panel title="Test" dismissable>Content</tui-panel>`);
+    const dismissBtn = el.shadowRoot.querySelector('.dismiss-btn');
+    expect(dismissBtn).to.exist;
+  });
+
+  it('hides dismiss button by default', async () => {
+    const el = await fixture(html`<tui-panel title="Test">Content</tui-panel>`);
+    const dismissBtn = el.shadowRoot.querySelector('.dismiss-btn');
+    expect(dismissBtn).to.not.exist;
+  });
+
+  it('emits panel-dismiss event when dismiss clicked', async () => {
+    const el = await fixture(html`<tui-panel title="Test" dismissable>Content</tui-panel>`);
+    let dismissed = false;
+    el.addEventListener('panel-dismiss', () => { dismissed = true; });
+    
+    const dismissBtn = el.shadowRoot.querySelector('.dismiss-btn');
+    dismissBtn.click();
+    
+    expect(dismissed).to.be.true;
+  });
 });

@@ -74,6 +74,9 @@ export class Panel extends LitElement {
   @property({ type: String, attribute: 'persist-id' })
   persistId = '';
 
+  @property({ type: Boolean, reflect: true })
+  dismissable = false;
+
   static styles = [
     sharedStyles,
     css`
@@ -303,6 +306,30 @@ export class Panel extends LitElement {
         opacity: 1;
       }
 
+      .header-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs, 4px);
+        margin-left: auto;
+      }
+
+      .dismiss-btn {
+        background: none;
+        border: none;
+        color: inherit;
+        font-family: inherit;
+        font-size: 0.85rem;
+        cursor: pointer;
+        padding: 0 2px;
+        opacity: 0.6;
+        line-height: 1;
+      }
+
+      .dismiss-btn:hover {
+        opacity: 1;
+        color: var(--color-error, #ff5555);
+      }
+
       .title {
         display: flex;
         align-items: center;
@@ -389,6 +416,14 @@ export class Panel extends LitElement {
     }
   }
 
+  dismiss(): void {
+    this.dispatchEvent(new CustomEvent('panel-dismiss', {
+      detail: { panelId: this.id || this.title },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
   render() {
     return html`
       <div class="panel ${this.collapsed ? 'collapsed' : ''}">
@@ -402,6 +437,11 @@ export class Panel extends LitElement {
             </button>
           ` : ''}
           <span class="title">${this.title}</span>
+          <div class="header-controls">
+            ${this.dismissable ? html`
+              <button class="dismiss-btn" aria-label="Dismiss panel" @click=${this.dismiss}>×</button>
+            ` : ''}
+          </div>
         </div>
         <div class="content">
           <slot></slot>
