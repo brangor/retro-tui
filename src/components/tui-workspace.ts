@@ -149,7 +149,7 @@ export class Workspace extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    
+
     // ResizeObserver may not be available in test environments
     if (typeof ResizeObserver !== 'undefined') {
       this._resizeObserver = new ResizeObserver((entries) => {
@@ -162,18 +162,20 @@ export class Workspace extends LitElement {
           }));
         }
       });
-      
+
       this._resizeObserver.observe(this);
     } else {
       // Fallback for test environments
       this._bounds = new DOMRect(0, 0, this.offsetWidth || 800, this.offsetHeight || 600);
     }
-    
+
     // Listen for panel events
     this.addEventListener('panel-move', this._handlePanelMove as EventListener);
     this.addEventListener('panel-resize', this._handlePanelResize as EventListener);
     this.addEventListener('panel-dismiss', this._handlePanelDismiss as EventListener);
     this.addEventListener('panel-drag-end', this._handlePanelDragEnd as EventListener);
+    this.addEventListener('panel-minimize', this._handlePanelMinimize as EventListener);
+    this.addEventListener('panel-restore', this._handlePanelRestore as EventListener);
   }
 
   disconnectedCallback(): void {
@@ -183,6 +185,8 @@ export class Workspace extends LitElement {
     this.removeEventListener('panel-resize', this._handlePanelResize as EventListener);
     this.removeEventListener('panel-dismiss', this._handlePanelDismiss as EventListener);
     this.removeEventListener('panel-drag-end', this._handlePanelDragEnd as EventListener);
+    this.removeEventListener('panel-minimize', this._handlePanelMinimize as EventListener);
+    this.removeEventListener('panel-restore', this._handlePanelRestore as EventListener);
   }
 
   private _detectSnapEdge(x: number, y: number, panelWidth: number, panelHeight: number): 'left' | 'right' | 'top' | null {
@@ -283,6 +287,59 @@ export class Workspace extends LitElement {
     // Just emit layout change - actual hiding is handled by app
     this._emitLayoutChange();
   };
+
+  private _handlePanelMinimize = (_e: CustomEvent): void => {
+    // Reflow all minimized tabs after a brief delay to let the panel update
+    requestAnimationFrame(() => {
+      this._reflowMinimizedTabs();
+    });
+  };
+
+  private _handlePanelRestore = (_e: CustomEvent): void => {
+    // Reflow remaining minimized tabs
+    requestAnimationFrame(() => {
+      this._reflowMinimizedTabs();
+    });
+  };
+
+  /**
+   * Stack minimized tabs vertically on each edge
+   */
+  private _reflowMinimizedTabs(): void {
+    const panels = this._getFloatingPanels();
+    const TAB_GAP = 4; // pixels between tabs
+
+    // Group minimized panels by edge
+    const leftTabs: HTMLElement[] = [];
+    const rightTabs: HTMLElement[] = [];
+
+    for (const panel of panels) {
+      if (!(panel as any).minimized) continue;
+      const edge = (panel as any).snapEdge || 'left';
+      if (edge === 'right') {
+        rightTabs.push(panel);
+      } else {
+        leftTabs.push(panel);
+      }
+    }
+
+    // Stack left edge tabs
+    let yOffset = TAB_GAP;
+    for (const panel of leftTabs) {
+      (panel as any).positionY = yOffset;
+      // Get the tab height after render - estimate if not available
+      const tabHeight = panel.offsetHeight || 80;
+      yOffset += tabHeight + TAB_GAP;
+    }
+
+    // Stack right edge tabs
+    yOffset = TAB_GAP;
+    for (const panel of rightTabs) {
+      (panel as any).positionY = yOffset;
+      const tabHeight = panel.offsetHeight || 80;
+      yOffset += tabHeight + TAB_GAP;
+    }
+  }
 
   private _emitLayoutChange(): void {
     const panels = this._getFloatingPanels();
