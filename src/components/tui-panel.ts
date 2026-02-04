@@ -592,6 +592,77 @@ export class Panel extends LitElement {
         height: auto;
         min-height: 0;
       }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         MINIMIZED STATE (edge tab)
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([minimized]) {
+        width: auto !important;
+        height: auto !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+      }
+
+      :host([minimized]) .panel {
+        display: none;
+      }
+
+      .edge-tab {
+        display: none;
+      }
+
+      :host([minimized]) .edge-tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        padding: 12px 6px;
+        background: var(--surface-elevated, #1a1a2e);
+        border: 1px solid var(--panel-color);
+        color: var(--panel-color);
+        font-size: 0.75rem;
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+        transition: background 0.15s, color 0.15s;
+      }
+
+      /* Left edge tab styling */
+      :host([minimized][snap-edge="left"]) .edge-tab {
+        border-left: none;
+        border-radius: 0 4px 4px 0;
+      }
+
+      /* Right edge tab styling */
+      :host([minimized][snap-edge="right"]) .edge-tab {
+        writing-mode: vertical-lr;
+        border-right: none;
+        border-radius: 4px 0 0 4px;
+      }
+
+      :host([minimized]) .edge-tab:hover {
+        background: var(--panel-color-bg);
+        color: var(--panel-color-fg);
+      }
+
+      /* Matrix-style collapse animation */
+      @keyframes matrix-collapse {
+        0% { opacity: 1; transform: scaleX(1); }
+        50% { opacity: 0.6; transform: scaleX(0.3); filter: blur(2px); }
+        100% { opacity: 0; transform: scaleX(0); }
+      }
+
+      @keyframes matrix-expand {
+        0% { opacity: 0; transform: scaleX(0); }
+        50% { opacity: 0.6; transform: scaleX(0.3); filter: blur(2px); }
+        100% { opacity: 1; transform: scaleX(1); }
+      }
+
+      :host([minimized]) .edge-tab {
+        animation: matrix-expand 0.25s ease-out;
+      }
     `,
   ];
 
