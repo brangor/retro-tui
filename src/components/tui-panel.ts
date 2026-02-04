@@ -986,8 +986,18 @@ export class Panel extends LitElement {
   };
 
   firstUpdated(): void {
+    // If panel starts minimized, capture initial position for restore
+    if (this.minimized && this.floating) {
+      this._preMinimizeX = this.positionX;
+      this._preMinimizeY = this.positionY;
+      // Set default snap edge if not specified
+      if (!this.snapEdge) {
+        this.snapEdge = 'left';
+      }
+    }
+
     // Apply initial position for floating panels
-    if (this.floating) {
+    if (this.floating && !this.minimized) {
       this.style.left = `${this.positionX}px`;
       this.style.top = `${this.positionY}px`;
     }
