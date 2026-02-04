@@ -16,47 +16,47 @@ type SelectionStyle = 'invert' | 'border' | '';
 
 /**
  * <tui-panel> - Floating panel with terminal aesthetic
- * 
+ *
  * Panels are floating by default and can be dragged within a tui-workspace.
  * They snap visually to edges when dragged near them.
- * 
+ * Dismissable panels minimize to edge tabs instead of hiding.
+ *
  * Two style variants:
  * - 'bright' (default): Header highlights when active, bold borders
  * - 'classic': Box-draw aesthetic with shadows, subtle color changes
- * 
+ *
  * Focus states:
  * - neutral: default appearance
  * - selected: emphasized (bold border or medium shadow)
  * - active: strongest emphasis (header highlight or heavy shadow)
- * 
+ *
  * @attr {string} title - Panel title
  * @attr {string} color - Semantic color: primary | secondary | error | success | info
- *                        (Legacy: cyan | green | magenta | yellow | red still work)
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
- *                                  Inherited by child components (toolbar, buttons)
  * @attr {boolean} floating - Whether panel is floating (default: true)
  * @attr {string} snap-edge - Edge the panel is snapped to: 'left' | 'right' | 'top' | ''
  * @attr {number} position-x - X position in pixels
  * @attr {number} position-y - Y position in pixels
  * @attr {boolean} collapsible - Whether panel can be collapsed
  * @attr {boolean} collapsed - Current collapsed state
- * @attr {boolean} dismissable - Whether panel can be dismissed
+ * @attr {boolean} dismissable - Whether panel can be minimized to edge
+ * @attr {boolean} minimized - Whether panel is currently minimized to edge tab
  * @attr {boolean} resizable - Whether panel can be resized
  * @attr {boolean} selected - Panel is selected but not focused
  * @attr {boolean} active - Panel is active/focused
- * @attr {string} persist-id - LocalStorage key for collapse state
- * 
+ * @attr {string} persist-id - LocalStorage key for state persistence
+ *
  * @fires toggle - When panel is collapsed/expanded
  * @fires panel-move - When panel is dragged
  * @fires panel-drag-end - When panel drag ends
- * @fires panel-dismiss - When panel is dismissed
+ * @fires panel-dismiss - When panel is dismissed (only if not floating+dismissable)
+ * @fires panel-minimize - When panel minimizes to edge tab
+ * @fires panel-restore - When panel restores from minimized state
  * @fires panel-resize - When panel is resized
  * @fires focus-request - When panel wants focus
- * 
+ *
  * @slot - Panel content
- * 
- * @cssprop [--selection-style] - Inherited selection style for child components
  */
 @customElement('tui-panel')
 export class Panel extends LitElement {
