@@ -990,9 +990,19 @@ export class Panel extends LitElement {
   }
 
   render() {
+    // Render edge tab when minimized
+    if (this.minimized) {
+      return html`
+        <div class="edge-tab" @click=${this._onEdgeTabClick} title="Click to restore ${this.title}">
+          ${this.title}
+        </div>
+      `;
+    }
+
+    // Normal panel render
     return html`
       <div class="panel ${this.collapsed ? 'collapsed' : ''}">
-        <div 
+        <div
           class="header ${this.floating ? 'draggable' : ''}"
           @pointerdown=${this.floating ? this._onDragStart : undefined}
         >
@@ -1004,7 +1014,7 @@ export class Panel extends LitElement {
               </button>
             ` : ''}
             ${this.dismissable ? html`
-              <button class="dismiss-btn" aria-label="Dismiss panel" @click=${this._onDismissClick}>×</button>
+              <button class="dismiss-btn" aria-label="Minimize panel" @click=${this._onDismissClick}>−</button>
             ` : ''}
           </div>
         </div>
