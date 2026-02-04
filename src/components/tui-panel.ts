@@ -768,6 +768,21 @@ export class Panel extends LitElement {
 
     this.minimized = true;
 
+    // Persist minimized state
+    if (this.persistId) {
+      const memory = {
+        minimized: true,
+        preMinimize: {
+          x: this._preMinimizeX,
+          y: this._preMinimizeY,
+          width: this._preMinimizeWidth,
+          height: this._preMinimizeHeight,
+        },
+        snapEdge: this.snapEdge,
+      };
+      localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
+    }
+
     this.dispatchEvent(new CustomEvent('panel-minimize', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
@@ -789,6 +804,20 @@ export class Panel extends LitElement {
 
     this.minimized = false;
 
+    // Update persisted state
+    if (this.persistId) {
+      const memory = {
+        minimized: false,
+        x: this.positionX,
+        y: this.positionY,
+        width: this.panelWidth,
+        height: this.panelHeight,
+        collapsed: this.collapsed,
+        snapEdge: this.snapEdge,
+      };
+      localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
+    }
+
     this.dispatchEvent(new CustomEvent('panel-restore', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
@@ -806,20 +835,32 @@ export class Panel extends LitElement {
    */
   restorePosition(): boolean {
     if (!this.persistId) return false;
-    
+
     const stored = localStorage.getItem(`tui-panel-memory-${this.persistId}`);
     if (!stored) return false;
-    
+
     try {
       const memory = JSON.parse(stored);
-      
+
+      // Handle minimized state
+      if (memory.minimized) {
+        this._preMinimizeX = memory.preMinimize?.x ?? 0;
+        this._preMinimizeY = memory.preMinimize?.y ?? 0;
+        this._preMinimizeWidth = memory.preMinimize?.width ?? null;
+        this._preMinimizeHeight = memory.preMinimize?.height ?? null;
+        this.snapEdge = memory.snapEdge || 'left';
+        this.minimized = true;
+        return true;
+      }
+
+      // Normal restore
       if (memory.x !== undefined) this.positionX = memory.x;
       if (memory.y !== undefined) this.positionY = memory.y;
       if (memory.width !== undefined) this.panelWidth = memory.width;
       if (memory.height !== undefined) this.panelHeight = memory.height;
       if (memory.collapsed !== undefined) this.collapsed = memory.collapsed;
       if (memory.snapEdge !== undefined) this.snapEdge = memory.snapEdge;
-      
+
       return true;
     } catch (e) {
       console.warn(`[tui-panel] Failed to restore position for ${this.persistId}:`, e);
