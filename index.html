@@ -77,6 +77,55 @@
     <pre>node push.js --channel=build --message="Compiling..."</pre>
   </div>
 
+  <!-- Floating Panel Demo -->
+  <h2 style="color: var(--yellow); margin: 1rem 0;">Floating Panel Demo (minimize test)</h2>
+  <div class="instructions">
+    <strong>Test minimize-to-edge:</strong> Click the <code>−</code> button on any floating panel to minimize it to an edge tab. Click the tab to restore.
+  </div>
+  <tui-workspace style="height: 400px; border: 1px solid var(--border); position: relative;">
+    <div slot="main" style="padding: 2rem; text-align: center; color: var(--text-dim);">
+      Workspace area - floating panels can be dragged here
+    </div>
+    <tui-panel
+      slot="floating"
+      title="Tools"
+      color="cyan"
+      floating
+      dismissable
+      position-x="20"
+      position-y="20"
+      persist-id="demo-tools"
+    >
+      <div style="padding: 0.5rem;">Tool content here</div>
+    </tui-panel>
+    <tui-panel
+      slot="floating"
+      title="Properties"
+      color="green"
+      floating
+      dismissable
+      position-x="200"
+      position-y="50"
+      persist-id="demo-props"
+    >
+      <div style="padding: 0.5rem;">Property inspector</div>
+    </tui-panel>
+    <tui-panel
+      slot="floating"
+      title="Layers"
+      color="magenta"
+      floating
+      dismissable
+      snap-edge="right"
+      position-x="400"
+      position-y="20"
+      persist-id="demo-layers"
+    >
+      <div style="padding: 0.5rem;">Layer list</div>
+    </tui-panel>
+  </tui-workspace>
+
+  <h2 style="color: var(--yellow); margin: 1rem 0 0.5rem;">Static Panels</h2>
   <div class="demo-grid">
     <!-- Live Output Panel -->
     <retro-panel title="Build Output" color="cyan">
