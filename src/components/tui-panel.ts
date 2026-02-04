@@ -716,7 +716,13 @@ export class Panel extends LitElement {
   }
 
   dismiss(): void {
-    // Store position/state if persist-id is set
+    // If dismissable panels should minimize instead of hide
+    if (this.floating && this.dismissable) {
+      this.minimize();
+      return;
+    }
+
+    // Original dismiss behavior for non-floating or explicit hide
     if (this.persistId) {
       const memory = {
         x: this.positionX,
@@ -728,21 +734,71 @@ export class Panel extends LitElement {
       };
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
-    
+
     const event = new CustomEvent('panel-dismiss', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
       composed: true,
-      cancelable: true,  // Allow preventing default
+      cancelable: true,
     });
-    
+
     const notCancelled = this.dispatchEvent(event);
-    
-    // Hide the panel unless the event was cancelled
+
     if (notCancelled) {
       this.hidden = true;
     }
   }
+
+  /**
+   * Minimize panel to edge tab
+   */
+  minimize(): void {
+    if (this.minimized) return;
+
+    // Store current position for restoration
+    this._preMinimizeX = this.positionX;
+    this._preMinimizeY = this.positionY;
+    this._preMinimizeWidth = this.panelWidth;
+    this._preMinimizeHeight = this.panelHeight;
+
+    // Default to left edge if no snap-edge set
+    if (!this.snapEdge) {
+      this.snapEdge = 'left';
+    }
+
+    this.minimized = true;
+
+    this.dispatchEvent(new CustomEvent('panel-minimize', {
+      detail: { panelId: this.id || this.title },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
+  /**
+   * Restore panel from minimized state
+   */
+  restore(): void {
+    if (!this.minimized) return;
+
+    // Restore position
+    this.positionX = this._preMinimizeX;
+    this.positionY = this._preMinimizeY;
+    if (this._preMinimizeWidth !== null) this.panelWidth = this._preMinimizeWidth;
+    if (this._preMinimizeHeight !== null) this.panelHeight = this._preMinimizeHeight;
+
+    this.minimized = false;
+
+    this.dispatchEvent(new CustomEvent('panel-restore', {
+      detail: { panelId: this.id || this.title },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
+  private _onEdgeTabClick = (): void => {
+    this.restore();
+  };
 
   /**
    * Restore panel position/state from localStorage
