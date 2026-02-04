@@ -105,6 +105,9 @@ export class Panel extends LitElement {
   @property({ type: Boolean, reflect: true })
   resizable = false;
 
+  @property({ type: Boolean, reflect: true })
+  minimized = false;
+
   @property({ type: Number, attribute: 'panel-width' })
   panelWidth: number | null = null;
 
@@ -146,6 +149,12 @@ export class Panel extends LitElement {
   private _resizeStartY = 0;
   private _resizeStartWidth = 0;
   private _resizeStartHeight = 0;
+
+  // Pre-minimize state for restoration
+  private _preMinimizeX = 0;
+  private _preMinimizeY = 0;
+  private _preMinimizeWidth: number | null = null;
+  private _preMinimizeHeight: number | null = null;
 
   static styles = [
     sharedStyles,
