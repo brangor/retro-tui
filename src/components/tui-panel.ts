@@ -953,15 +953,36 @@ export class Panel extends LitElement {
   }
 
   updated(changedProperties: Map<string, unknown>): void {
-    // Position - always update when floating and properties change
+    // Handle minimized positioning
+    if (this.minimized) {
+      // Position on the appropriate edge
+      if (this.snapEdge === 'right') {
+        this.style.left = 'auto';
+        this.style.right = '0';
+      } else {
+        // Default to left
+        this.style.left = '0';
+        this.style.right = 'auto';
+      }
+      this.style.top = `${this.positionY}px`;
+      this.style.width = '';
+      this.style.height = '';
+      this.style.minWidth = '';
+      this.style.minHeight = '';
+      return;
+    }
+
+    // Normal position handling for non-minimized...
     if (this.floating) {
-      if (changedProperties.has('positionX') || changedProperties.has('positionY') || changedProperties.has('floating')) {
+      if (changedProperties.has('positionX') || changedProperties.has('positionY') ||
+          changedProperties.has('floating') || changedProperties.has('minimized')) {
         this.style.left = `${this.positionX}px`;
         this.style.top = `${this.positionY}px`;
+        this.style.right = 'auto';
       }
     }
-    
-    // Sizing - don't apply height when collapsed (let CSS handle it)
+
+    // ... rest of sizing logic unchanged
     if (changedProperties.has('panelWidth') && this.panelWidth !== null) {
       this.style.width = `${this.panelWidth}px`;
     }
