@@ -47,14 +47,27 @@ describe('tui-panel', () => {
     expect(dismissBtn).to.not.exist;
   });
 
-  it('emits panel-dismiss event when dismiss clicked', async () => {
+  it('emits panel-minimize event when dismiss clicked on floating panel', async () => {
+    // floating defaults to true, so floating+dismissable panels minimize instead of dismiss
     const el = await fixture(html`<tui-panel title="Test" dismissable>Content</tui-panel>`);
-    let dismissed = false;
-    el.addEventListener('panel-dismiss', () => { dismissed = true; });
-    
+    let minimized = false;
+    el.addEventListener('panel-minimize', () => { minimized = true; });
+
     const dismissBtn = el.shadowRoot.querySelector('.dismiss-btn');
     dismissBtn.click();
-    
+
+    expect(minimized).to.be.true;
+    expect(el.minimized).to.be.true;
+  });
+
+  it('emits panel-dismiss event when dismiss clicked on non-floating panel', async () => {
+    const el = await fixture(html`<tui-panel title="Test" dismissable .floating=${false}>Content</tui-panel>`);
+    let dismissed = false;
+    el.addEventListener('panel-dismiss', () => { dismissed = true; });
+
+    const dismissBtn = el.shadowRoot.querySelector('.dismiss-btn');
+    dismissBtn.click();
+
     expect(dismissed).to.be.true;
   });
 
@@ -175,15 +188,15 @@ describe('tui-panel', () => {
     expect(dragEndEvent.panelId).to.equal('Test');
   });
 
-  // Task 5: Panel memory - store on dismiss
-  it('stores position to localStorage on dismiss when persist-id set', async () => {
+  // Task 5: Panel memory - store minimized state on dismiss
+  it('stores minimized state to localStorage on dismiss when persist-id set', async () => {
     localStorage.removeItem('tui-panel-memory-test-panel');
-    
+
     const el = await fixture(html`
-      <tui-panel 
-        title="Test" 
-        floating 
-        dismissable 
+      <tui-panel
+        title="Test"
+        floating
+        dismissable
         persist-id="test-panel"
         position-x="150"
         position-y="75"
@@ -191,18 +204,19 @@ describe('tui-panel', () => {
         panel-height="180"
       >Content</tui-panel>
     `);
-    
-    el.dismiss();
-    
+
+    el.dismiss(); // For floating+dismissable, this calls minimize()
+
     const stored = localStorage.getItem('tui-panel-memory-test-panel');
     expect(stored).to.exist;
-    
+
     const data = JSON.parse(stored);
-    expect(data.x).to.equal(150);
-    expect(data.y).to.equal(75);
-    expect(data.width).to.equal(250);
-    expect(data.height).to.equal(180);
-    
+    expect(data.minimized).to.be.true;
+    expect(data.preMinimize.x).to.equal(150);
+    expect(data.preMinimize.y).to.equal(75);
+    expect(data.preMinimize.width).to.equal(250);
+    expect(data.preMinimize.height).to.equal(180);
+
     localStorage.removeItem('tui-panel-memory-test-panel');
   });
 
