@@ -396,6 +396,7 @@ export class Workspace extends LitElement {
     // Delay to allow panels to render with their dimensions
     requestAnimationFrame(() => {
       this._constrainAllPanels();
+      this._reflowMinimizedTabs();
     });
   }
 
