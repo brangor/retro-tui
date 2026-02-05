@@ -20,6 +20,7 @@ export { Toolbar, Tool } from './components/tui-toolbar.ts';
 export { Toast, tuiToast } from './components/tui-toast.ts';
 export { Card } from './components/tui-card.ts';
 export { Palette } from './components/tui-palette.ts';
+export { Canvas } from './components/tui-canvas.ts';
 
 // Utilities
 export { ansiToHtml } from './utils/ansi.js';

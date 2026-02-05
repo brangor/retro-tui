@@ -41,6 +41,9 @@ export class App extends LitElement {
   @property({ type: String, reflect: true })
   subtitle = '';
 
+  @property({ type: Boolean, reflect: true })
+  compact = false;
+
   @state()
   private _focusContext: FocusContext = 'workspace';
 
@@ -199,6 +202,22 @@ export class App extends LitElement {
       /* Hide focus outline when using mouse */
       :host(.using-mouse) .workspace-area:focus-within {
         outline: none;
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         COMPACT MODE - Minimal header height
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([compact]) .header {
+        padding: var(--spacing-xs) var(--spacing-md);
+      }
+
+      :host([compact]) .header__title {
+        font-size: 0.9rem;
+      }
+
+      :host([compact]) .container {
+        padding-top: var(--spacing-xs);
       }
     `,
   ];
