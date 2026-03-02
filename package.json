@@ -39,6 +39,7 @@
   "author": "Brandon",
   "license": "MIT",
   "dependencies": {
+    "@lit/context": "^1.1.6",
     "lit": "^3.1.0",
     "ws": "^8.16.0"
   },
