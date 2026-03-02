@@ -22,6 +22,17 @@ export { Card } from './components/tui-card.ts';
 export { Palette } from './components/tui-palette.ts';
 export { Canvas } from './components/tui-canvas.ts';
 
+// Tool State
+export { ToolState, toolContext } from './state/tool-state.js';
+export type { ToolDefinition, GroupDefinition, ToolConfig } from './state/tool-state.js';
+
+// Projections
+export { getProjection } from './projections/index.js';
+export { RectangularProjection } from './projections/rectangular.js';
+export { IsometricProjection } from './projections/isometric.js';
+export { TriangularProjection } from './projections/triangular.js';
+export type { Projection, GridCoord, ScreenCoord, ProjectionBounds } from './projections/types.js';
+
 // Utilities
 export { ansiToHtml } from './utils/ansi.js';
 export { RetroPush } from './utils/push-client.js';

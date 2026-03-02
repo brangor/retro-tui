@@ -23,6 +23,8 @@ Terminal-aesthetic UI components for the web with real-time script integration.
 - **Real-time updates** - Push from shell/node scripts via WebSocket
 - **ANSI color support** - Standard terminal colors in web UI
 - **Zero-config** - Just import and use
+- **Projection system** - Rectangular, isometric, and triangular grid projections
+- **Tool state management** - Declarative tool/group state via `@lit/context`
 
 ## Quick Start
 
@@ -207,6 +209,15 @@ Arbitrary strings. Suggested:
 └──────────────┘                   └──────────────┘                   └──────────────┘
 ```
 
+`<tui-canvas>` supports a `projection` attribute (`rectangular` | `isometric` | `triangular`) for different grid layouts. `ToolState` provides declarative tool management with exclusive/non-exclusive groups via `@lit/context`.
+
+## Examples
+
+- `examples/isosketch.html` - Isometric tile map editor (Diablo-style minimaps)
+- `examples/quiltsketch-demo.html` - Triangle quilt pattern designer
+
+Run `npm run dev` and navigate to the example files.
+
 ## Roadmap
 
 - [x] Core components (panel, output, table, console)
@@ -215,6 +226,8 @@ Arbitrary strings. Suggested:
 - [x] `<retro-menu>` (menu bar)
 - [x] `<retro-toolbar>` (tool buttons)
 - [x] Design token system (themeable components)
+- [x] Projection system (rectangular, isometric, triangular grids)
+- [x] Tool state management (`@lit/context`)
 - [ ] `<retro-toolbar>` hotkey support — `getHotkeyMap()` method + `hotkey` attribute on tools for display hints and user-remappable bindings
 - [ ] `<retro-grid>` (character grid from GridSketch)
 - [ ] `<retro-tabs>` (tab container)
