@@ -33,4 +33,36 @@ describe('ToolState', () => {
     state.selectTool('eraser');
     expect(state.activeTool).to.equal('eraser');
   });
+
+  it('should allow multiple active tools in non-exclusive groups', () => {
+    const state = new ToolState({
+      groups: { symmetry: { exclusive: false } },
+      tools: [
+        { id: 'sym-h', group: 'symmetry' },
+        { id: 'sym-v', group: 'symmetry' },
+      ],
+    });
+
+    state.toggleTool('sym-h');
+    expect(state.activeTools).to.include('sym-h');
+
+    state.toggleTool('sym-v');
+    expect(state.activeTools).to.include('sym-h');
+    expect(state.activeTools).to.include('sym-v');
+  });
+
+  it('should toggle off a non-exclusive tool', () => {
+    const state = new ToolState({
+      groups: { symmetry: { exclusive: false } },
+      tools: [
+        { id: 'sym-h', group: 'symmetry' },
+      ],
+    });
+
+    state.toggleTool('sym-h');
+    expect(state.activeTools).to.include('sym-h');
+
+    state.toggleTool('sym-h');
+    expect(state.activeTools).to.not.include('sym-h');
+  });
 });

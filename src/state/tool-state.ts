@@ -49,6 +49,25 @@ export class ToolState {
 
     return this;
   }
+
+  toggleTool(toolId: string): ToolState {
+    const tool = this.tools.find((t) => t.id === toolId);
+    if (!tool) return this;
+
+    const group = this.groups[tool.group];
+    if (!group) return this;
+
+    if (group.exclusive) {
+      return this.selectTool(toolId);
+    }
+
+    const isActive = this.activeTools.includes(toolId);
+    this.activeTools = isActive
+      ? this.activeTools.filter((id) => id !== toolId)
+      : [...this.activeTools, toolId];
+
+    return this;
+  }
 }
 
 export const toolContext = createContext<ToolState>('tool-state');
