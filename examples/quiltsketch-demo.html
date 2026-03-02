@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>QuiltSketch Demo - RetroTUI Migration</title>
-  <script type="module" src="../src/components/tui-app.ts"></script>
-  <script type="module" src="../src/components/tui-workspace.ts"></script>
-  <script type="module" src="../src/components/tui-panel.ts"></script>
-  <script type="module" src="../src/components/tui-toolbar.ts"></script>
-  <script type="module" src="../src/components/tui-canvas.ts"></script>
   <style>
     body { margin: 0; background: var(--bg, #1a1a2e); color: var(--text, #eee); }
     .palette { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; }
@@ -46,6 +41,12 @@
   </tui-app>
 
   <script type="module">
+    // Import components (registers custom elements)
+    import '../src/components/tui-app.ts';
+    import '../src/components/tui-workspace.ts';
+    import '../src/components/tui-panel.ts';
+    import '../src/components/tui-toolbar.ts';
+    import '../src/components/tui-canvas.ts';
     import { ToolState } from '../src/state/tool-state.ts';
     import { TriangularProjection } from '../src/projections/triangular.ts';
 
