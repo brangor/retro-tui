@@ -424,29 +424,23 @@ export class Canvas extends LitElement {
   private renderGrid() {
     if (!this.showGrid) return null;
 
-    const totalWidth = this.width * this.cellSize;
-    const totalHeight = this.height * this.cellSize;
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    const { width: totalWidth, height: totalHeight } = proj.getDimensions(this.width, this.height);
 
-    // Generate grid lines
-    const lines: string[] = [];
+    // Generate cell outlines using projection
+    const paths: string[] = [];
 
-    // Vertical lines
-    for (let x = 0; x <= this.width; x++) {
-      const px = x * this.cellSize;
-      lines.push(`<line x1="${px}" y1="0" x2="${px}" y2="${totalHeight}"/>`);
-    }
-
-    // Horizontal lines
-    for (let y = 0; y <= this.height; y++) {
-      const py = y * this.cellSize;
-      lines.push(`<line x1="0" y1="${py}" x2="${totalWidth}" y2="${py}"/>`);
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        paths.push(`<path d="${proj.getCellPath(x, y)}" fill="none"/>`);
+      }
     }
 
     return html`
       <div class="grid-layer">
         <svg viewBox="0 0 ${totalWidth} ${totalHeight}">
           <g stroke="var(--_canvas-grid-color)" stroke-width="1">
-            ${lines.map((line) => html`${this.unsafeSVG(line)}`)}
+            ${paths.map((p) => html`${this.unsafeSVG(p)}`)}
           </g>
         </svg>
       </div>
@@ -463,16 +457,15 @@ export class Canvas extends LitElement {
   private renderHover() {
     if (this.hoverX < 0 || this.hoverY < 0) return null;
 
-    const style = `
-      left: ${this.hoverX * this.cellSize}px;
-      top: ${this.hoverY * this.cellSize}px;
-      width: ${this.cellSize}px;
-      height: ${this.cellSize}px;
-    `;
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    const { width: totalWidth, height: totalHeight } = proj.getDimensions(this.width, this.height);
+    const pathD = proj.getCellPath(this.hoverX, this.hoverY);
 
     return html`
       <div class="hover-layer">
-        <div class="hover-cell" style=${style}></div>
+        <svg viewBox="0 0 ${totalWidth} ${totalHeight}" style="width:100%;height:100%;">
+          <path d="${pathD}" fill="var(--_canvas-hover-color)" />
+        </svg>
       </div>
     `;
   }
