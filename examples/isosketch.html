@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IsoSketch - Isometric Map Editor</title>
+  <script type="module" src="../src/components/tui-app.ts"></script>
+  <script type="module" src="../src/components/tui-workspace.ts"></script>
+  <script type="module" src="../src/components/tui-panel.ts"></script>
+  <script type="module" src="../src/components/tui-toolbar.ts"></script>
+  <script type="module" src="../src/components/tui-canvas.ts"></script>
+  <style>
+    body { margin: 0; background: var(--bg, #1a1a2e); color: var(--text, #eee); }
+  </style>
+</head>
+<body>
+  <tui-app>
+    <tui-workspace>
+      <div slot="main" style="padding: 1rem; overflow: auto;">
+        <tui-canvas
+          id="canvas"
+          projection="isometric"
+          width="16"
+          height="16"
+          cell-size="40"
+          show-grid
+        >
+          <svg id="tiles" style="position:absolute;inset:0;pointer-events:none;"></svg>
+        </tui-canvas>
+      </div>
+
+      <tui-panel slot="sidebar-left" title="Tools">
+        <tui-toolbar id="toolbar" orientation="vertical" selected="paint"></tui-toolbar>
+      </tui-panel>
+
+      <tui-panel slot="sidebar-right" title="Tiles">
+        <div id="tile-picker" style="padding: 8px; display: flex; flex-direction: column; gap: 4px;"></div>
+      </tui-panel>
+    </tui-workspace>
+  </tui-app>
+
+  <script type="module">
+    import { ToolState } from '../src/state/tool-state.ts';
+
+    // Tool config
+    const toolConfig = {
+      groups: { tool: { exclusive: true } },
+      tools: [
+        { id: 'paint', group: 'tool', icon: 'P', name: 'Paint' },
+        { id: 'erase', group: 'tool', icon: 'E', name: 'Erase' },
+      ],
+    };
+
+    const toolState = new ToolState(toolConfig);
+    toolState.selectTool('paint');
+
+    const toolbar = document.getElementById('toolbar');
+    toolbar.tools = toolConfig.tools;
+
+    // Tile types
+    const tileTypes = {
+      floor: { color: '#8b4513', label: 'Floor' },
+      wall: { color: '#696969', label: 'Wall' },
+      door: { color: '#daa520', label: 'Door' },
+      water: { color: '#4169e1', label: 'Water' },
+    };
+
+    let currentTile = 'floor';
+
+    // Build tile picker
+    const picker = document.getElementById('tile-picker');
+    for (const [id, tile] of Object.entries(tileTypes)) {
+      const btn = document.createElement('button');
+      btn.textContent = tile.label;
+      btn.style.cssText = `
+        background: ${tile.color}; color: #fff; border: 2px solid transparent;
+        padding: 6px 10px; cursor: pointer; font-family: monospace;
+      `;
+      btn.addEventListener('click', () => {
+        currentTile = id;
+        picker.querySelectorAll('button').forEach(b => b.style.borderColor = 'transparent');
+        btn.style.borderColor = '#fff';
+      });
+      if (id === 'floor') btn.style.borderColor = '#fff';
+      picker.appendChild(btn);
+    }
+
+    // Grid state
+    const grid = Array(16).fill(null).map(() => Array(16).fill(null));
+
+    // Tool select
+    toolbar.addEventListener('tool-select', (e) => {
+      toolState.selectTool(e.detail.tool);
+      toolbar.selected = e.detail.tool;
+    });
+
+    // Canvas draw
+    const canvas = document.getElementById('canvas');
+    canvas.addEventListener('canvas-draw', (e) => {
+      const { x, y } = e.detail;
+      if (x < 0 || x >= 16 || y < 0 || y >= 16) return;
+
+      if (toolState.isActive('erase')) {
+        grid[y][x] = null;
+      } else {
+        grid[y][x] = currentTile;
+      }
+      renderTiles();
+    });
+
+    // Render isometric tiles as SVG diamonds
+    function renderTiles() {
+      const svg = document.getElementById('tiles');
+      const tw = 40; // cellSize
+      const th = 20; // cellSize / 2
+      const originX = (16 + 16) * tw / 4; // center offset matching projection
+
+      let paths = '';
+      for (let y = 0; y < 16; y++) {
+        for (let x = 0; x < 16; x++) {
+          if (grid[y][x]) {
+            const color = tileTypes[grid[y][x]]?.color || '#888';
+            const cx = originX + (x - y) * (tw / 2);
+            const cy = (x + y) * (th / 2);
+            const d = `M ${cx},${cy - th/2} L ${cx + tw/2},${cy} L ${cx},${cy + th/2} L ${cx - tw/2},${cy} Z`;
+            paths += `<path d="${d}" fill="${color}" stroke="#000" stroke-width="0.5" opacity="0.9"/>`;
+          }
+        }
+      }
+      svg.innerHTML = paths;
+    }
+
+    renderTiles();
+  </script>
+</body>
+</html>
