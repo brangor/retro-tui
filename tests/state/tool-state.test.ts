@@ -65,4 +65,42 @@ describe('ToolState', () => {
     state.toggleTool('sym-h');
     expect(state.activeTools).to.not.include('sym-h');
   });
+
+  it('should report active state for exclusive tools', () => {
+    const state = new ToolState({
+      groups: { brush: { exclusive: true } },
+      tools: [
+        { id: 'pencil', group: 'brush' },
+        { id: 'eraser', group: 'brush' },
+      ],
+    });
+
+    state.selectTool('pencil');
+    expect(state.isActive('pencil')).to.be.true;
+    expect(state.isActive('eraser')).to.be.false;
+  });
+
+  it('should report active state for non-exclusive tools', () => {
+    const state = new ToolState({
+      groups: { symmetry: { exclusive: false } },
+      tools: [
+        { id: 'sym-h', group: 'symmetry' },
+        { id: 'sym-v', group: 'symmetry' },
+      ],
+    });
+
+    state.toggleTool('sym-h');
+    expect(state.isActive('sym-h')).to.be.true;
+    expect(state.isActive('sym-v')).to.be.false;
+  });
+
+  it('should update palette color', () => {
+    const state = new ToolState({
+      groups: {},
+      tools: [],
+    });
+
+    state.setColor('#ff0000');
+    expect(state.palette.currentColor).to.equal('#ff0000');
+  });
 });

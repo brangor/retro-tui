@@ -68,6 +68,15 @@ export class ToolState {
 
     return this;
   }
+
+  isActive(toolId: string): boolean {
+    return this.activeTool === toolId || this.activeTools.includes(toolId);
+  }
+
+  setColor(color: string): ToolState {
+    this.palette = { ...this.palette, currentColor: color };
+    return this;
+  }
 }
 
 export const toolContext = createContext<ToolState>('tool-state');
