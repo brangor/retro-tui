@@ -31,6 +31,24 @@ export class ToolState {
     this.groups = config.groups;
     this.tools = config.tools;
   }
+
+  selectTool(toolId: string): ToolState {
+    const tool = this.tools.find((t) => t.id === toolId);
+    if (!tool) return this;
+
+    const group = this.groups[tool.group];
+    if (!group) return this;
+
+    if (group.exclusive) {
+      this.activeTool = toolId;
+    } else {
+      if (!this.activeTools.includes(toolId)) {
+        this.activeTools = [...this.activeTools, toolId];
+      }
+    }
+
+    return this;
+  }
 }
 
 export const toolContext = createContext<ToolState>('tool-state');

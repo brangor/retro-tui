@@ -17,4 +17,20 @@ describe('ToolState', () => {
     expect(state.tools).to.have.length(2);
     expect(state.activeTool).to.be.null;
   });
+
+  it('should enforce exclusive tool groups (radio behavior)', () => {
+    const state = new ToolState({
+      groups: { brush: { exclusive: true } },
+      tools: [
+        { id: 'pencil', group: 'brush' },
+        { id: 'eraser', group: 'brush' },
+      ],
+    });
+
+    state.selectTool('pencil');
+    expect(state.activeTool).to.equal('pencil');
+
+    state.selectTool('eraser');
+    expect(state.activeTool).to.equal('eraser');
+  });
 });
