@@ -178,6 +178,7 @@ export class Toolbar extends LitElement {
                 <tui-button
                   variant="icon"
                   size=${this.size}
+                  tool-id=${tool.id}
                   ?selected=${this.selected === tool.id}
                   selection-style=${this.selectionStyle || 'invert'}
                   title="${tool.name || tool.id}${tool.key ? ` (${tool.key})` : ''}"
