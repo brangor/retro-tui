@@ -53,6 +53,7 @@ export interface CanvasHoverEvent {
  * @fires canvas-drag-end - When drag ends: {x, y, startX, startY, pointerType}
  * @fires canvas-hover - When hovering over a cell: {x, y}
  * @fires canvas-leave - When pointer leaves canvas
+ * @fires canvas-ready - When projection dimensions are computed: {width, height, viewBox}
  *
  * @slot - Custom content rendered above the grid (e.g., SVG overlay)
  *
@@ -122,6 +123,7 @@ export class Canvas extends LitElement {
       :host {
         --_canvas-bg: var(--tui-canvas-bg, var(--surface-base));
         --_canvas-grid-color: var(--tui-canvas-grid-color, var(--border-default));
+        --_canvas-grid-fill: var(--tui-canvas-grid-fill, var(--surface-elevated, rgba(255, 255, 255, 0.03)));
         --_canvas-hover-color: var(--tui-canvas-hover-color, rgba(255, 255, 255, 0.1));
 
         display: block;
@@ -194,6 +196,10 @@ export class Canvas extends LitElement {
       this.projectionEngine = getProjection(this.projection, this.cellSize);
       this.hoverX = -1;
       this.hoverY = -1;
+      this.dispatchEvent(new CustomEvent('canvas-ready', {
+        bubbles: true, composed: true,
+        detail: { width: this.canvasWidth, height: this.canvasHeight, viewBox: this.viewBox },
+      }));
     }
   }
 
@@ -436,10 +442,14 @@ export class Canvas extends LitElement {
       }
     }
 
+    // Bounds backdrop path
+    const boundsPath = proj.getBoundsPath();
+
     return html`
       <div class="grid-layer">
         <svg viewBox="0 0 ${totalWidth} ${totalHeight}">
-          <g stroke="var(--_canvas-grid-color)" stroke-width="1">
+          <path d="${boundsPath}" fill="var(--_canvas-grid-fill)" stroke="var(--_canvas-grid-color)" stroke-width="1"/>
+          <g stroke="var(--_canvas-grid-color)" stroke-width="0.5" opacity="0.5">
             ${paths.map((p) => html`${this.unsafeSVG(p)}`)}
           </g>
         </svg>
@@ -516,6 +526,29 @@ export class Canvas extends LitElement {
       height: this.height,
       cellSize: this.cellSize,
     };
+  }
+
+  /**
+   * Total pixel width of the canvas (from projection)
+   */
+  get canvasWidth(): number {
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    return proj.getDimensions(this.width, this.height).width;
+  }
+
+  /**
+   * Total pixel height of the canvas (from projection)
+   */
+  get canvasHeight(): number {
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    return proj.getDimensions(this.width, this.height).height;
+  }
+
+  /**
+   * SVG viewBox string matching canvas dimensions: "0 0 width height"
+   */
+  get viewBox(): string {
+    return `0 0 ${this.canvasWidth} ${this.canvasHeight}`;
   }
 
   /**

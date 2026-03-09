@@ -72,7 +72,18 @@ export class TriangularProjection implements Projection {
     return paths[region] || '';
   }
 
+  private _gridWidth = 0;
+  private _gridHeight = 0;
+
+  getBoundsPath(): string {
+    const w = this._gridWidth * this.cellSize;
+    const h = this._gridHeight * this.cellSize;
+    return `M 0,0 L ${w},0 L ${w},${h} L 0,${h} Z`;
+  }
+
   getDimensions(gridWidth: number, gridHeight: number): { width: number; height: number } {
+    this._gridWidth = gridWidth;
+    this._gridHeight = gridHeight;
     return {
       width: gridWidth * this.cellSize,
       height: gridHeight * this.cellSize,

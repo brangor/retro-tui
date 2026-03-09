@@ -31,7 +31,19 @@ export class RectangularProjection implements Projection {
     return `M ${x},${y} L ${x + s},${y} L ${x + s},${y + s} L ${x},${y + s} Z`;
   }
 
+  // Cache for getBoundsPath
+  private _gridWidth = 0;
+  private _gridHeight = 0;
+
+  getBoundsPath(): string {
+    const w = this._gridWidth * this.cellSize;
+    const h = this._gridHeight * this.cellSize;
+    return `M 0,0 L ${w},0 L ${w},${h} L 0,${h} Z`;
+  }
+
   getDimensions(gridWidth: number, gridHeight: number): { width: number; height: number } {
+    this._gridWidth = gridWidth;
+    this._gridHeight = gridHeight;
     return {
       width: gridWidth * this.cellSize,
       height: gridHeight * this.cellSize,

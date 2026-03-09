@@ -20,4 +20,6 @@ export interface Projection {
   gridToScreen(gridX: number, gridY: number, bounds: ProjectionBounds, region?: string): ScreenCoord;
   getCellPath(gridX: number, gridY: number, region?: string): string;
   getDimensions(gridWidth: number, gridHeight: number): { width: number; height: number };
+  /** SVG path tracing the outer boundary of the full grid */
+  getBoundsPath(): string;
 }
