@@ -49,6 +49,7 @@
     import '../src/components/tui-canvas.ts';
     import { ToolState } from '../src/state/tool-state.ts';
     import { TriangularProjection } from '../src/projections/triangular.ts';
+    import { renderGrid } from '../src/utils/canvas-renderer.js';
 
     // Tool config with two groups
     const toolConfig = {
@@ -191,21 +192,15 @@
     // Render all triangles
     function renderCanvas() {
       const svg = document.getElementById('quilt-svg');
-      let paths = '';
-
-      for (let y = 0; y < H; y++) {
-        for (let x = 0; x < W; x++) {
-          const cell = grid[y][x];
-          for (const region of ['top', 'right', 'bottom', 'left']) {
-            if (cell[region]) {
-              const d = projection.getCellPath(x, y, region);
-              paths += `<path d="${d}" fill="${cell[region].color}" stroke="${cell[region].color}" stroke-width="0.5"/>`;
-            }
-          }
-        }
-      }
-
-      svg.innerHTML = paths;
+      svg.innerHTML = renderGrid({
+        grid,
+        projection,
+        regions: ['top', 'right', 'bottom', 'left'],
+        cellRenderer: (x, y, cell, region) => {
+          if (!cell[region]) return null;
+          return { fill: cell[region].color, stroke: cell[region].color, strokeWidth: 0.5 };
+        },
+      });
     }
 
     renderCanvas();

@@ -118,47 +118,47 @@
        Using RetroTUI components for layout
        ═══════════════════════════════════════════════════════════════════ -->
 
-  <retro-app title="RETRO PAINT" subtitle="EXAMPLE APP">
-    
+  <tui-app title="RETRO PAINT" subtitle="EXAMPLE APP">
+
     <!-- Menu Bar -->
-    <retro-menu slot="menu">
-      <retro-menu-item label="Edit" hotkey="e">
-        <retro-menu-action id="action-undo" label="Undo" shortcut="Ctrl+Z"></retro-menu-action>
-        <retro-menu-divider></retro-menu-divider>
-        <retro-menu-action id="action-clear" label="Clear All" danger></retro-menu-action>
-      </retro-menu-item>
-      <retro-menu-item label="Help" hotkey="h">
-        <retro-menu-action id="action-help" label="Controls" shortcut="?"></retro-menu-action>
-      </retro-menu-item>
-    </retro-menu>
+    <tui-menu slot="menu">
+      <tui-menu-item label="Edit" hotkey="e">
+        <tui-menu-action id="action-undo" label="Undo" shortcut="Ctrl+Z"></tui-menu-action>
+        <tui-menu-divider></tui-menu-divider>
+        <tui-menu-action id="action-clear" label="Clear All" danger></tui-menu-action>
+      </tui-menu-item>
+      <tui-menu-item label="Help" hotkey="h">
+        <tui-menu-action id="action-help" label="Controls" shortcut="?"></tui-menu-action>
+      </tui-menu-item>
+    </tui-menu>
 
     <!-- Left Toolbar -->
-    <retro-panel id="panel-tools" slot="toolbar" title="Tools">
-      <retro-toolbar id="toolbar" orientation="vertical"></retro-toolbar>
-    </retro-panel>
+    <tui-panel id="panel-tools" slot="toolbar" title="Tools">
+      <tui-toolbar id="toolbar" orientation="vertical"></tui-toolbar>
+    </tui-panel>
 
     <!-- Main Canvas -->
-    <retro-panel id="panel-canvas" slot="main" title="Canvas" color="cyan" active>
+    <tui-panel id="panel-canvas" slot="main" title="Canvas" color="primary" active>
       <div id="canvas" class="canvas-grid"></div>
-    </retro-panel>
+    </tui-panel>
 
     <!-- Right Sidebar: Color Palette -->
-    <retro-panel id="panel-palette" slot="sidebar" title="Colors" color="green" collapsible>
+    <tui-panel id="panel-palette" slot="sidebar" title="Colors" color="secondary" collapsible>
       <div id="palette-tabs" class="palette-tabs"></div>
       <div id="color-swatches" class="color-swatches"></div>
-    </retro-panel>
+    </tui-panel>
 
     <!-- Status Bar -->
-    <retro-statusbar slot="status">
-      <retro-status-item label="Tool" id="statusTool" value="Brush"></retro-status-item>
-      <retro-status-item label="Color" id="statusColor" value="Cyan"></retro-status-item>
-      <retro-status-item label="Pos" id="statusPos" value="0,0"></retro-status-item>
-      <retro-status-item label="Mode" id="statusMode" value="CANVAS"></retro-status-item>
-    </retro-statusbar>
-  </retro-app>
+    <tui-statusbar slot="status">
+      <tui-status-item label="Tool" id="statusTool" value="Brush"></tui-status-item>
+      <tui-status-item label="Color" id="statusColor" value="Cyan"></tui-status-item>
+      <tui-status-item label="Pos" id="statusPos" value="0,0"></tui-status-item>
+      <tui-status-item label="Mode" id="statusMode" value="CANVAS"></tui-status-item>
+    </tui-statusbar>
+  </tui-app>
 
   <!-- Help Modal -->
-  <retro-modal id="modal-help" title="Controls">
+  <tui-modal id="modal-help" title="Controls">
     <h3>Tools</h3>
     <p><kbd>B</kbd> Brush &nbsp; <kbd>F</kbd> Fill &nbsp; <kbd>E</kbd> Eraser</p>
     
@@ -176,10 +176,10 @@
     <h3>Actions</h3>
     <p><kbd>Ctrl+Z</kbd> Undo</p>
     <p><kbd>?</kbd> Show this help</p>
-  </retro-modal>
+  </tui-modal>
 
   <!-- Toast container (for notifications) -->
-  <retro-toast></retro-toast>
+  <tui-toast></tui-toast>
 
   <script type="module" src="./src/main.js"></script>
 </body>

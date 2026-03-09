@@ -34,3 +34,4 @@ export { TriangularProjection } from './projections/triangular.ts';
 // Utilities
 export { ansiToHtml } from './utils/ansi.js';
 export { RetroPush } from './utils/push-client.js';
+export { renderGrid, isometricOrder } from './utils/canvas-renderer.js';
