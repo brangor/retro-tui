@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 // The main vite.config.js is library mode (dist/retro-tui.js).
 // This config builds index.html as a deployable app.
 export default defineConfig({
+  base: '/retro-tui/',
   build: {
     outDir: 'site',
   },
