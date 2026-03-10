@@ -24,7 +24,8 @@ interface OutputLine {
  * @attr {number} max-lines - Maximum lines to keep (default: 500)
  * @attr {boolean} autoscroll - Auto-scroll to bottom on new content
  * @attr {boolean} timestamps - Show timestamps on each line
- * 
+ * @attr {string} attr - Space-separated text attributes applied to the output container (bold, dim, italic, etc.)
+ *
  * @method append(text) - Add a line of text
  * @method clear() - Clear all output
  */
@@ -38,6 +39,9 @@ export class Output extends LitElement {
 
   @property({ type: Boolean })
   timestamps = false;
+
+  @property({ type: String })
+  attr = '';
 
   @state()
   private _lines: OutputLine[] = [];
@@ -133,9 +137,13 @@ export class Output extends LitElement {
     }
   }
 
+  private get _attrClasses(): string {
+    return this.attr.split(/\s+/).filter(Boolean).map(a => `tui-${a}`).join(' ');
+  }
+
   render() {
     return html`
-      <div class="output">
+      <div class="output ${this._attrClasses}">
         ${this._lines.length === 0 
           ? html`<div class="empty">Waiting for output...</div>`
           : this._lines.map(line => html`
