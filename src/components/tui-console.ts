@@ -23,6 +23,7 @@ interface ConsoleLine {
  * <tui-console> - Interactive command console with history
  * 
  * @attr {string} prompt - Command prompt (default: "> ")
+ * @attr {string} prompt-attr - Space-separated text attributes for the prompt (bold, dim, italic, etc.)
  * @attr {number} history-size - Max history entries (default: 100)
  * 
  * @fires command - When a command is submitted { detail: string }
@@ -34,6 +35,9 @@ interface ConsoleLine {
 export class Console extends LitElement {
   @property({ type: String })
   prompt = '❯ ';
+
+  @property({ type: String, attribute: 'prompt-attr' })
+  promptAttr = '';
 
   @property({ type: Number, attribute: 'history-size' })
   historySize = 100;
@@ -234,6 +238,10 @@ export class Console extends LitElement {
     this._inputValue = (e.target as HTMLInputElement).value;
   }
 
+  private get _promptClasses(): string {
+    return ['prompt', ...this.promptAttr.split(/\s+/).filter(Boolean).map(a => `tui-${a}`)].join(' ');
+  }
+
   render() {
     return html`
       <div class="console" @click=${this.focusInput}>
@@ -245,7 +253,7 @@ export class Console extends LitElement {
           `)}
         </div>
         <div class="input-line">
-          <span class="prompt">${this.prompt}</span>
+          <span class="${this._promptClasses}">${this.prompt}</span>
           <input
             type="text"
             .value=${this._inputValue}

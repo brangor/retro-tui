@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+import { titleDecoration, type BorderStyle } from '../utils/borders.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -9,6 +10,7 @@ import { sharedStyles } from '../styles/shared.js';
 type PanelColor = 'primary' | 'secondary' | 'error' | 'success' | 'info' | 'cyan' | 'green' | 'magenta' | 'yellow' | 'red' | '';
 type PanelVariant = 'bright' | 'classic';
 type SelectionStyle = 'invert' | 'border' | '';
+type PanelBorder = BorderStyle;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
@@ -32,6 +34,7 @@ type SelectionStyle = 'invert' | 'border' | '';
  *
  * @attr {string} title - Panel title
  * @attr {string} color - Semantic color: primary | secondary | error | success | info
+ * @attr {string} border - Border style: single | heavy | double | rounded | none (default: single)
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
  * @attr {boolean} floating - Whether panel is floating (default: true)
@@ -65,6 +68,9 @@ export class Panel extends LitElement {
 
   @property({ type: String })
   color: PanelColor = '';
+
+  @property({ type: String, reflect: true })
+  border: PanelBorder = 'single';
 
   @property({ type: String, reflect: true })
   variant: PanelVariant = 'bright';
@@ -303,10 +309,8 @@ export class Panel extends LitElement {
         color: var(--panel-color-fg);
       }
 
-      :host(:not([variant="classic"]))[active] .title::before,
-      :host(:not([variant="classic"]))[active] .title::after,
-      :host([variant="bright"][active]) .title::before,
-      :host([variant="bright"][active]) .title::after {
+      :host(:not([variant="classic"]))[active] .title-decor,
+      :host([variant="bright"][active]) .title-decor {
         opacity: 1;
       }
 
@@ -331,8 +335,7 @@ export class Panel extends LitElement {
         border-color: var(--panel-color);
       }
 
-      :host([variant="classic"][selected]) .title::before,
-      :host([variant="classic"][selected]) .title::after {
+      :host([variant="classic"][selected]) .title-decor {
         opacity: 1;
       }
 
@@ -350,8 +353,7 @@ export class Panel extends LitElement {
         text-shadow: 0 0 8px var(--panel-color);
       }
 
-      :host([variant="classic"][active]) .title::before,
-      :host([variant="classic"][active]) .title::after {
+      :host([variant="classic"][active]) .title-decor {
         opacity: 1;
         color: var(--panel-color);
       }
@@ -444,14 +446,13 @@ export class Panel extends LitElement {
         align-items: center;
       }
 
-      .title::before {
-        content: '┌─ ';
+      .title-decor {
         opacity: 0.7;
       }
 
-      .title::after {
-        content: ' ─┐';
-        opacity: 0.7;
+      :host([active]) .title-decor,
+      :host([selected]) .title-decor {
+        opacity: 1;
       }
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -1078,7 +1079,7 @@ export class Panel extends LitElement {
           class="header ${this.floating ? 'draggable' : ''}"
           @pointerdown=${this.floating ? this._onDragStart : undefined}
         >
-          <span class="title">${this.title}</span>
+          <span class="title"><span class="title-decor">${titleDecoration(this.border).before}</span>${this.title}<span class="title-decor">${titleDecoration(this.border).after}</span></span>
           <div class="header-controls">
             ${this.collapsible ? html`
               <button class="collapse-btn" aria-label="Toggle panel" @click=${this._onCollapseClick}>
