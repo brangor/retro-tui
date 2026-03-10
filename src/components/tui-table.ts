@@ -1,12 +1,11 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+import { type BorderStyle } from '../utils/borders.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
-
-type BorderStyle = 'single' | 'double' | 'heavy' | 'none';
 type RowData = Record<string, unknown>;
 
 // ═══════════════════════════════════════════════════════════════════════════════
