@@ -3,214 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RetroTUI - Demo</title>
+  <title>RetroTUI</title>
+  <script type="module" src="/src/styles/tokens.css"></script>
+  <script type="module" src="/src/components/tui-app.ts"></script>
+  <script type="module" src="/src/components/tui-button.ts"></script>
   <style>
-    :root {
-      --bg: #0d1117;
-      --bg-light: #161b22;
-      --border: #30363d;
-      --text: #c9d1d9;
-      --text-dim: #8b949e;
-      --cyan: #58a6ff;
-      --green: #3fb950;
-      --yellow: #d29922;
-      --magenta: #bc8cff;
-      --red: #f85149;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-      background: var(--bg);
-      color: var(--text);
+      background: var(--surface-base);
+      font-family: var(--font-mono);
       min-height: 100vh;
-      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    h1 {
-      color: var(--cyan);
+    .crt-bezel {
+      background: var(--surface-elevated);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 900px;
+      width: 90vw;
+      aspect-ratio: 4 / 3;
+      display: flex;
+    }
+
+    .crt-screen {
+      background: var(--surface-elevated);
+      border-radius: 8px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      gap: 48px;
+    }
+    .screen-title {
+      color: var(--color-primary);
+      font-size: 1.2rem;
       font-weight: normal;
-      margin-bottom: 1rem;
+      letter-spacing: var(--spacing-sm);
+      text-transform: uppercase;
     }
 
-    .demo-grid {
+    .program-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 600px;
     }
 
-    .instructions {
-      background: var(--bg-light);
-      border: 1px solid var(--border);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      font-size: 0.85rem;
+    .program-link {
+      text-decoration: none;
+      display: contents; /* lets tui-button fill the grid cell */
     }
 
-    .instructions code {
-      background: var(--bg);
-      padding: 0.2rem 0.4rem;
-      border-radius: 2px;
+    .program-tile {
+      aspect-ratio: 3 / 2;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    
+      --tui-button-border-color: var(--color-primary);
+      --tui-button-color: var(--color-primary);
+      --tui-button-bg: transparent;
     }
 
-    .instructions pre {
-      background: var(--bg);
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      overflow-x: auto;
+    .program-tile.empty {
+      border: var(--border-width) solid var(--color-primary);
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .program-grid tui-button {
+      display:block;
+      width: 100%;
+      height: 100%;
+      
+                                                             
+      --tui-button-bg: transparent;                                                                         
+      --tui-button-color: var(--color-primary);                                                                          
+      --tui-button-border-color: var(--color-primary);
+      --tui-button-hover-bg: var(--color-primary);
+      --tui-button-hover-color: var(--surface-base);
+      --tui-button-hover-border-color: var(--color-primary);
+
+      &::hover {
+        border-color: var(--color-primary);
+      }
+
+      &::part(button) {
+        height: 100%;
+      }
+    }
+
+    .program-grid a {
+      text-decoration: none;
+      display: block;
+      aspect-ratio: 3 / 2;
     }
   </style>
 </head>
-<body>
-  <h1>░░ RETRO-TUI <span style="color: var(--green)">[ DEMO ]</span> ░░</h1>
-  
-  <div class="instructions">
-    <strong>Push updates from terminal:</strong>
-    <pre>curl -X POST http://localhost:3001/push -H "Content-Type: application/json" -d '{"channel":"build","type":"log","data":"Build started..."}'</pre>
-    <pre>./push.sh log "Hello from shell!"</pre>
-    <pre>node push.js --channel=build --message="Compiling..."</pre>
-  </div>
-
-  <!-- Floating Panel Demo -->
-  <h2 style="color: var(--yellow); margin: 1rem 0;">Floating Panel Demo (minimize test)</h2>
-  <div class="instructions">
-    <strong>Test minimize-to-edge:</strong> Click the <code>−</code> button on any floating panel to minimize it to an edge tab. Click the tab to restore.
-  </div>
-  <tui-workspace style="height: 400px; border: 1px solid var(--border); position: relative;">
-    <div slot="main" style="padding: 2rem; text-align: center; color: var(--text-dim);">
-      Workspace area - floating panels can be dragged here
+<body class="theme-home-security-interface">
+  <div class="crt-bezel">
+    <div class="crt-screen">
+      <h1 class="screen-title">SELECT PROGRAM</h1>
+      <div class="program-grid">
+        <a href="/examples/isosketch.html" tabindex="-1">
+          <tui-button class="program-tile">ISOSKETCH</tui-button>
+        </a>
+        <a href="/examples/quiltsketch-demo.html" tabindex="-1">
+          <tui-button class="program-tile">QUILTSKETCH DEMO</tui-button>
+        </a>
+        <a href="/examples/panels-demo.html" tabindex="-1">
+          <tui-button class="program-tile">PANELS DEMO</tui-button>
+        </a>
+          <a href="https://quiltsketch.vercel.app/" tabindex="-1">
+          <tui-button class="program-tile">LIVE QUILTSKETCH</tui-button>
+        </a>
+        <div class="program-tile empty"></div>
+        <div class="program-tile empty"></div>
+      </div>
     </div>
-    <tui-panel
-      slot="floating"
-      title="Tools"
-      color="cyan"
-      floating
-      dismissable
-      minimized
-      position-x="20"
-      position-y="20"
-      persist-id="demo-tools"
-    >
-      <div style="padding: 0.5rem;">Tool content here</div>
-    </tui-panel>
-    <tui-panel
-      slot="floating"
-      title="Properties"
-      color="green"
-      floating
-      dismissable
-      minimized
-      position-x="200"
-      position-y="50"
-      persist-id="demo-props"
-    >
-      <div style="padding: 0.5rem;">Property inspector</div>
-    </tui-panel>
-    <tui-panel
-      slot="floating"
-      title="Layers"
-      color="magenta"
-      floating
-      dismissable
-      minimized
-      position-x="400"
-      position-y="20"
-      persist-id="demo-layers"
-    >
-      <div style="padding: 0.5rem;">Layer list</div>
-    </tui-panel>
-    <tui-panel
-      slot="floating"
-      title="History"
-      color="cyan"
-      floating
-      dismissable
-      minimized
-      position-x="20"
-      position-y="150"
-      persist-id="demo-history"
-    >
-      <div style="padding: 0.5rem;">Undo history</div>
-    </tui-panel>
-    <tui-panel
-      slot="floating"
-      title="Colors"
-      color="yellow"
-      floating
-      dismissable
-      minimized
-      position-x="200"
-      position-y="150"
-      persist-id="demo-colors"
-    >
-      <div style="padding: 0.5rem;">Color picker</div>
-    </tui-panel>
-    <tui-panel
-      slot="floating"
-      title="Brushes"
-      color="green"
-      floating
-      dismissable
-      minimized
-      position-x="400"
-      position-y="150"
-      persist-id="demo-brushes"
-    >
-      <div style="padding: 0.5rem;">Brush presets</div>
-    </tui-panel>
-    <tui-panel
-      slot="floating"
-      title="Navigator"
-      color="info"
-      floating
-      dismissable
-      minimized
-      position-x="20"
-      position-y="280"
-      persist-id="demo-navigator"
-    >
-      <div style="padding: 0.5rem;">Canvas overview</div>
-    </tui-panel>
-    <tui-panel
-      slot="floating"
-      title="Actions"
-      color="error"
-      floating
-      dismissable
-      minimized
-      position-x="200"
-      position-y="280"
-      persist-id="demo-actions"
-    >
-      <div style="padding: 0.5rem;">Quick actions</div>
-    </tui-panel>
-  </tui-workspace>
-
-  <h2 style="color: var(--yellow); margin: 1rem 0 0.5rem;">Static Panels</h2>
-  <div class="demo-grid">
-    <!-- Live Output Panel -->
-    <retro-panel title="Build Output" color="cyan">
-      <retro-output id="build-output" max-lines="50"></retro-output>
-    </retro-panel>
-
-    <!-- Status Panel -->
-    <retro-panel title="System Status" color="green" collapsible>
-      <retro-table id="status-table"></retro-table>
-    </retro-panel>
-
-    <!-- Console Panel -->
-    <retro-panel title="Console" color="magenta">
-      <retro-console id="console" prompt="❯ "></retro-console>
-    </retro-panel>
   </div>
-
-  <script type="module" src="/src/index.js"></script>
-  <script type="module" src="/src/demo.js"></script>
 </body>
+<script type="module">
+  const grid = document.querySelector('.program-grid');
+  const buttons = [...grid.querySelectorAll('tui-button')];
+  const cols = 3;
+
+  // Focus the first button on load so keyboard works immediately
+  buttons[0]?.focus();
+
+  document.addEventListener('keydown', (e) => {
+    const idx = buttons.indexOf(document.activeElement);
+    if (idx === -1) return;
+
+    let next = idx;
+    switch(e.key) {
+      case 'ArrowRight': next = idx + 1; break;
+      case 'ArrowLeft': next = idx - 1; break;
+      case 'ArrowDown': next = idx + cols; break;
+      case 'ArrowUp': next = idx - cols; break;
+      case 'Enter':
+        const link = buttons[idx].closest('a');
+        if (link) window.location.href = link.href;
+        return;
+      default: return;
+    }
+
+    if (next >= 0 && next < buttons.length) {
+      e.preventDefault();
+      buttons[next].focus();
+    }
+  });
+</script>
 </html>

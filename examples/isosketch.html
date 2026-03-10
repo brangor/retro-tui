@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IsoSketch - Isometric Map Editor</title>
+  <style>
+    body { margin: 0; background: var(--bg, #1a1a2e); color: var(--text, #eee); }
+  </style>
+</head>
+<body>
+  <tui-app>
+    <tui-workspace slot="main">
+      <div slot="main" style="padding: 1rem; overflow: auto;">
+        <tui-canvas
+          id="canvas"
+          projection="isometric"
+          width="16"
+          height="16"
+          cell-size="40"
+          show-grid
+        >
+          <svg id="tiles" style="pointer-events:none;"></svg>
+        </tui-canvas>
+      </div>
+
+      <tui-panel slot="floating" title="Tools" floating position-x="16" position-y="16">
+        <tui-toolbar id="toolbar" orientation="vertical" selected="paint"></tui-toolbar>
+      </tui-panel>
+
+      <tui-panel id="panel-picker" slot="floating" title="Tiles" floating position-x="700" position-y="16">
+        <div id="tile-picker" style="padding: 8px; display: flex; flex-direction: column; gap: 4px;"></div>
+      </tui-panel>
+    </tui-workspace>
+  </tui-app>
+
+  <script type="module">
+    // Import components (registers custom elements)
+    import '../src/components/tui-app.ts';
+    import '../src/components/tui-workspace.ts';
+    import '../src/components/tui-panel.ts';
+    import '../src/components/tui-toolbar.ts';
+    import '../src/components/tui-canvas.ts';
+    import { ToolState } from '../src/state/tool-state.ts';
+    import { isometricOrder } from '../src/utils/canvas-renderer.js';
+
+    // ── Constants ──────────────────────────────────────────────────────────────
+    const GRID_W = 16;
+    const GRID_H = 16;
+    const CELL_SIZE = 40;
+    const TW = CELL_SIZE;       // tile width
+    const TH = CELL_SIZE / 2;   // tile height
+    const ORIGIN_X = GRID_H * (TW / 2); // matches IsometricProjection origin
+
+    // ── Tool config ────────────────────────────────────────────────────────────
+    const toolConfig = {
+      groups: { tool: { exclusive: true } },
+      tools: [
+        { id: 'paint', group: 'tool', icon: '■', name: 'Paint Face' },
+        { id: 'edge',  group: 'tool', icon: '╱', name: 'Paint Edge' },
+        { id: 'fill',  group: 'tool', icon: '▨', name: 'Fill' },
+        { id: 'erase', group: 'tool', icon: '×', name: 'Erase' },
+      ],
+    };
+
+    const toolState = new ToolState(toolConfig);
+    toolState.selectTool('paint');
+
+    const toolbar = document.getElementById('toolbar');
+    toolbar.tools = toolConfig.tools;
+
+    // ── Tile types ─────────────────────────────────────────────────────────────
+    const tileTypes = {
+      floor: { color: '#8b4513', label: 'Floor', depth: 2 },
+      wall:  { color: '#696969', label: 'Wall',  depth: 8 },
+      door:  { color: '#daa520', label: 'Door',  depth: 4 },
+      water: { color: '#4169e1', label: 'Water', depth: 0 },
+    };
+
+    // ── Edge types ─────────────────────────────────────────────────────────────
+    const edgeTypes = {
+      wall: { color: '#ffffff', width: 3, label: 'Wall' },
+      door: { color: '#daa520', width: 2, label: 'Door' },
+    };
+
+    let currentTile = 'floor';
+    let currentEdge = 'wall';
+
+    // ── Build tile picker ──────────────────────────────────────────────────────
+    const picker = document.getElementById('tile-picker');
+
+    function buildPicker() {
+      picker.innerHTML = '';
+      if (toolState.isActive('edge')) {
+        // Show edge types
+        for (const [id, edge] of Object.entries(edgeTypes)) {
+          const btn = document.createElement('button');
+          btn.textContent = edge.label;
+          btn.style.cssText = `
+            background: transparent; color: ${edge.color}; border: 2px solid ${edge.color};
+            padding: 6px 10px; cursor: pointer; font-family: monospace;
+          `;
+          btn.addEventListener('click', () => {
+            currentEdge = id;
+            picker.querySelectorAll('button').forEach(b => b.style.background = 'transparent');
+            btn.style.background = edge.color;
+            btn.style.color = '#000';
+          });
+          if (id === currentEdge) { btn.style.background = edge.color; btn.style.color = '#000'; }
+          picker.appendChild(btn);
+        }
+      } else {
+        // Show face tile types
+        for (const [id, tile] of Object.entries(tileTypes)) {
+          const btn = document.createElement('button');
+          btn.textContent = tile.label;
+          btn.style.cssText = `
+            background: ${tile.color}; color: #fff; border: 2px solid transparent;
+            padding: 6px 10px; cursor: pointer; font-family: monospace;
+          `;
+          btn.addEventListener('click', () => {
+            currentTile = id;
+            picker.querySelectorAll('button').forEach(b => b.style.borderColor = 'transparent');
+            btn.style.borderColor = '#fff';
+          });
+          if (id === currentTile) btn.style.borderColor = '#fff';
+          picker.appendChild(btn);
+        }
+      }
+    }
+    buildPicker();
+
+    // ── Grid state ─────────────────────────────────────────────────────────────
+    const grid = Array(GRID_H).fill(null).map(() => Array(GRID_W).fill(null));
+
+    // Edge state: each cell owns its north and east edges
+    const edges = Array(GRID_H).fill(null).map(() =>
+      Array(GRID_W).fill(null).map(() => ({ north: null, east: null }))
+    );
+
+    // ── Tool select ────────────────────────────────────────────────────────────
+    toolbar.addEventListener('tool-select', (e) => {
+      toolState.selectTool(e.detail.tool);
+      toolbar.selected = e.detail.tool;
+      buildPicker(); // swap picker between face/edge types
+      const pickerPanel = document.getElementById('panel-picker');
+      if (pickerPanel) pickerPanel.title = toolState.isActive('edge') ? 'Edges' : 'Tiles';
+    });
+
+    // ── Edge helpers ───────────────────────────────────────────────────────────
+
+    // Set an edge, handling neighbor deduplication.
+    // Each cell owns north and east. South = neighbor's north, West = neighbor's east.
+    function setEdge(x, y, side, type) {
+      if (side === 'north' && y >= 0 && y < GRID_H && x >= 0 && x < GRID_W) {
+        edges[y][x].north = type;
+      } else if (side === 'east' && y >= 0 && y < GRID_H && x >= 0 && x < GRID_W) {
+        edges[y][x].east = type;
+      } else if (side === 'south') {
+        if (y + 1 < GRID_H && x >= 0 && x < GRID_W) edges[y + 1][x].north = type;
+      } else if (side === 'west') {
+        if (x - 1 >= 0 && y >= 0 && y < GRID_H) edges[y][x - 1].east = type;
+      }
+    }
+
+    // Shared helper: generate edge line SVG for a cell side
+    function edgeLineSVG(x, y, side, et, opacity = 1) {
+      const cx = ORIGIN_X + (x - y) * (TW / 2);
+      const cy = (x + y) * (TH / 2) + TH / 2;
+      const o = opacity < 1 ? ` opacity="${opacity}"` : '';
+      if (side === 'north') {
+        return `<line x1="${cx}" y1="${cy - TH/2}" x2="${cx + TW/2}" y2="${cy}" stroke="${et.color}" stroke-width="${et.width}" stroke-linecap="round"${o}/>`;
+      } else if (side === 'east') {
+        return `<line x1="${cx + TW/2}" y1="${cy}" x2="${cx}" y2="${cy + TH/2}" stroke="${et.color}" stroke-width="${et.width}" stroke-linecap="round"${o}/>`;
+      } else if (side === 'south') {
+        return `<line x1="${cx}" y1="${cy + TH/2}" x2="${cx - TW/2}" y2="${cy}" stroke="${et.color}" stroke-width="${et.width}" stroke-linecap="round"${o}/>`;
+      } else { // west
+        return `<line x1="${cx - TW/2}" y1="${cy}" x2="${cx}" y2="${cy - TH/2}" stroke="${et.color}" stroke-width="${et.width}" stroke-linecap="round"${o}/>`;
+      }
+    }
+
+    // Determine edges to draw between two grid points.
+    // - Same row: single line of north edges (runs NE-SW on screen)
+    // - Same column: single line of east edges (runs NW-SE on screen)
+    // - Otherwise: full box (4 sides)
+    function getEdgeSegments(x1, y1, x2, y2) {
+      const minX = Math.max(0, Math.min(x1, x2));
+      const maxX = Math.min(GRID_W - 1, Math.max(x1, x2));
+      const minY = Math.max(0, Math.min(y1, y2));
+      const maxY = Math.min(GRID_H - 1, Math.max(y1, y2));
+
+      const segments = []; // { x, y, side }
+
+      if (minY === maxY) {
+        // Horizontal line in grid space → north edges along one row
+        for (let x = minX; x <= maxX; x++) segments.push({ x, y: minY, side: 'north' });
+      } else if (minX === maxX) {
+        // Vertical line in grid space → east edges along one column
+        for (let y = minY; y <= maxY; y++) segments.push({ x: minX, y, side: 'east' });
+      } else {
+        // Box: all 4 sides
+        for (let x = minX; x <= maxX; x++) segments.push({ x, y: minY, side: 'north' });
+        for (let x = minX; x <= maxX; x++) segments.push({ x, y: maxY, side: 'south' });
+        for (let y = minY; y <= maxY; y++) segments.push({ x: minX, y, side: 'west' });
+        for (let y = minY; y <= maxY; y++) segments.push({ x: maxX, y, side: 'east' });
+      }
+      return segments;
+    }
+
+    function drawEdges(x1, y1, x2, y2, type) {
+      for (const seg of getEdgeSegments(x1, y1, x2, y2)) {
+        setEdge(seg.x, seg.y, seg.side, type);
+      }
+    }
+
+    function previewEdges(x1, y1, x2, y2, type) {
+      const et = edgeTypes[type] || { color: '#fff', width: 2 };
+      let lines = '';
+      for (const seg of getEdgeSegments(x1, y1, x2, y2)) {
+        lines += edgeLineSVG(seg.x, seg.y, seg.side, et, 0.5);
+      }
+      return lines;
+    }
+
+    // ── Flood fill ─────────────────────────────────────────────────────────────
+    // Fills connected cells that share the same face type, stopping at edges.
+    function floodFill(startX, startY, fillType) {
+      const targetType = grid[startY][startX]; // what we're replacing (can be null)
+      if (targetType === fillType) return;      // already this type, nothing to do
+
+      const queue = [{ x: startX, y: startY }];
+      const visited = new Set();
+      const key = (x, y) => `${x},${y}`;
+
+      while (queue.length > 0) {
+        const { x, y } = queue.shift();
+        const k = key(x, y);
+        if (visited.has(k)) continue;
+        if (x < 0 || x >= GRID_W || y < 0 || y >= GRID_H) continue;
+        if (grid[y][x] !== targetType) continue;
+        visited.add(k);
+
+        grid[y][x] = fillType;
+
+        // Check each neighbor, but only if no edge blocks the path
+        // North neighbor (y-1): blocked by our north edge
+        if (!edges[y][x].north) queue.push({ x, y: y - 1 });
+        // East neighbor (x+1): blocked by our east edge
+        if (!edges[y][x].east) queue.push({ x: x + 1, y });
+        // South neighbor (y+1): blocked by south edge (= neighbor's north)
+        if (y + 1 < GRID_H && !edges[y + 1][x].north) queue.push({ x, y: y + 1 });
+        // West neighbor (x-1): blocked by west edge (= neighbor's east)
+        if (x - 1 >= 0 && !edges[y][x - 1].east) queue.push({ x: x - 1, y });
+      }
+    }
+
+    // ── Canvas events ──────────────────────────────────────────────────────────
+    const canvas = document.getElementById('canvas');
+    let edgeDragStart = null; // { x, y } grid coords of drag start
+    let edgePreview = '';      // SVG string for preview during drag
+
+    // Align tiles SVG viewBox when canvas projection is ready
+    canvas.addEventListener('canvas-ready', (e) => {
+      const svg = document.getElementById('tiles');
+      svg.setAttribute('viewBox', e.detail.viewBox);
+      svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
+      renderAll();
+    });
+
+    // Immediate tools: paint, fill, erase
+    canvas.addEventListener('canvas-draw', (e) => {
+      const { x, y } = e.detail;
+      if (x < 0 || x >= GRID_W || y < 0 || y >= GRID_H) return;
+
+      if (toolState.isActive('paint')) {
+        grid[y][x] = currentTile;
+        renderAll();
+      } else if (toolState.isActive('fill')) {
+        floodFill(x, y, currentTile);
+        renderAll();
+      } else if (toolState.isActive('erase')) {
+        // Erase face and all edges on this cell
+        grid[y][x] = null;
+        edges[y][x].north = null;
+        edges[y][x].east = null;
+        // Also clear south (= next row's north) and west (= prev col's east)
+        if (y + 1 < GRID_H) edges[y + 1][x].north = null;
+        if (x - 1 >= 0) edges[y][x - 1].east = null;
+        renderAll();
+      }
+    });
+
+    // Edge tool: drag to draw line/box
+    canvas.addEventListener('canvas-drag-start', (e) => {
+      if (!toolState.isActive('edge')) return;
+      const { x, y } = e.detail;
+      if (x < 0 || x >= GRID_W || y < 0 || y >= GRID_H) return;
+      edgeDragStart = { x, y };
+      edgePreview = '';
+    });
+
+    canvas.addEventListener('canvas-drag', (e) => {
+      if (!edgeDragStart || !toolState.isActive('edge')) return;
+      const { x, y } = e.detail;
+      if (x < 0 || x >= GRID_W || y < 0 || y >= GRID_H) return;
+
+      edgePreview = previewEdges(edgeDragStart.x, edgeDragStart.y, x, y, currentEdge);
+      renderAll();
+    });
+
+    canvas.addEventListener('canvas-drag-end', (e) => {
+      if (!edgeDragStart || !toolState.isActive('edge')) return;
+      const { x, y } = e.detail;
+      const endX = Math.max(0, Math.min(GRID_W - 1, x));
+      const endY = Math.max(0, Math.min(GRID_H - 1, y));
+
+      drawEdges(edgeDragStart.x, edgeDragStart.y, endX, endY, currentEdge);
+      edgeDragStart = null;
+      edgePreview = '';
+      renderAll();
+    });
+
+    // ── Rendering helpers ──────────────────────────────────────────────────────
+
+    function darken(hex, amount) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      const f = 1 - amount;
+      return `rgb(${Math.round(r * f)},${Math.round(g * f)},${Math.round(b * f)})`;
+    }
+
+    function renderTile(cx, cy, color, depth) {
+      // Top face (diamond)
+      const topD = `M ${cx},${cy - TH/2} L ${cx + TW/2},${cy} L ${cx},${cy + TH/2} L ${cx - TW/2},${cy} Z`;
+
+      if (depth <= 0) {
+        return `<path d="${topD}" fill="${color}" stroke="#000" stroke-width="0.5"/>`;
+      }
+
+      // Left side face
+      const leftD = `M ${cx - TW/2},${cy} L ${cx},${cy + TH/2} L ${cx},${cy + TH/2 + depth} L ${cx - TW/2},${cy + depth} Z`;
+      // Right side face
+      const rightD = `M ${cx + TW/2},${cy} L ${cx},${cy + TH/2} L ${cx},${cy + TH/2 + depth} L ${cx + TW/2},${cy + depth} Z`;
+
+      return `
+        <path d="${leftD}" fill="${darken(color, 0.5)}" stroke="#000" stroke-width="0.5"/>
+        <path d="${rightD}" fill="${darken(color, 0.3)}" stroke="#000" stroke-width="0.5"/>
+        <path d="${topD}" fill="${color}" stroke="#000" stroke-width="0.5"/>
+      `;
+    }
+
+    function renderFaces() {
+      let paths = '';
+      // Render back-to-front using shared isometric sort order
+      for (const { x, y } of isometricOrder(GRID_W, GRID_H)) {
+        if (!grid[y][x]) continue;
+
+        const tile = tileTypes[grid[y][x]];
+        const color = tile?.color || '#888';
+        const depth = tile?.depth ?? 0;
+        const cx = ORIGIN_X + (x - y) * (TW / 2);
+        const cy = (x + y) * (TH / 2) + TH / 2;
+        paths += renderTile(cx, cy, color, depth);
+      }
+      return paths;
+    }
+
+    function renderEdges() {
+      let lines = '';
+      for (let y = 0; y < GRID_H; y++) {
+        for (let x = 0; x < GRID_W; x++) {
+          const e = edges[y][x];
+          if (e.north) lines += edgeLineSVG(x, y, 'north', edgeTypes[e.north]);
+          if (e.east) lines += edgeLineSVG(x, y, 'east', edgeTypes[e.east]);
+        }
+      }
+      return lines;
+    }
+
+    function renderAll() {
+      const svg = document.getElementById('tiles');
+      if (!svg.getAttribute('viewBox')) return; // wait for canvas-ready
+      svg.innerHTML = renderFaces() + renderEdges() + edgePreview;
+    }
+  </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import { LitElement, html, css, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+import { getProjection, type ProjectionType, type Projection } from '../projections/index.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -9,12 +10,14 @@ import { sharedStyles } from '../styles/shared.js';
 export interface CanvasDrawEvent {
   x: number;
   y: number;
+  region?: string;
   pointerType: string;
 }
 
 export interface CanvasDragEvent {
   x: number;
   y: number;
+  region?: string;
   startX: number;
   startY: number;
   pointerType: string;
@@ -23,6 +26,7 @@ export interface CanvasDragEvent {
 export interface CanvasHoverEvent {
   x: number;
   y: number;
+  region?: string;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -49,6 +53,7 @@ export interface CanvasHoverEvent {
  * @fires canvas-drag-end - When drag ends: {x, y, startX, startY, pointerType}
  * @fires canvas-hover - When hovering over a cell: {x, y}
  * @fires canvas-leave - When pointer leaves canvas
+ * @fires canvas-ready - When projection dimensions are computed: {width, height, viewBox}
  *
  * @slot - Custom content rendered above the grid (e.g., SVG overlay)
  *
@@ -80,6 +85,9 @@ export class Canvas extends LitElement {
   @property({ type: Boolean })
   continuous = false;
 
+  @property({ type: String })
+  projection: ProjectionType = 'rectangular';
+
   // ─────────────────────────────────────────────────────────────────────────────
   // STATE
   // ─────────────────────────────────────────────────────────────────────────────
@@ -89,6 +97,9 @@ export class Canvas extends LitElement {
 
   @state()
   private hoverY = -1;
+
+  @state()
+  private projectionEngine: Projection | null = null;
 
   // ─────────────────────────────────────────────────────────────────────────────
   // PRIVATE
@@ -112,6 +123,7 @@ export class Canvas extends LitElement {
       :host {
         --_canvas-bg: var(--tui-canvas-bg, var(--surface-base));
         --_canvas-grid-color: var(--tui-canvas-grid-color, var(--border-default));
+        --_canvas-grid-fill: var(--tui-canvas-grid-fill, var(--surface-elevated, rgba(255, 255, 255, 0.03)));
         --_canvas-hover-color: var(--tui-canvas-hover-color, rgba(255, 255, 255, 0.1));
 
         display: block;
@@ -167,12 +179,27 @@ export class Canvas extends LitElement {
   // LIFECYCLE
   // ─────────────────────────────────────────────────────────────────────────────
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.projectionEngine = getProjection(this.projection, this.cellSize);
+  }
+
   protected updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
-    // Reset hover when dimensions change
-    if (changedProperties.has('width') || changedProperties.has('height')) {
+
+    if (
+      changedProperties.has('projection') ||
+      changedProperties.has('cellSize') ||
+      changedProperties.has('width') ||
+      changedProperties.has('height')
+    ) {
+      this.projectionEngine = getProjection(this.projection, this.cellSize);
       this.hoverX = -1;
       this.hoverY = -1;
+      this.dispatchEvent(new CustomEvent('canvas-ready', {
+        bubbles: true, composed: true,
+        detail: { width: this.canvasWidth, height: this.canvasHeight, viewBox: this.viewBox },
+      }));
     }
   }
 
@@ -183,23 +210,17 @@ export class Canvas extends LitElement {
   /**
    * Convert screen coordinates to grid cell coordinates
    */
-  private screenToGrid(clientX: number, clientY: number): { x: number; y: number } | null {
+  private screenToGrid(clientX: number, clientY: number): { x: number; y: number; region?: string } | null {
     const container = this.shadowRoot?.querySelector('.canvas-container');
-    if (!container) return null;
+    if (!container || !this.projectionEngine) return null;
 
     const rect = container.getBoundingClientRect();
     const localX = clientX - rect.left;
     const localY = clientY - rect.top;
 
-    const cellX = Math.floor(localX / this.cellSize);
-    const cellY = Math.floor(localY / this.cellSize);
+    const { width: totalW, height: totalH } = this.projectionEngine.getDimensions(this.width, this.height);
 
-    // Bounds check
-    if (cellX < 0 || cellX >= this.width || cellY < 0 || cellY >= this.height) {
-      return null;
-    }
-
-    return { x: cellX, y: cellY };
+    return this.projectionEngine.screenToGrid(localX, localY, { width: totalW, height: totalH });
   }
 
   /**
@@ -211,8 +232,8 @@ export class Canvas extends LitElement {
     y0: number,
     x1: number,
     y1: number
-  ): Array<{ x: number; y: number }> {
-    const points: Array<{ x: number; y: number }> = [];
+  ): Array<{ x: number; y: number; region?: string }> {
+    const points: Array<{ x: number; y: number; region?: string }> = [];
     const dx = x1 - x0;
     const dy = y1 - y0;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -263,7 +284,7 @@ export class Canvas extends LitElement {
     // Emit drag-start
     this.dispatchEvent(
       new CustomEvent('canvas-drag-start', {
-        detail: { x: cell.x, y: cell.y, pointerType: e.pointerType },
+        detail: { x: cell.x, y: cell.y, region: cell.region, pointerType: e.pointerType },
         bubbles: true,
         composed: true,
       })
@@ -272,7 +293,7 @@ export class Canvas extends LitElement {
     // Emit initial draw
     this.dispatchEvent(
       new CustomEvent('canvas-draw', {
-        detail: { x: cell.x, y: cell.y, pointerType: e.pointerType },
+        detail: { x: cell.x, y: cell.y, region: cell.region, pointerType: e.pointerType },
         bubbles: true,
         composed: true,
       })
@@ -289,7 +310,7 @@ export class Canvas extends LitElement {
         this.hoverY = cell.y;
         this.dispatchEvent(
           new CustomEvent('canvas-hover', {
-            detail: { x: cell.x, y: cell.y },
+            detail: { x: cell.x, y: cell.y, region: cell.region },
             bubbles: true,
             composed: true,
           })
@@ -322,7 +343,7 @@ export class Canvas extends LitElement {
           // Emit draw for each cell
           this.dispatchEvent(
             new CustomEvent('canvas-draw', {
-              detail: { x: point.x, y: point.y, pointerType: e.pointerType },
+              detail: { x: point.x, y: point.y, region: point.region, pointerType: e.pointerType },
               bubbles: true,
               composed: true,
             })
@@ -334,6 +355,7 @@ export class Canvas extends LitElement {
               detail: {
                 x: point.x,
                 y: point.y,
+                region: point.region,
                 startX: this.startX,
                 startY: this.startY,
                 pointerType: e.pointerType,
@@ -368,6 +390,7 @@ export class Canvas extends LitElement {
         detail: {
           x: cell?.x ?? this.lastX,
           y: cell?.y ?? this.lastY,
+          region: cell?.region,
           startX: this.startX,
           startY: this.startY,
           pointerType: e.pointerType,
@@ -407,29 +430,27 @@ export class Canvas extends LitElement {
   private renderGrid() {
     if (!this.showGrid) return null;
 
-    const totalWidth = this.width * this.cellSize;
-    const totalHeight = this.height * this.cellSize;
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    const { width: totalWidth, height: totalHeight } = proj.getDimensions(this.width, this.height);
 
-    // Generate grid lines
-    const lines: string[] = [];
+    // Generate cell outlines using projection
+    const paths: string[] = [];
 
-    // Vertical lines
-    for (let x = 0; x <= this.width; x++) {
-      const px = x * this.cellSize;
-      lines.push(`<line x1="${px}" y1="0" x2="${px}" y2="${totalHeight}"/>`);
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        paths.push(`<path d="${proj.getCellPath(x, y)}" fill="none"/>`);
+      }
     }
 
-    // Horizontal lines
-    for (let y = 0; y <= this.height; y++) {
-      const py = y * this.cellSize;
-      lines.push(`<line x1="0" y1="${py}" x2="${totalWidth}" y2="${py}"/>`);
-    }
+    // Bounds backdrop path
+    const boundsPath = proj.getBoundsPath();
 
     return html`
       <div class="grid-layer">
         <svg viewBox="0 0 ${totalWidth} ${totalHeight}">
-          <g stroke="var(--_canvas-grid-color)" stroke-width="1">
-            ${lines.map((line) => html`${this.unsafeSVG(line)}`)}
+          <path d="${boundsPath}" fill="var(--_canvas-grid-fill)" stroke="var(--_canvas-grid-color)" stroke-width="1"/>
+          <g stroke="var(--_canvas-grid-color)" stroke-width="0.5" opacity="0.5">
+            ${paths.map((p) => html`${this.unsafeSVG(p)}`)}
           </g>
         </svg>
       </div>
@@ -446,16 +467,15 @@ export class Canvas extends LitElement {
   private renderHover() {
     if (this.hoverX < 0 || this.hoverY < 0) return null;
 
-    const style = `
-      left: ${this.hoverX * this.cellSize}px;
-      top: ${this.hoverY * this.cellSize}px;
-      width: ${this.cellSize}px;
-      height: ${this.cellSize}px;
-    `;
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    const { width: totalWidth, height: totalHeight } = proj.getDimensions(this.width, this.height);
+    const pathD = proj.getCellPath(this.hoverX, this.hoverY);
 
     return html`
       <div class="hover-layer">
-        <div class="hover-cell" style=${style}></div>
+        <svg viewBox="0 0 ${totalWidth} ${totalHeight}" style="width:100%;height:100%;">
+          <path d="${pathD}" fill="var(--_canvas-hover-color)" />
+        </svg>
       </div>
     `;
   }
@@ -465,9 +485,12 @@ export class Canvas extends LitElement {
   // ─────────────────────────────────────────────────────────────────────────────
 
   render() {
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    const { width: totalWidth, height: totalHeight } = proj.getDimensions(this.width, this.height);
+
     const containerStyle = `
-      width: ${this.width * this.cellSize}px;
-      height: ${this.height * this.cellSize}px;
+      width: ${totalWidth}px;
+      height: ${totalHeight}px;
     `;
 
     return html`
@@ -506,16 +529,42 @@ export class Canvas extends LitElement {
   }
 
   /**
+   * Total pixel width of the canvas (from projection)
+   */
+  get canvasWidth(): number {
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    return proj.getDimensions(this.width, this.height).width;
+  }
+
+  /**
+   * Total pixel height of the canvas (from projection)
+   */
+  get canvasHeight(): number {
+    const proj = this.projectionEngine || getProjection('rectangular', this.cellSize);
+    return proj.getDimensions(this.width, this.height).height;
+  }
+
+  /**
+   * SVG viewBox string matching canvas dimensions: "0 0 width height"
+   */
+  get viewBox(): string {
+    return `0 0 ${this.canvasWidth} ${this.canvasHeight}`;
+  }
+
+  /**
    * Convert grid coordinates to screen coordinates (center of cell)
    */
   gridToScreen(cellX: number, cellY: number): { x: number; y: number } | null {
     const container = this.shadowRoot?.querySelector('.canvas-container');
-    if (!container) return null;
+    if (!container || !this.projectionEngine) return null;
 
     const rect = container.getBoundingClientRect();
+    const { width: totalW, height: totalH } = this.projectionEngine.getDimensions(this.width, this.height);
+    const screen = this.projectionEngine.gridToScreen(cellX, cellY, { width: totalW, height: totalH });
+
     return {
-      x: rect.left + (cellX + 0.5) * this.cellSize,
-      y: rect.top + (cellY + 0.5) * this.cellSize,
+      x: rect.left + screen.x,
+      y: rect.top + screen.y,
     };
   }
 

@@ -118,3 +118,54 @@
   --red: var(--color-error);
   --magenta: var(--color-primary);
 }
+
+.theme-home-security-interface {
+  /* Semantic Colors */
+  --color-primary: #3fb950;
+  --color-primary-bg: #002b36;
+  --color-primary-fg: #3fb950;
+  
+  --color-secondary: #00ff00;
+  --color-secondary-bg: #003300;
+  --color-secondary-fg: #00ff00;
+  
+  --color-error: #ff5555;
+  --color-error-bg: #330000;
+  --color-error-fg: #ff5555;
+  
+  --color-success: #3fb950;
+  --color-success-bg: #003300;
+  --color-success-fg: #3fb950;
+  
+  --color-info: #8be9fd;
+  --color-info-bg: #002233;
+  --color-info-fg: #8be9fd;
+
+  /* Surfaces */
+  --surface-base: #111;
+  --surface-elevated: #1a1a1a;
+  --surface-overlay: #2a2a2a;
+  --text-primary: #e0e0e0;
+  --text-muted: #666666;
+  --border-default: #3fb950;
+
+  /* Structural */
+  --border-width: 3px;
+  --border-radius: 0px;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Legacy mappings (for existing components) */
+  --bg: var(--surface-base);
+  --text: var(--text-primary);
+  --text-dim: var(--text-muted);
+  --border: var(--border-default);
+  --cyan: var(--color-primary);
+  --green: var(--color-secondary);
+  --yellow: #f1fa8c;
+  --red: var(--color-error);
+  --magenta: #ff79c6;
+}

@@ -1,6 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { consume } from '@lit/context';
 import { sharedStyles } from '../styles/shared.js';
+import { ToolState, toolContext } from '../state/tool-state.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -32,10 +34,18 @@ type SelectionStyle = 'invert' | 'border';
  * @cssprop [--tui-button-bg] - Override background color
  * @cssprop [--tui-button-color] - Override text color
  * @cssprop [--tui-button-border-color] - Override border color
+ * @cssprop [--tui-button-hover-bg] - Override hover background color
+ * @cssprop [--tui-button-hover-color] - Override hover text color
+ * @cssprop [--tui-button-hover-border-color] - Override hover border color
  * @cssprop [--selection-style] - Inherited selection style (invert | border)
  */
 @customElement('tui-button')
 export class Button extends LitElement {
+  static shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
+
   @property({ reflect: true })
   variant: ButtonVariant = 'default';
 
@@ -44,6 +54,12 @@ export class Button extends LitElement {
 
   @property({ attribute: 'selection-style' })
   selectionStyle?: SelectionStyle;
+
+  @property({ attribute: 'tool-id' })
+  toolId?: string;
+
+  @consume({ context: toolContext, subscribe: true })
+  private toolState?: ToolState;
 
   @property({ type: Boolean, reflect: true })
   selected = false;
@@ -70,6 +86,11 @@ export class Button extends LitElement {
         --_btn-color: var(--tui-button-color, var(--text-primary));
         --_btn-border-color: var(--tui-button-border-color, var(--border-default));
         --_btn-border-width: var(--border-width, 1px);
+
+        /* Hover overrides - default to standard behavior if not set */
+        --_btn-hover-bg: var(--tui-button-hover-bg, var(--border-default));
+        --_btn-hover-color: var(--tui-button-hover-color, var(--_btn-color));
+        --_btn-hover-border-color: var(--tui-button-hover-border-color, var(--text-muted));
 
         /* Size tokens */
         --_btn-padding-x: var(--spacing-md);
@@ -112,8 +133,9 @@ export class Button extends LitElement {
           filter 0.1s ease-out;
 
         &:hover:not(:disabled) {
-          background: var(--border-default);
-          border-color: var(--text-muted);
+          background: var(--_btn-hover-bg);
+          color: var(--_btn-hover-color);
+          border-color: var(--_btn-hover-border-color);
         }
 
         &:focus {
@@ -302,6 +324,13 @@ export class Button extends LitElement {
       }
     `,
   ];
+
+  protected updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+    if (this.toolId && this.toolState) {
+      this.selected = this.toolState.isActive(this.toolId);
+    }
+  }
 
   render() {
     return html`
