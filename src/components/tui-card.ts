@@ -1,6 +1,12 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+import { BORDER_CHARS } from '../utils/borders.js';
+
+// Static CSS character values from shared border module
+const S = BORDER_CHARS.single;
+const H = BORDER_CHARS.heavy;
+const D = BORDER_CHARS.double;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -67,7 +73,8 @@ export class Card extends LitElement {
 
       /* ═══════════════════════════════════════════════════════════════════
          CARD STRUCTURE
-         Uses CSS to simulate box-drawing borders
+         Uses CSS pseudo-elements for box-drawing corners.
+         State mapping (from borders.ts): single → neutral, heavy → hover, double → selected
          ═══════════════════════════════════════════════════════════════════ */
 
       .card {
@@ -101,7 +108,7 @@ export class Card extends LitElement {
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         NEUTRAL STATE - Single line border ┌──┐
+         NEUTRAL STATE - Single line border ${unsafeCSS(S.tl)}${unsafeCSS(S.h)}${unsafeCSS(S.h)}${unsafeCSS(S.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       .card {
@@ -109,7 +116,7 @@ export class Card extends LitElement {
       }
 
       .card::before {
-        content: '┌';
+        content: '${unsafeCSS(S.tl)}';
         position: absolute;
         top: -1px;
         left: -1px;
@@ -119,7 +126,7 @@ export class Card extends LitElement {
       }
 
       .card::after {
-        content: '┐';
+        content: '${unsafeCSS(S.tr)}';
         position: absolute;
         top: -1px;
         right: -1px;
@@ -129,7 +136,7 @@ export class Card extends LitElement {
       }
 
       .card-bottom::before {
-        content: '└';
+        content: '${unsafeCSS(S.bl)}';
         position: absolute;
         bottom: -1px;
         left: -1px;
@@ -139,7 +146,7 @@ export class Card extends LitElement {
       }
 
       .card-bottom::after {
-        content: '┘';
+        content: '${unsafeCSS(S.br)}';
         position: absolute;
         bottom: -1px;
         right: -1px;
@@ -149,7 +156,7 @@ export class Card extends LitElement {
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         HOVER STATE - Thick line border ┏━━┓
+         HOVER STATE - Heavy line border ${unsafeCSS(H.tl)}${unsafeCSS(H.h)}${unsafeCSS(H.h)}${unsafeCSS(H.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       .card:hover:not(.disabled) {
@@ -158,13 +165,13 @@ export class Card extends LitElement {
         transform: translateY(-2px);
       }
 
-      .card:hover:not(.disabled)::before { content: '┏'; color: var(--text-primary); }
-      .card:hover:not(.disabled)::after { content: '┓'; color: var(--text-primary); }
-      .card:hover:not(.disabled) .card-bottom::before { content: '┗'; color: var(--text-primary); }
-      .card:hover:not(.disabled) .card-bottom::after { content: '┛'; color: var(--text-primary); }
+      .card:hover:not(.disabled)::before { content: '${unsafeCSS(H.tl)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled)::after { content: '${unsafeCSS(H.tr)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled) .card-bottom::before { content: '${unsafeCSS(H.bl)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled) .card-bottom::after { content: '${unsafeCSS(H.br)}'; color: var(--text-primary); }
 
       /* ═══════════════════════════════════════════════════════════════════
-         SELECTED STATE - Double line border ╔══╗
+         SELECTED STATE - Double line border ${unsafeCSS(D.tl)}${unsafeCSS(D.h)}${unsafeCSS(D.h)}${unsafeCSS(D.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       :host([selected]) .card {
@@ -172,10 +179,10 @@ export class Card extends LitElement {
         box-shadow: 3px 3px 0 rgba(88, 166, 255, 0.2);
       }
 
-      :host([selected]) .card::before { content: '╔'; color: var(--color-primary); }
-      :host([selected]) .card::after { content: '╗'; color: var(--color-primary); }
-      :host([selected]) .card-bottom::before { content: '╚'; color: var(--color-primary); }
-      :host([selected]) .card-bottom::after { content: '╝'; color: var(--color-primary); }
+      :host([selected]) .card::before { content: '${unsafeCSS(D.tl)}'; color: var(--color-primary); }
+      :host([selected]) .card::after { content: '${unsafeCSS(D.tr)}'; color: var(--color-primary); }
+      :host([selected]) .card-bottom::before { content: '${unsafeCSS(D.bl)}'; color: var(--color-primary); }
+      :host([selected]) .card-bottom::after { content: '${unsafeCSS(D.br)}'; color: var(--color-primary); }
 
       /* Selected + hover */
       :host([selected]) .card:hover:not(.disabled) {

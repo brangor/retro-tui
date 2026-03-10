@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+import { titleDecoration, type BorderStyle } from '../utils/borders.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
@@ -15,6 +16,7 @@ import { sharedStyles } from '../styles/shared.js';
  * - Popup/Modal → heavy shadow, dims background
  * 
  * @attr {string} title - Modal title
+ * @attr {string} border - Border style: single | heavy | double | rounded | none (default: double)
  * @attr {boolean} open - Whether modal is visible
  * @attr {boolean} closable - Show close button (default: true)
  * 
@@ -27,6 +29,9 @@ import { sharedStyles } from '../styles/shared.js';
 export class Modal extends LitElement {
   @property({ type: String, reflect: true })
   title = '';
+
+  @property({ type: String, reflect: true })
+  border: BorderStyle = 'double';
 
   @property({ type: Boolean, reflect: true })
   open = false;
@@ -102,12 +107,8 @@ export class Modal extends LitElement {
         font-weight: normal;
       }
 
-      .title::before {
-        content: '┌─ ';
-      }
-
-      .title::after {
-        content: ' ─┐';
+      .title-decor {
+        opacity: 0.8;
       }
 
       .close {
@@ -216,7 +217,7 @@ export class Modal extends LitElement {
       <div class="overlay" @click=${this._handleOverlayClick}>
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
           <div class="header">
-            <span class="title" id="modal-title">${this.title}</span>
+            <span class="title" id="modal-title"><span class="title-decor">${titleDecoration(this.border).before}</span>${this.title}<span class="title-decor">${titleDecoration(this.border).after}</span></span>
             ${this.closable ? html`
               <button class="close" @click=${this.close} aria-label="Close">✕</button>
             ` : ''}
