@@ -65,7 +65,7 @@ Each type maps to a retro-tui component:
 | `progress` | `tui-progress` (new) | `{ value, label?, total?, current? }` | Trackable progress |
 | `table` | `tui-table` | `{ columns, rows }` or `{ key, row }` for upsert | Structured data display |
 | `status` | `tui-status` (new) | `{ state, message }` | Success/error/info badges |
-| `prompt` | `tui-console` | `{ message, options? }` | Request user input (future: requires return-path design) |
+| `prompt` | `tui-console` | `{ message, options? }` | Request user input (see Bidirectional Relay below) |
 | `clear` | (any) | `{ }` | Reset a component by id |
 | `dismiss` | (any) | `{ }` | Remove a panel by id |
 
@@ -78,6 +78,40 @@ Apps can send custom types the protocol doesn't define. Retro-tui renders unreco
 - **Layout instructions** — the app doesn't say "put this in the top-left." That's the UI's job.
 - **Styling directives** — no sending CSS. ANSI codes in text content are fine (already supported).
 - **Lifecycle management** — no "app connected/disconnected" semantics beyond what the WebSocket already provides.
+
+### Bidirectional Relay (Planned Phase)
+
+The push server's WebSocket connection is already bidirectional — messages just flow one direction today by convention. For interactive experiences (user input, prompts, MUD-style interactions), the push server extends to relay in both directions:
+
+**Return-path message format:**
+
+```json
+{
+  "channel": "spotify-dl",
+  "type": "response",
+  "id": "auth-prompt",
+  "data": {
+    "value": "https://open.spotify.com/playlist/..."
+  }
+}
+```
+
+**How it works:**
+- Browser sends a message back through the existing WebSocket when the user interacts with a `prompt`-type component
+- Push server relays it to the app (the pipe works both ways)
+- App receives it via WebSocket — the emitter kit offers a `RetroEmitter.connect()` mode that upgrades from fire-and-forget HTTP to a persistent WebSocket for apps that want to receive responses
+
+**What the push server still does NOT do:**
+- Interpret, store, or act on return messages — it's still a dumb relay
+- Manage sessions or correlate request/response pairs — the app uses `id` fields for that
+- Queue messages for disconnected apps — if nobody's listening, the message is dropped
+
+**Design constraints for v1 (to avoid closing the door):**
+- Event `id` fields must be stable enough for round-trip correlation
+- The push server's client tracking must distinguish app connections from browser connections so it knows which direction to relay
+- The emitter kit's API must not assume fire-and-forget (i.e., don't make `connect()` an afterthought — design the interface so HTTP-only and WebSocket modes share the same event vocabulary)
+
+This phase is not built in v1, but the protocol and emitter kit are designed to accommodate it.
 
 ---
 
