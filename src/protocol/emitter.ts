@@ -45,8 +45,8 @@ export class RetroEmitter {
     await this.emit('dismiss', id, {});
   }
 
-  async emit(type: string, id: string, data: Record<string, unknown>): Promise<void> {
-    const event: TuiEvent = { channel: this.channel, type, id, data };
+  async emit(type: string, id: string, data: Record<string, unknown> | LogData | ProgressData | TableData | StatusData): Promise<void> {
+    const event: TuiEvent = { channel: this.channel, type, id, data: data as Record<string, unknown> };
     await fetch(this.url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
