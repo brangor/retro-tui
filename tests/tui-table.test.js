@@ -29,4 +29,39 @@ describe('tui-table', () => {
     const header = el.shadowRoot.querySelector('.header');
     expect(header).to.exist;
   });
+
+  it('handles table event via handleEvent (full data)', async () => {
+    const el = await fixture(html`<tui-table></tui-table>`);
+    el.handleEvent({
+      channel: 'test', type: 'table', id: 'x',
+      data: { columns: ['Name', 'Score'], rows: [{ Name: 'Alice', Score: 100 }] },
+    });
+    await el.updateComplete;
+    const header = el.shadowRoot.querySelector('.header');
+    expect(header).to.exist;
+    const cells = el.shadowRoot.querySelectorAll('.row:not(.header) .cell');
+    expect(cells.length).to.equal(2);
+    expect(cells[0].textContent).to.contain('Alice');
+  });
+
+  it('handles table event via handleEvent (upsert)', async () => {
+    const el = await fixture(html`<tui-table></tui-table>`);
+    el.setData(['Name', 'Score'], [{ Name: 'Alice', Score: 100 }]);
+    el.handleEvent({
+      channel: 'test', type: 'table', id: 'x',
+      data: { key: 'Bob', row: { Name: 'Bob', Score: 200 } },
+    });
+    await el.updateComplete;
+    const rows = el.shadowRoot.querySelectorAll('.row:not(.header)');
+    expect(rows.length).to.equal(2);
+  });
+
+  it('handles clear event via handleEvent', async () => {
+    const el = await fixture(html`<tui-table></tui-table>`);
+    el.setData(['Name'], [{ Name: 'Alice' }]);
+    el.handleEvent({ channel: 'test', type: 'clear', id: 'x', data: {} });
+    await el.updateComplete;
+    const empty = el.shadowRoot.querySelector('.empty');
+    expect(empty).to.exist;
+  });
 });

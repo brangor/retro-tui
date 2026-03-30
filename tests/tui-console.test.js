@@ -35,4 +35,25 @@ describe('tui-console', () => {
     const el = await fixture(html`<tui-console history-size="50"></tui-console>`);
     expect(el.historySize).to.equal(50);
   });
+
+  it('handles log event via handleEvent', async () => {
+    const el = await fixture(html`<tui-console></tui-console>`);
+    el.handleEvent({
+      channel: 'test', type: 'log', id: 'x',
+      data: { message: 'Server output' },
+    });
+    await el.updateComplete;
+    const lines = el.shadowRoot.querySelectorAll('.line');
+    expect(lines.length).to.equal(1);
+    expect(lines[0].textContent).to.contain('Server output');
+  });
+
+  it('handles clear event via handleEvent', async () => {
+    const el = await fixture(html`<tui-console></tui-console>`);
+    el.print('something');
+    el.handleEvent({ channel: 'test', type: 'clear', id: 'x', data: {} });
+    await el.updateComplete;
+    const lines = el.shadowRoot.querySelectorAll('.line');
+    expect(lines.length).to.equal(0);
+  });
 });

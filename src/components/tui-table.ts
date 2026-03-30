@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { type BorderStyle } from '../utils/borders.js';
+import type { TuiEvent, TableData, TableUpsertData } from '../protocol/types.ts';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -111,6 +112,23 @@ export class Table extends LitElement {
       ];
     } else {
       this._rows = [...this._rows, data];
+    }
+  }
+
+  /** Accept a protocol event */
+  handleEvent(event: TuiEvent): void {
+    if (event.type === 'clear') {
+      this._columns = [];
+      this._rows = [];
+      return;
+    }
+    const data = event.data as Record<string, unknown>;
+    if ('columns' in data && 'rows' in data) {
+      const tableData = data as unknown as TableData;
+      this.setData(tableData.columns, tableData.rows);
+    } else if ('key' in data && 'row' in data) {
+      const upsert = data as unknown as TableUpsertData;
+      this.upsertRow(upsert.key, upsert.row);
     }
   }
 

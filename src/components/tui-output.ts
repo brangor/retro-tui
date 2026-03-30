@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { ansiToHtml } from '../utils/ansi.js';
+import type { TuiEvent, LogData } from '../protocol/types.ts';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -128,6 +129,18 @@ export class Output extends LitElement {
    */
   clear(): void {
     this._lines = [];
+  }
+
+  /** Accept a protocol event */
+  handleEvent(event: TuiEvent): void {
+    if (event.type === 'clear') {
+      this.clear();
+      return;
+    }
+    const data = event.data as unknown as LogData;
+    if (data.message != null) {
+      this.append(data.message);
+    }
   }
 
   private scrollToBottom(): void {
