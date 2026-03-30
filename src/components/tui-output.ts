@@ -119,7 +119,7 @@ export class Output extends LitElement {
 
     this._lines = [...this._lines, ...newLines].slice(-this.maxLines);
 
-    if (this.autoscroll) {
+    if (this.autoscroll && this._isNearBottom()) {
       this.updateComplete.then(() => this.scrollToBottom());
     }
   }
@@ -141,6 +141,14 @@ export class Output extends LitElement {
     if (data.message != null) {
       this.append(data.message);
     }
+  }
+
+  /** Check if the user is scrolled near the bottom (within 1 line height) */
+  private _isNearBottom(): boolean {
+    const output = this.shadowRoot?.querySelector('.output');
+    if (!output) return true;
+    const threshold = 30; // ~1.5 lines
+    return output.scrollHeight - output.scrollTop - output.clientHeight < threshold;
   }
 
   private scrollToBottom(): void {
