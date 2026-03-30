@@ -9,6 +9,9 @@
     ".": {
       "import": "./dist/retro-tui.js"
     },
+    "./emitter": {
+      "import": "./src/protocol/emitter.ts"
+    },
     "./src/*": "./src/*"
   },
   "files": [

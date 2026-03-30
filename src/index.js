@@ -36,3 +36,12 @@ export { ansiToHtml } from './utils/ansi.js';
 export { RetroPush } from './utils/push-client.js';
 export { renderGrid, isometricOrder } from './utils/canvas-renderer.js';
 export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './utils/borders.ts';
+
+// Protocol
+export { validateEvent } from './protocol/types.ts';
+export { RetroEmitter } from './protocol/emitter.ts';
+export { EventRouter } from './protocol/event-router.ts';
+
+// New components
+export { Progress } from './components/tui-progress.ts';
+export { Status } from './components/tui-status.ts';
