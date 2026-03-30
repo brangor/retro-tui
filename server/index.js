@@ -71,6 +71,7 @@ const httpServer = createServer((req, res) => {
         const payload = JSON.stringify({
           channel: message.channel,
           type: message.type || 'message',
+          id: message.id || null,
           data: message.data,
           timestamp: Date.now(),
         });
