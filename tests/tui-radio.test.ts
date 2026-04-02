@@ -87,4 +87,18 @@ describe('tui-radio', () => {
     await el.updateComplete;
     expect(el.checked).to.be.false;
   });
+
+  it('selects on Space keypress', async () => {
+    const el = await fixture(html`<tui-radio></tui-radio>`) as any;
+    const container = el.shadowRoot!.querySelector('.radio');
+    container!.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    await el.updateComplete;
+    expect(el.checked).to.be.true;
+  });
+
+  it('sets tabindex=-1 when disabled', async () => {
+    const el = await fixture(html`<tui-radio disabled></tui-radio>`);
+    const container = el.shadowRoot!.querySelector('.radio');
+    expect(container!.getAttribute('tabindex')).to.equal('-1');
+  });
 });
