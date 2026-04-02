@@ -1,4 +1,4 @@
-import { describe, it, vi, expect as vitestExpect } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
 import '../src/components/tui-checkbox.ts';
 
@@ -66,7 +66,7 @@ describe('tui-checkbox', () => {
     el.addEventListener('tui-change', handler);
     const container = el.shadowRoot!.querySelector('.checkbox');
     container!.click();
-    vitestExpect(handler).toHaveBeenCalledOnce();
+    expect(handler.mock.calls).to.have.length(1);
     const detail = handler.mock.calls[0][0].detail;
     expect(detail.checked).to.be.true;
     expect(detail.value).to.equal('opt1');

@@ -1,7 +1,8 @@
+// src/components/tui-checkbox.ts
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import type { TuiEvent } from '../protocol/types.ts';
+import type { TuiEvent, CheckboxData } from '../protocol/types.ts';
 
 @customElement('tui-checkbox')
 export class Checkbox extends LitElement {
@@ -66,7 +67,7 @@ export class Checkbox extends LitElement {
       this.checked = false;
       return;
     }
-    const data = event.data as Record<string, unknown>;
+    const data = event.data as unknown as CheckboxData;
     if (data.checked != null) this.checked = Boolean(data.checked);
     if (data.disabled != null) this.disabled = Boolean(data.disabled);
     if (data.label != null) this.label = String(data.label);
@@ -94,7 +95,7 @@ export class Checkbox extends LitElement {
       <div class="checkbox"
            role="checkbox"
            aria-checked="${this.checked}"
-           tabindex="0"
+           tabindex="${this.disabled ? -1 : 0}"
            @click=${this._toggle}
            @keydown=${this._onKeydown}>
         <span class="glyph">${this.checked ? '▣' : '□'}</span>

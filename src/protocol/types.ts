@@ -35,6 +35,12 @@ export interface StatusData {
   message: string;
 }
 
+export interface CheckboxData {
+  checked?: boolean;
+  disabled?: boolean;
+  label?: string;
+}
+
 export interface PromptData {
   message: string;
   options?: string[];
