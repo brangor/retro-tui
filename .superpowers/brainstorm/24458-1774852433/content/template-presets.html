@@ -1,0 +1,86 @@
+<h2>Layout Presets</h2>
+<p class="subtitle">The component ships with preset templates. Which of these feel useful? (Select all that apply)</p>
+
+<div class="options" data-multiselect>
+  <div class="option" data-choice="monitor" onclick="toggleSelect(this)">
+    <div class="letter" style="font-size:14px;">1</div>
+    <div class="content" style="display:flex;gap:16px;align-items:flex-start;">
+      <div>
+        <h3>Monitor</h3>
+        <p>Status strip top, full-height activity log left, stacked aside panels right. The protocol demo layout.</p>
+        <p style="color:#888;font-size:12px;margin-top:4px;">Good for: CLI tool dashboards, build monitors, process watchers</p>
+      </div>
+      <div style="width:160px;flex-shrink:0;height:90px;display:flex;flex-direction:column;gap:1px;font-family:monospace;font-size:7px;">
+        <div style="height:14px;background:#1a2a35;border:1px solid #00cccc;display:flex;align-items:center;padding:0 4px;color:#00cccc;">status &bull; status &bull; status</div>
+        <div style="flex:1;display:flex;gap:1px;">
+          <div style="width:50%;background:#1a2a35;border:1px solid #00cccc;padding:2px 4px;color:#8899aa;">main</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:1px;">
+            <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:2px 4px;color:#335566;">aside</div>
+            <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:2px 4px;color:#335566;">aside</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="otacon" onclick="toggleSelect(this)">
+    <div class="letter" style="font-size:14px;">2</div>
+    <div class="content" style="display:flex;gap:16px;align-items:flex-start;">
+      <div>
+        <h3>Viewer</h3>
+        <p>Header bar top, two equal columns for main content, full-width detail/description strip below. The Otacon photo viewer layout.</p>
+        <p style="color:#888;font-size:12px;margin-top:4px;">Good for: Comparison views, image/data viewers, detail inspectors</p>
+      </div>
+      <div style="width:160px;flex-shrink:0;height:90px;display:flex;flex-direction:column;gap:1px;font-family:monospace;font-size:7px;">
+        <div style="height:14px;background:#1a2a35;border:1px solid #00cccc;display:flex;align-items:center;padding:0 4px;color:#00cccc;">header</div>
+        <div style="flex:1;display:flex;gap:1px;">
+          <div style="flex:1;background:#1a2a35;border:1px solid #00cccc;padding:2px 4px;color:#8899aa;">primary</div>
+          <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:2px 4px;color:#335566;">secondary</div>
+        </div>
+        <div style="height:28px;background:#1a2a35;border:1px solid #335566;padding:2px 4px;color:#335566;">detail</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="console" onclick="toggleSelect(this)">
+    <div class="letter" style="font-size:14px;">3</div>
+    <div class="content" style="display:flex;gap:16px;align-items:flex-start;">
+      <div>
+        <h3>Console</h3>
+        <p>Full-width main area on top (takes most space), narrow horizontal strip at bottom for status/input. Minimal, terminal-focused.</p>
+        <p style="color:#888;font-size:12px;margin-top:4px;">Good for: MUDs, interactive terminals, single-focus apps with a status bar</p>
+      </div>
+      <div style="width:160px;flex-shrink:0;height:90px;display:flex;flex-direction:column;gap:1px;font-family:monospace;font-size:7px;">
+        <div style="flex:1;background:#1a2a35;border:1px solid #00cccc;padding:2px 4px;color:#8899aa;">main</div>
+        <div style="height:20px;background:#1a2a35;border:1px solid #335566;padding:2px 4px;color:#335566;">footer</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="triad" onclick="toggleSelect(this)">
+    <div class="letter" style="font-size:14px;">4</div>
+    <div class="content" style="display:flex;gap:16px;align-items:flex-start;">
+      <div>
+        <h3>Triad</h3>
+        <p>Three equal columns. No hierarchy assumed — each column is a named slot. Simple and symmetric.</p>
+        <p style="color:#888;font-size:12px;margin-top:4px;">Good for: Multi-stream monitors, comparison dashboards, chat/log views</p>
+      </div>
+      <div style="width:160px;flex-shrink:0;height:90px;display:flex;gap:1px;font-family:monospace;font-size:7px;">
+        <div style="flex:1;background:#1a2a35;border:1px solid #00cccc;padding:2px 4px;color:#8899aa;">left</div>
+        <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:2px 4px;color:#335566;">center</div>
+        <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:2px 4px;color:#335566;">right</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="custom" onclick="toggleSelect(this)">
+    <div class="letter" style="font-size:14px;">+</div>
+    <div class="content">
+      <h3>Custom (always available)</h3>
+      <p>Pass your own CSS grid-template-areas string and slot names. The presets above are just shorthand for common patterns — you can always define your own.</p>
+      <p style="color:#888;font-size:12px;margin-top:4px;">
+        <code style="background:#1a2a35;padding:2px 6px;border-radius:2px;">&lt;tui-tiled areas="main main | aside-1 aside-2"&gt;</code>
+      </p>
+    </div>
+  </div>
+</div>

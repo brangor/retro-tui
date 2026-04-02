@@ -1,0 +1,136 @@
+<h2>Tiled Workspace Layout</h2>
+<p class="subtitle">How should the fixed anchors and free tiling area relate to each other?</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;">
+      <div style="display:flex;height:200px;gap:2px;font-size:11px;font-family:monospace;">
+        <!-- Left anchor + right tiling -->
+        <div style="width:35%;background:#1a2a35;border:1px solid #00cccc;display:flex;flex-direction:column;">
+          <div style="padding:4px 8px;background:#0d1a22;color:#00cccc;font-size:9px;border-bottom:1px solid #00cccc;">ACTIVITY</div>
+          <div style="flex:1;padding:6px;color:#8899aa;font-size:8px;line-height:1.6;">
+            Authenticating...<br>
+            <span style="color:#00ff88;">&#10003;</span> Authenticated<br>
+            [1/6] Downloading...<br>
+            &nbsp; OK: track.mp3
+          </div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+          <div style="height:28px;background:#1a2a35;border:1px solid #00cccc;display:flex;gap:2px;">
+            <div style="flex:1;padding:2px 6px;display:flex;align-items:center;gap:4px;color:#8899aa;font-size:8px;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#00ff88;display:inline-block;"></span> auth
+            </div>
+            <div style="flex:1;padding:2px 6px;display:flex;align-items:center;gap:4px;color:#8899aa;font-size:8px;border-left:1px solid #00cccc;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#00cccc;display:inline-block;"></span> fetch
+            </div>
+          </div>
+          <div style="flex:1;display:flex;gap:2px;">
+            <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:4px;">
+              <div style="color:#335566;font-size:7px;margin-bottom:4px;">PROGRESS</div>
+              <div style="height:6px;background:#0d1a22;margin-top:8px;"><div style="width:60%;height:100%;background:#00cccc;"></div></div>
+            </div>
+            <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:4px;">
+              <div style="color:#335566;font-size:7px;margin-bottom:4px;">SUMMARY</div>
+              <div style="color:#8899aa;font-size:7px;line-height:1.4;">Downloaded: 3<br>Tagged: 0</div>
+            </div>
+          </div>
+          <div style="flex:1;display:flex;gap:2px;">
+            <div style="flex:1;background:#1a2a35;border:1px dashed #335566;padding:4px;display:flex;align-items:center;justify-content:center;">
+              <span style="color:#335566;font-size:8px;">auto-tile zone</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A: Anchor Left, Tile Right</h3>
+      <p>Activity log anchored as a full-height left column. Status strip anchored at top-right. Remaining right area auto-tiles dynamic panels into a grid. Closest to the protocol demo.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;">
+      <div style="display:flex;flex-direction:column;height:200px;gap:2px;font-size:11px;font-family:monospace;">
+        <!-- Top anchors + bottom tiling -->
+        <div style="height:28px;background:#1a2a35;border:1px solid #00cccc;display:flex;gap:2px;">
+          <div style="flex:1;padding:2px 6px;display:flex;align-items:center;gap:4px;color:#8899aa;font-size:8px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#00ff88;display:inline-block;"></span> auth
+          </div>
+          <div style="flex:1;padding:2px 6px;display:flex;align-items:center;gap:4px;color:#8899aa;font-size:8px;border-left:1px solid #00cccc;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#00cccc;display:inline-block;"></span> fetch
+          </div>
+          <div style="flex:1;padding:2px 6px;display:flex;align-items:center;gap:4px;color:#8899aa;font-size:8px;border-left:1px solid #00cccc;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#335566;display:inline-block;"></span> tag
+          </div>
+        </div>
+        <div style="flex:1;display:flex;gap:2px;">
+          <div style="width:50%;background:#1a2a35;border:1px solid #00cccc;display:flex;flex-direction:column;">
+            <div style="padding:4px 8px;background:#0d1a22;color:#00cccc;font-size:9px;border-bottom:1px solid #00cccc;">ACTIVITY</div>
+            <div style="flex:1;padding:6px;color:#8899aa;font-size:8px;line-height:1.6;">
+              Authenticating...<br>
+              <span style="color:#00ff88;">&#10003;</span> Authenticated<br>
+              [1/6] Downloading...
+            </div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+            <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:4px;">
+              <div style="color:#335566;font-size:7px;">PROGRESS</div>
+              <div style="height:6px;background:#0d1a22;margin-top:8px;"><div style="width:60%;height:100%;background:#00cccc;"></div></div>
+            </div>
+            <div style="flex:1;background:#1a2a35;border:1px solid #335566;padding:4px;">
+              <div style="color:#335566;font-size:7px;">SUMMARY</div>
+              <div style="color:#8899aa;font-size:7px;">Downloaded: 3</div>
+            </div>
+            <div style="flex:1;background:#1a2a35;border:1px dashed #335566;display:flex;align-items:center;justify-content:center;">
+              <span style="color:#335566;font-size:8px;">auto-tile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B: Anchor Top + Left, Tile Bottom-Right</h3>
+      <p>Status strip anchored across top. Activity anchored as half-width left column. Right column splits between anchored zones and auto-tile area at bottom. More balanced use of space.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:16px;">
+      <div style="display:flex;flex-direction:column;height:200px;gap:2px;font-size:11px;font-family:monospace;">
+        <!-- Configurable named regions -->
+        <div style="height:24px;background:#1a2a35;border:1px solid #00cccc;display:flex;align-items:center;padding:0 8px;color:#00cccc;font-size:8px;gap:8px;">
+          <span>header</span>
+          <span style="color:#335566;">|</span>
+          <span style="color:#8899aa;">auth: OK</span>
+          <span style="color:#335566;">|</span>
+          <span style="color:#8899aa;">fetch: OK</span>
+        </div>
+        <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;">
+          <div style="background:#1a2a35;border:1px solid #00cccc;grid-row:1/3;display:flex;flex-direction:column;">
+            <div style="padding:3px 8px;color:#335566;font-size:7px;border-bottom:1px solid #1a3344;">slot: main</div>
+            <div style="flex:1;padding:4px;color:#8899aa;font-size:7px;line-height:1.5;">
+              [1/6] Downloading...<br>OK: track.mp3<br>[2/6] Downloading...
+            </div>
+          </div>
+          <div style="background:#1a2a35;border:1px solid #335566;">
+            <div style="padding:3px 8px;color:#335566;font-size:7px;border-bottom:1px solid #1a3344;">slot: aside-1</div>
+            <div style="padding:4px;color:#8899aa;font-size:7px;">
+              <div style="height:6px;background:#0d1a22;margin-top:4px;"><div style="width:40%;height:100%;background:#00cccc;"></div></div>
+            </div>
+          </div>
+          <div style="background:#1a2a35;border:1px solid #335566;">
+            <div style="padding:3px 8px;color:#335566;font-size:7px;border-bottom:1px solid #1a3344;">slot: aside-2</div>
+            <div style="padding:4px;color:#8899aa;font-size:7px;">Downloaded: 3<br>Tagged: 0</div>
+          </div>
+        </div>
+        <div style="height:20px;background:#1a2a35;border:1px solid #335566;display:flex;align-items:center;padding:0 8px;color:#335566;font-size:7px;">
+          footer
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C: Named Slot Grid</h3>
+      <p>Declare named slots (header, main, aside-1, aside-2, footer) with CSS grid areas. Any slot can be an anchor or auto-tile zone. Most flexible — the app defines the layout template, the component fills it. Like CSS grid-template-areas as a component API.</p>
+    </div>
+  </div>
+</div>
