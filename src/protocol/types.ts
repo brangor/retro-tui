@@ -41,6 +41,12 @@ export interface CheckboxData {
   label?: string;
 }
 
+export interface RadioData {
+  checked?: boolean;
+  disabled?: boolean;
+  label?: string;
+}
+
 export interface PromptData {
   message: string;
   options?: string[];
