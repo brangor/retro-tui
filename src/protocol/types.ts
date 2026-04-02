@@ -47,6 +47,13 @@ export interface RadioData {
   label?: string;
 }
 
+export interface InputData {
+  value?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  label?: string;
+}
+
 export interface PromptData {
   message: string;
   options?: string[];
