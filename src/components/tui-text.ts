@@ -23,6 +23,9 @@ export class Text extends LitElement {
   @property({ type: String })
   attr = '';
 
+  @property({ type: String, reflect: true })
+  variant: 'body' | 'caption' | 'subtitle' | 'label' | '' = '';
+
   static styles = [
     sharedStyles,
     css`
@@ -37,6 +40,28 @@ export class Text extends LitElement {
         line-height: 1.4;
         white-space: pre-wrap;
         word-break: break-all;
+      }
+
+      :host([variant="caption"]) pre {
+        font-size: var(--font-size-caption, 0.6rem);
+        color: var(--text-muted);
+      }
+
+      :host([variant="subtitle"]) pre {
+        font-size: var(--font-size-sm, 0.75rem);
+        color: var(--text-muted);
+      }
+
+      :host([variant="label"]) pre {
+        font-size: var(--font-size-label, 0.75rem);
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      :host([variant="body"]) pre {
+        font-size: var(--font-size-body, 0.85rem);
+        color: var(--text-primary);
       }
     `,
   ];

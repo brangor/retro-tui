@@ -27,9 +27,11 @@ export class Input extends LitElement {
       :host { display: block; }
       label {
         display: block;
-        font-size: 0.8rem;
-        color: var(--text-muted, var(--text-dim, #8b949e));
+        font-size: var(--font-size-label, 0.75rem);
+        color: var(--text-muted);
         margin-bottom: var(--spacing-xs, 0.25rem);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
       }
       input {
         width: 100%;
@@ -37,16 +39,17 @@ export class Input extends LitElement {
         padding: var(--spacing-sm, 0.5rem);
         font-family: inherit;
         font-size: inherit;
-        color: var(--text-primary, var(--text, #c9d1d9));
-        background: var(--surface-base, var(--bg, #0d1117));
+        color: var(--text-primary);
+        background: var(--surface-base);
         border: var(--border-width, 1px) solid var(--border-default, var(--border, #30363d));
         outline: none;
       }
       input:focus {
-        border-color: var(--color-primary, var(--cyan, #58a6ff));
+        border-color: var(--color-primary);
       }
       input::placeholder {
-        color: var(--text-muted, var(--text-dim, #8b949e));
+        color: var(--text-muted);
+        font-size: var(--font-size-body, 0.85rem);
       }
       input:disabled {
         opacity: 0.5;

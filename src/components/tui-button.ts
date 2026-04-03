@@ -8,7 +8,7 @@ import { ToolState, toolContext } from '../state/tool-state.js';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-type ButtonVariant = 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu';
+type ButtonVariant = 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu' | 'outline';
 type ButtonSize = 'sm' | 'md' | 'lg';
 type SelectionStyle = 'invert' | 'border';
 
@@ -215,6 +215,24 @@ export class Button extends LitElement {
           background: transparent;
           border-color: var(--border-default);
           color: var(--text-primary);
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         VARIANT: OUTLINE
+         Single border outline, text colored, transparent background
+         Border matches variant color. Fills on hover.
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([variant="outline"]) {
+        --_btn-bg: transparent;
+        --_btn-color: var(--color-primary);
+        --_btn-border-color: var(--color-primary);
+
+        & button:hover:not(:disabled) {
+          background: var(--color-primary);
+          color: var(--surface-base);
+          border-color: var(--color-primary);
         }
       }
 

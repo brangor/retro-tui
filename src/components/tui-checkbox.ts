@@ -38,26 +38,26 @@ export class Checkbox extends LitElement {
       .glyph {
         font-size: 1.1em;
         line-height: 1;
-        color: var(--text-primary, var(--text, #c9d1d9));
+        color: var(--text-primary);
         transition: color 0.15s;
       }
       :host([checked]) .glyph {
-        color: var(--color-primary, var(--cyan, #58a6ff));
+        color: var(--color-primary);
       }
       :host([disabled]) .glyph {
-        color: var(--text-muted, var(--text-dim, #8b949e));
+        color: var(--text-muted);
       }
       .checkbox:hover .glyph {
-        color: var(--color-primary, var(--cyan, #58a6ff));
+        color: var(--color-primary);
       }
       :host([disabled]) .checkbox:hover .glyph {
-        color: var(--text-muted, var(--text-dim, #8b949e));
+        color: var(--text-muted);
       }
       .label {
-        color: var(--text-primary, var(--text, #c9d1d9));
+        color: var(--text-primary);
       }
       :host([disabled]) .label {
-        color: var(--text-muted, var(--text-dim, #8b949e));
+        color: var(--text-muted);
       }
     `,
   ];

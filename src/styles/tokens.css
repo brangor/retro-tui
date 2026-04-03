@@ -17,19 +17,23 @@
   --color-primary: #00ffff;
   --color-primary-bg: #002b36;
   --color-primary-fg: #00ffff;
-  
+
   --color-secondary: #00ff00;
   --color-secondary-bg: #003300;
   --color-secondary-fg: #00ff00;
-  
+
   --color-error: #ff5555;
   --color-error-bg: #330000;
   --color-error-fg: #ff5555;
-  
+
+  --color-warning: #e8691e;
+  --color-warning-bg: #331500;
+  --color-warning-fg: #e8691e;
+
   --color-success: #50fa7b;
   --color-success-bg: #003300;
   --color-success-fg: #50fa7b;
-  
+
   --color-info: #8be9fd;
   --color-info-bg: #002233;
   --color-info-fg: #8be9fd;
@@ -51,16 +55,15 @@
   --spacing-lg: 1.5rem;
   --font-mono: 'IBM Plex Mono', 'Fira Code', 'Consolas', monospace;
 
-  /* Legacy mappings (for existing components) */
-  --bg: var(--surface-base);
-  --text: var(--text-primary);
-  --text-dim: var(--text-muted);
-  --border: var(--border-default);
-  --cyan: var(--color-primary);
-  --green: var(--color-secondary);
-  --yellow: #f1fa8c;
-  --red: var(--color-error);
-  --magenta: #ff79c6;
+  /* Type Scale */
+  --font-size-xs: 0.6rem;
+  --font-size-sm: 0.75rem;
+  --font-size-md: 0.85rem;
+  --font-size-lg: 1rem;
+  --font-size-xl: 1.25rem;
+  --font-size-label: var(--font-size-sm);
+  --font-size-body: var(--font-size-md);
+  --font-size-caption: var(--font-size-xs);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -73,19 +76,23 @@
   --color-primary: #ff00ff;
   --color-primary-bg: #ff00ff;
   --color-primary-fg: #000000;
-  
+
   --color-secondary: #00ffcc;
   --color-secondary-bg: #00ffcc;
   --color-secondary-fg: #000000;
-  
+
   --color-error: #ff3366;
   --color-error-bg: #ff3366;
   --color-error-fg: #ffffff;
-  
+
+  --color-warning: #ff6622;
+  --color-warning-bg: #ff6622;
+  --color-warning-fg: #000000;
+
   --color-success: #00ff66;
   --color-success-bg: #00ff66;
   --color-success-fg: #000000;
-  
+
   --color-info: #6666ff;
   --color-info-bg: #6666ff;
   --color-info-fg: #ffffff;
@@ -107,16 +114,15 @@
   --spacing-lg: 1.5rem;
   --font-mono: 'IBM Plex Mono', 'Fira Code', 'Consolas', monospace;
 
-  /* Legacy mappings */
-  --bg: var(--surface-base);
-  --text: var(--text-primary);
-  --text-dim: var(--text-muted);
-  --border: var(--border-default);
-  --cyan: var(--color-secondary);
-  --green: var(--color-success);
-  --yellow: #ffcc00;
-  --red: var(--color-error);
-  --magenta: var(--color-primary);
+  /* Type Scale */
+  --font-size-xs: 0.6rem;
+  --font-size-sm: 0.75rem;
+  --font-size-md: 0.85rem;
+  --font-size-lg: 1rem;
+  --font-size-xl: 1.25rem;
+  --font-size-label: var(--font-size-sm);
+  --font-size-body: var(--font-size-md);
+  --font-size-caption: var(--font-size-xs);
 }
 
 .theme-home-security-interface {
@@ -124,19 +130,23 @@
   --color-primary: #3fb950;
   --color-primary-bg: #002b36;
   --color-primary-fg: #3fb950;
-  
+
   --color-secondary: #00ff00;
   --color-secondary-bg: #003300;
   --color-secondary-fg: #00ff00;
-  
+
   --color-error: #ff5555;
   --color-error-bg: #330000;
   --color-error-fg: #ff5555;
-  
+
+  --color-warning: #e8691e;
+  --color-warning-bg: #331500;
+  --color-warning-fg: #e8691e;
+
   --color-success: #3fb950;
   --color-success-bg: #003300;
   --color-success-fg: #3fb950;
-  
+
   --color-info: #8be9fd;
   --color-info-bg: #002233;
   --color-info-fg: #8be9fd;
@@ -158,14 +168,13 @@
   --spacing-lg: 1.5rem;
   --font-mono: 'IBM Plex Mono', 'Fira Code', 'Consolas', monospace;
 
-  /* Legacy mappings (for existing components) */
-  --bg: var(--surface-base);
-  --text: var(--text-primary);
-  --text-dim: var(--text-muted);
-  --border: var(--border-default);
-  --cyan: var(--color-primary);
-  --green: var(--color-secondary);
-  --yellow: #f1fa8c;
-  --red: var(--color-error);
-  --magenta: #ff79c6;
+  /* Type Scale */
+  --font-size-xs: 0.6rem;
+  --font-size-sm: 0.75rem;
+  --font-size-md: 0.85rem;
+  --font-size-lg: 1rem;
+  --font-size-xl: 1.25rem;
+  --font-size-label: var(--font-size-sm);
+  --font-size-body: var(--font-size-md);
+  --font-size-caption: var(--font-size-xs);
 }

@@ -21,6 +21,12 @@ export { Toast, tuiToast } from './components/tui-toast.ts';
 export { Card } from './components/tui-card.ts';
 export { Palette } from './components/tui-palette.ts';
 export { Canvas } from './components/tui-canvas.ts';
+export { Link } from './components/tui-link.ts';
+export { ActionList } from './components/tui-action-list.ts';
+export { Stat } from './components/tui-stat.ts';
+export { StatusStrip, StripItem } from './components/tui-status-strip.ts';
+export { Titlebar } from './components/tui-titlebar.ts';
+export { ZoneLayout } from './components/tui-zone-layout.ts';
 
 // Form
 export { Input } from './components/tui-input.ts';

@@ -30,7 +30,7 @@ export class RadioGroup extends LitElement {
       }
       .group-label {
         font-size: 0.8rem;
-        color: var(--text-muted, var(--text-dim, #8b949e));
+        color: var(--text-muted);
         margin-bottom: var(--spacing-xs, 0.25rem);
       }
     `,
