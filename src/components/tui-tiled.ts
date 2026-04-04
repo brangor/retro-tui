@@ -1,0 +1,184 @@
+import { LitElement, html, css, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { sharedStyles } from '../styles/shared.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TYPES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+type TiledPreset = 'monitor' | 'viewer' | 'console' | 'console-split' | 'triad';
+
+interface ParsedGrid {
+  areas: string;       // CSS grid-template-areas value
+  rows: string;        // CSS grid-template-rows value
+  cols: string;        // CSS grid-template-columns value
+  slotNames: string[]; // Unique area names for slot generation
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PRESETS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const PRESETS: Record<TiledPreset, string> = {
+  'monitor':       'status status | main aside-1 | main aside-2',
+  'viewer':        'primary secondary | detail detail',
+  'console':       'main | footer',
+  'console-split': 'main aside | footer footer',
+  'triad':         'left center right',
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PARSING
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Parse a pipe-separated areas shorthand into CSS grid values.
+ *
+ * Input:  "header header | main sidebar | footer footer"
+ * Output: {
+ *   areas: '"header header" "main sidebar" "footer footer"',
+ *   rows:  'auto 1fr auto',
+ *   cols:  '1fr 1fr',
+ *   slotNames: ['header', 'main', 'sidebar', 'footer']
+ * }
+ */
+export function parseAreas(shorthand: string): ParsedGrid {
+  const rows = shorthand.split('|').map(r => r.trim()).filter(Boolean);
+  const grid = rows.map(row => row.split(/\s+/));
+
+  // CSS grid-template-areas: quoted row strings
+  const areas = grid.map(cols => `"${cols.join(' ')}"`).join(' ');
+
+  // Max columns across all rows
+  const maxCols = Math.max(...grid.map(cols => cols.length));
+  const colTemplate = Array(maxCols).fill('1fr').join(' ');
+
+  // Unique slot names (preserve order of first appearance)
+  const seen = new Set<string>();
+  const slotNames: string[] = [];
+  for (const row of grid) {
+    for (const name of row) {
+      if (!seen.has(name)) {
+        seen.add(name);
+        slotNames.push(name);
+      }
+    }
+  }
+
+  // Row sizing rules:
+  // - Full-width top row → auto (size to content)
+  // - Full-width bottom row → minmax(120px, auto) (min height for log panels)
+  // - All other rows → 1fr
+  const rowTemplate = grid.map((cols, i) => {
+    const isFullWidth = new Set(cols).size === 1;
+    if (isFullWidth && i === 0) return 'auto';
+    if (isFullWidth && i === grid.length - 1) return 'minmax(120px, auto)';
+    return '1fr';
+  }).join(' ');
+
+  return { areas, rows: rowTemplate, cols: colTemplate, slotNames };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * <tui-tiled> - CSS grid layout with named slots and preset templates
+ *
+ * A pure layout component. Compose with tui-titlebar and tui-status-strip
+ * for app shell chrome.
+ *
+ * @attr {string} preset - Named layout: 'monitor' | 'viewer' | 'console' | 'console-split' | 'triad'
+ * @attr {string} areas - Custom grid-template-areas shorthand. '|' separates rows. Overrides preset.
+ * @attr {string} gap - CSS grid gap value (default: '1px')
+ * @attr {boolean} labels - Show zone-name labels in top-left of each slot
+ */
+@customElement('tui-tiled')
+export class Tiled extends LitElement {
+  @property({ type: String, reflect: true })
+  preset: TiledPreset | '' = '';
+
+  @property({ type: String })
+  areas = '';
+
+  @property({ type: String })
+  gap = '1px';
+
+  @property({ type: Boolean })
+  labels = false;
+
+  static styles = [
+    sharedStyles,
+    css`
+      :host {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background: var(--surface-base);
+      }
+
+      .grid {
+        flex: 1;
+        display: grid;
+        background: var(--border-default);
+        min-height: 0;
+      }
+
+      .zone {
+        position: relative;
+        background: var(--surface-base);
+        min-height: 0;
+        overflow: auto;
+      }
+
+      .zone-label {
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        font-size: var(--font-size-caption, 0.6rem);
+        color: var(--text-muted);
+        opacity: 0.5;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        pointer-events: none;
+        z-index: 1;
+      }
+    `,
+  ];
+
+  private _getGrid(): ParsedGrid | null {
+    const shorthand = this.areas || (this.preset ? PRESETS[this.preset] : '');
+    if (!shorthand) return null;
+    return parseAreas(shorthand);
+  }
+
+  render() {
+    const grid = this._getGrid();
+    if (!grid) return nothing;
+
+    const gridStyle = `
+      grid-template-areas: ${grid.areas};
+      grid-template-rows: ${grid.rows};
+      grid-template-columns: ${grid.cols};
+      gap: ${this.gap};
+    `;
+
+    return html`
+      <div class="grid" style=${gridStyle}>
+        ${grid.slotNames.map(name => html`
+          <div class="zone" style="grid-area: ${name};">
+            ${this.labels ? html`<span class="zone-label">${name}</span>` : nothing}
+            <slot name=${name}></slot>
+          </div>
+        `)}
+      </div>
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'tui-tiled': Tiled;
+  }
+}

@@ -26,7 +26,7 @@ export { ActionList } from './components/tui-action-list.ts';
 export { Stat } from './components/tui-stat.ts';
 export { StatusStrip, StripItem } from './components/tui-status-strip.ts';
 export { Titlebar } from './components/tui-titlebar.ts';
-export { ZoneLayout } from './components/tui-zone-layout.ts';
+export { Tiled, parseAreas } from './components/tui-tiled.ts';
 
 // Form
 export { Input } from './components/tui-input.ts';
