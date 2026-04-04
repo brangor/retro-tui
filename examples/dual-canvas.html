@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dual Canvas — Rectangular ↔ Isometric Mirror</title>
+  <style>
+    body { margin: 0; background: #1a1a2e; color: #eee; }
+  </style>
+</head>
+<body>
+  <tui-app>
+    <tui-workspace slot="main">
+
+      <!-- ── Both canvases side-by-side in main slot ───────────────────── -->
+      <div slot="main" style="display: flex; gap: 1rem; padding: 1rem; overflow: auto; flex-wrap: wrap;">
+
+        <tui-panel title="Rectangular" style="flex: 0 0 auto;">
+          <div style="padding: 1rem;">
+            <tui-canvas
+              id="rect-canvas"
+              projection="rectangular"
+              width="12"
+              height="12"
+              cell-size="28"
+              show-grid
+            >
+              <svg id="rect-tiles" style="pointer-events:none;"></svg>
+            </tui-canvas>
+          </div>
+        </tui-panel>
+
+        <tui-panel title="Isometric" style="flex: 0 0 auto;">
+          <div style="padding: 1rem;">
+            <tui-canvas
+              id="iso-canvas"
+              projection="isometric"
+              width="12"
+              height="12"
+              cell-size="28"
+              show-grid
+            >
+              <svg id="iso-tiles" style="pointer-events:none;"></svg>
+            </tui-canvas>
+          </div>
+        </tui-panel>
+
+      </div>
+
+      <!-- ── Floating palette ──────────────────────────────────────────── -->
+      <tui-panel slot="floating" title="Palette" floating position-x="16" position-y="16">
+        <div id="palette" style="padding: 8px; display: flex; flex-wrap: wrap; gap: 4px;"></div>
+      </tui-panel>
+
+    </tui-workspace>
+  </tui-app>
+
+  <script type="module">
+    // ── Imports ─────────────────────────────────────────────────────────────
+    import '../src/components/tui-app.ts';
+    import '../src/components/tui-workspace.ts';
+    import '../src/components/tui-panel.ts';
+    import '../src/components/tui-canvas.ts';
+    import { getProjection } from '../src/projections/index.ts';
+    import { renderGrid } from '../src/utils/canvas-renderer.js';
+    import { isometricOrder } from '../src/utils/canvas-renderer.js';
+
+    // ── Config ──────────────────────────────────────────────────────────────
+    const GRID_W = 12;
+    const GRID_H = 12;
+    const CELL_SIZE = 28;
+
+    // Colour palette — pick whichever you like, or add more!
+    const COLORS = [
+      { id: 'erase', color: null,      label: '×',  title: 'Erase' },
+      { id: 'green', color: '#2ecc71', label: '██', title: 'Green' },
+      { id: 'blue',  color: '#3498db', label: '██', title: 'Blue' },
+      { id: 'red',   color: '#e74c3c', label: '██', title: 'Red' },
+      { id: 'gold',  color: '#f1c40f', label: '██', title: 'Gold' },
+      { id: 'cyan',  color: '#00cec9', label: '██', title: 'Cyan' },
+      { id: 'purple',color: '#a29bfe', label: '██', title: 'Purple' },
+      { id: 'white', color: '#dfe6e9', label: '██', title: 'White' },
+    ];
+
+    let activeColor = COLORS[1].color; // start with green
+
+    // ── Shared grid state ───────────────────────────────────────────────────
+    //    This is the single source of truth. Both canvases render from it.
+    //    Each cell is either null (empty) or a color string.
+    const grid = Array.from({ length: GRID_H }, () => Array(GRID_W).fill(null));
+
+    // ── Projection instances (for renderGrid) ───────────────────────────────
+    const rectProj = getProjection('rectangular', CELL_SIZE);
+    const isoProj  = getProjection('isometric', CELL_SIZE);
+
+    // ── DOM refs ────────────────────────────────────────────────────────────
+    const rectCanvas = document.getElementById('rect-canvas');
+    const isoCanvas  = document.getElementById('iso-canvas');
+    const rectTiles  = document.getElementById('rect-tiles');
+    const isoTiles   = document.getElementById('iso-tiles');
+
+    // ── Render both canvases from grid state ────────────────────────────────
+    //    This is the key function — call it any time the grid changes and
+    //    both views update automatically.
+    function render() {
+      // Rectangular SVG
+      const rectDims = rectProj.getDimensions(GRID_W, GRID_H);
+      rectTiles.setAttribute('viewBox', `0 0 ${rectDims.width} ${rectDims.height}`);
+      rectTiles.style.width  = '100%';
+      rectTiles.style.height = '100%';
+      rectTiles.innerHTML = renderGrid({
+        grid,
+        projection: rectProj,
+        cellRenderer: (_x, _y, cell) => cell ? { fill: cell } : null,
+      });
+
+      // Isometric SVG
+      const isoDims = isoProj.getDimensions(GRID_W, GRID_H);
+      isoTiles.setAttribute('viewBox', `0 0 ${isoDims.width} ${isoDims.height}`);
+      isoTiles.style.width  = '100%';
+      isoTiles.style.height = '100%';
+      isoTiles.innerHTML = renderGrid({
+        grid,
+        projection: isoProj,
+        cellRenderer: (_x, _y, cell) => cell ? { fill: cell } : null,
+        sortOrder: isometricOrder,
+      });
+    }
+
+    // ── Handle drawing on EITHER canvas ─────────────────────────────────────
+    //    Both canvases emit canvas-draw with the same {x, y} grid coords,
+    //    so one handler works for both.
+    function handleDraw(e) {
+      const { x, y } = e.detail;
+      if (x < 0 || x >= GRID_W || y < 0 || y >= GRID_H) return;
+      grid[y][x] = activeColor;
+      render();
+    }
+
+    rectCanvas.addEventListener('canvas-draw', handleDraw);
+    isoCanvas.addEventListener('canvas-draw', handleDraw);
+
+    // ── Build palette buttons ───────────────────────────────────────────────
+    const paletteEl = document.getElementById('palette');
+
+    COLORS.forEach((c) => {
+      const btn = document.createElement('button');
+      btn.textContent = c.label;
+      btn.title = c.title;
+      btn.style.cssText = `
+        background: ${c.color || 'transparent'};
+        color: ${c.color ? '#000' : '#e74c3c'};
+        border: 2px solid ${c.color || '#e74c3c'};
+        width: 32px; height: 32px;
+        cursor: pointer; font-family: monospace; font-size: 14px;
+        display: flex; align-items: center; justify-content: center;
+      `;
+      btn.addEventListener('click', () => {
+        activeColor = c.color;
+        // Highlight selected
+        paletteEl.querySelectorAll('button').forEach((b) => b.style.outline = 'none');
+        btn.style.outline = '2px solid #fff';
+      });
+      paletteEl.appendChild(btn);
+    });
+
+    // Auto-select first color button
+    paletteEl.querySelector('button:nth-child(2)').style.outline = '2px solid #fff';
+
+    // ── Initial render ──────────────────────────────────────────────────────
+    //    Wait for both canvases to be ready, then draw the empty grid lines.
+    Promise.all([
+      new Promise((r) => rectCanvas.addEventListener('canvas-ready', r, { once: true })),
+      new Promise((r) => isoCanvas.addEventListener('canvas-ready', r, { once: true })),
+    ]).then(render);
+
+    // Also render after a short delay as a fallback
+    setTimeout(render, 200);
+  </script>
+</body>
+</html>
