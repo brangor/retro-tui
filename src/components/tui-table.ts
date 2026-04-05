@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { type BorderStyle } from '../utils/borders.js';
-import type { TuiEvent, TableData, TableUpsertData } from '../protocol/types.ts';
+import type { TuiEvent, TableData, TableUpsertData } from '../protocol/types';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES

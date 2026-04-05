@@ -1,4 +1,4 @@
-import type { Projection, GridCoord, ScreenCoord, ProjectionBounds } from './types.ts';
+import type { Projection, GridCoord, ScreenCoord, ProjectionBounds } from './types';
 
 export class TriangularProjection implements Projection {
   constructor(public cellSize: number) {}

@@ -2,8 +2,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import type { TuiEvent } from '../protocol/types.ts';
-import type { Radio } from './tui-radio.ts';
+import type { TuiEvent } from '../protocol/types';
+import type { Radio } from './tui-radio';
 
 @customElement('tui-radio-group')
 export class RadioGroup extends LitElement {

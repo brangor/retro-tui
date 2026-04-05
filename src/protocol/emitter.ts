@@ -1,4 +1,4 @@
-import type { TuiEvent, LogData, ProgressData, TableData, StatusData } from './types.ts';
+import type { TuiEvent, LogData, ProgressData, TableData, StatusData } from './types';
 
 export interface EmitterOptions {
   channel: string;

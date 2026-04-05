@@ -1,60 +1,64 @@
 // TUI Component Library
 // Terminal-aesthetic UI components built with Lit
 
+// Auto-inject design tokens (theme-terminal-classic by default).
+// Override by adding a theme class to <body>: class="theme-vibrant-scifi"
+import './styles/inject-tokens.ts';
+
 // Layout (opinionated compositions)
-export { App } from './components/tui-app.ts';
-export { Workspace } from './components/tui-workspace.ts';
-export { Sidebar } from './components/tui-sidebar.ts';
+export { App } from './components/tui-app';
+export { Workspace } from './components/tui-workspace';
+export { Sidebar } from './components/tui-sidebar';
 
 // Atoms (primitives)
-export { Panel } from './components/tui-panel.ts';
-export { Output } from './components/tui-output.ts';
-export { Table } from './components/tui-table.ts';
-export { Console } from './components/tui-console.ts';
-export { Text } from './components/tui-text.ts';
-export { Menu, MenuItem, MenuAction, MenuDivider } from './components/tui-menu.ts';
-export { Statusbar, StatusItem } from './components/tui-statusbar.ts';
-export { Modal } from './components/tui-modal.ts';
-export { Button } from './components/tui-button.ts';
-export { Toolbar, Tool } from './components/tui-toolbar.ts';
-export { Toast, tuiToast } from './components/tui-toast.ts';
-export { Card } from './components/tui-card.ts';
-export { Palette } from './components/tui-palette.ts';
-export { Canvas } from './components/tui-canvas.ts';
-export { Link } from './components/tui-link.ts';
-export { ActionList } from './components/tui-action-list.ts';
-export { Stat } from './components/tui-stat.ts';
-export { StatusStrip, StripItem } from './components/tui-status-strip.ts';
-export { Titlebar } from './components/tui-titlebar.ts';
-export { Tiled, parseAreas } from './components/tui-tiled.ts';
+export { Panel } from './components/tui-panel';
+export { Output } from './components/tui-output';
+export { Table } from './components/tui-table';
+export { Console } from './components/tui-console';
+export { Text } from './components/tui-text';
+export { Menu, MenuItem, MenuAction, MenuDivider } from './components/tui-menu';
+export { Statusbar, StatusItem } from './components/tui-statusbar';
+export { Modal } from './components/tui-modal';
+export { Button } from './components/tui-button';
+export { Toolbar, Tool } from './components/tui-toolbar';
+export { Toast, tuiToast } from './components/tui-toast';
+export { Card } from './components/tui-card';
+export { Palette } from './components/tui-palette';
+export { Canvas } from './components/tui-canvas';
+export { Link } from './components/tui-link';
+export { ActionList } from './components/tui-action-list';
+export { Stat } from './components/tui-stat';
+export { StatusStrip, StripItem } from './components/tui-status-strip';
+export { Titlebar } from './components/tui-titlebar';
+export { Tiled, parseAreas } from './components/tui-tiled';
 
 // Form
-export { Input } from './components/tui-input.ts';
-export { Checkbox } from './components/tui-checkbox.ts';
-export { Radio } from './components/tui-radio.ts';
-export { CheckboxGroup } from './components/tui-checkbox-group.ts';
-export { RadioGroup } from './components/tui-radio-group.ts';
+export { Input } from './components/tui-input';
+export { Checkbox } from './components/tui-checkbox';
+export { Radio } from './components/tui-radio';
+export { CheckboxGroup } from './components/tui-checkbox-group';
+export { RadioGroup } from './components/tui-radio-group';
 
 // Tool State
-export { ToolState, toolContext } from './state/tool-state.ts';
+export { ToolState, toolContext } from './state/tool-state';
 
 // Projections
-export { getProjection } from './projections/index.ts';
-export { RectangularProjection } from './projections/rectangular.ts';
-export { IsometricProjection } from './projections/isometric.ts';
-export { TriangularProjection } from './projections/triangular.ts';
+export { getProjection } from './projections/index';
+export { RectangularProjection } from './projections/rectangular';
+export { IsometricProjection } from './projections/isometric';
+export { TriangularProjection } from './projections/triangular';
 
 // Utilities
 export { ansiToHtml } from './utils/ansi.js';
 export { RetroPush } from './utils/push-client.js';
 export { renderGrid, isometricOrder } from './utils/canvas-renderer.js';
-export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './utils/borders.ts';
+export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './utils/borders';
 
 // Protocol
-export { validateEvent } from './protocol/types.ts';
-export { RetroEmitter } from './protocol/emitter.ts';
-export { EventRouter } from './protocol/event-router.ts';
+export { validateEvent } from './protocol/types';
+export { RetroEmitter } from './protocol/emitter';
+export { EventRouter } from './protocol/event-router';
 
 // New components
-export { Progress } from './components/tui-progress.ts';
-export { Status } from './components/tui-status.ts';
+export { Progress } from './components/tui-progress';
+export { Status } from './components/tui-status';

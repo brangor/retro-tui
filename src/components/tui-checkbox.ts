@@ -2,7 +2,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import type { TuiEvent, CheckboxData } from '../protocol/types.ts';
+import type { TuiEvent, CheckboxData } from '../protocol/types';
 
 @customElement('tui-checkbox')
 export class Checkbox extends LitElement {

@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { ansiToHtml } from '../utils/ansi.js';
-import type { TuiEvent, LogData } from '../protocol/types.ts';
+import type { TuiEvent, LogData } from '../protocol/types';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES

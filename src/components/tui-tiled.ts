@@ -7,6 +7,7 @@ import { sharedStyles } from '../styles/shared.js';
 // ═══════════════════════════════════════════════════════════════════════════════
 
 type TiledPreset = 'monitor' | 'viewer' | 'console' | 'console-split' | 'triad';
+type TiledLabels = 'caption' | 'titlebar' | '';
 
 interface ParsedGrid {
   areas: string;       // CSS grid-template-areas value
@@ -91,8 +92,10 @@ export function parseAreas(shorthand: string): ParsedGrid {
  *
  * @attr {string} preset - Named layout: 'monitor' | 'viewer' | 'console' | 'console-split' | 'triad'
  * @attr {string} areas - Custom grid-template-areas shorthand. '|' separates rows. Overrides preset.
+ *                        When used with preset, acts as ordered display labels mapped to the preset's slot names.
+ *                        e.g. preset="console-split" areas="DOWNLOAD | HISTORY | CONSOLE"
  * @attr {string} gap - CSS grid gap value (default: '1px')
- * @attr {boolean} labels - Show zone-name labels in top-left of each slot
+ * @attr {string} labels - Zone label style: 'caption' (small overlay) | 'titlebar' (full bar) | '' (none)
  */
 @customElement('tui-tiled')
 export class Tiled extends LitElement {
@@ -105,8 +108,8 @@ export class Tiled extends LitElement {
   @property({ type: String })
   gap = '1px';
 
-  @property({ type: Boolean })
-  labels = false;
+  @property({ type: String })
+  labels: TiledLabels = '';
 
   static styles = [
     sharedStyles,
@@ -144,13 +147,52 @@ export class Tiled extends LitElement {
         pointer-events: none;
         z-index: 1;
       }
+
+      .zone-titlebar {
+        display: flex;
+        align-items: center;
+        padding: 0 var(--spacing-sm);
+        height: 1.75rem;
+        min-height: 1.75rem;
+        background: var(--surface-elevated);
+        border-bottom: var(--border-width, 1px) solid var(--border-default);
+        font-size: var(--font-size-caption, 0.6rem);
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-family: var(--font-mono);
+      }
+
+      .zone.has-titlebar {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .zone.has-titlebar slot {
+        flex: 1;
+        overflow: auto;
+        display: block;
+      }
     `,
   ];
 
   private _getGrid(): ParsedGrid | null {
-    const shorthand = this.areas || (this.preset ? PRESETS[this.preset] : '');
+    const shorthand = this.preset ? PRESETS[this.preset] : this.areas;
     if (!shorthand) return null;
     return parseAreas(shorthand);
+  }
+
+  // When preset + areas are both set, treat areas as ordered display labels
+  // mapped 1:1 onto the preset's slot names.
+  private _getDisplayLabels(slotNames: string[]): Record<string, string> {
+    if (!this.preset || !this.areas) return {};
+    const displayNames = this.areas.split('|').flatMap(r => r.trim().split(/\s+/)).filter(Boolean);
+    const map: Record<string, string> = {};
+    slotNames.forEach((slot, i) => {
+      if (displayNames[i]) map[slot] = displayNames[i];
+    });
+    return map;
   }
 
   render() {
@@ -164,14 +206,20 @@ export class Tiled extends LitElement {
       gap: ${this.gap};
     `;
 
+    const displayLabels = this._getDisplayLabels(grid.slotNames);
+
     return html`
       <div class="grid" style=${gridStyle}>
-        ${grid.slotNames.map(name => html`
-          <div class="zone" style="grid-area: ${name};">
-            ${this.labels ? html`<span class="zone-label">${name}</span>` : nothing}
-            <slot name=${name}></slot>
-          </div>
-        `)}
+        ${grid.slotNames.map(name => {
+          const label = displayLabels[name] ?? name;
+          return html`
+            <div class="zone ${this.labels === 'titlebar' ? 'has-titlebar' : ''}" style="grid-area: ${name};">
+              ${this.labels === 'titlebar' ? html`<div class="zone-titlebar">${label}</div>` : nothing}
+              ${this.labels === 'caption' ? html`<span class="zone-label">${label}</span>` : nothing}
+              <slot name=${name}></slot>
+            </div>
+          `;
+        })}
       </div>
     `;
   }

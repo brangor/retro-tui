@@ -1,5 +1,5 @@
 // src/protocol/event-router.ts
-import type { TuiEvent } from './types.ts';
+import type { TuiEvent } from './types';
 
 /** Any element that can receive protocol events */
 export interface TuiEventReceiver {

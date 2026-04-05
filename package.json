@@ -1,6 +1,6 @@
 {
   "name": "retro-tui",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Terminal-aesthetic UI components for the web with real-time script integration",
   "type": "module",
   "main": "dist/retro-tui.js",
@@ -8,6 +8,10 @@
   "exports": {
     ".": {
       "import": "./dist/retro-tui.js"
+    },
+    "./tokens.css": {
+      "import": "./dist/tokens.css",
+      "types": "./dist/tokens.css.d.ts"
     },
     "./emitter": {
       "import": "./src/protocol/emitter.ts"

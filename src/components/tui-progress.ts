@@ -2,7 +2,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import type { TuiEvent, ProgressData } from '../protocol/types.ts';
+import type { TuiEvent, ProgressData } from '../protocol/types';
 
 @customElement('tui-progress')
 export class Progress extends LitElement {

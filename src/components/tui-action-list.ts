@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 
@@ -7,18 +7,20 @@ import { sharedStyles } from '../styles/shared.js';
  *
  * Clicking an item expands an action slot below it. One expanded at a time.
  *
- * @attr {Array} items - Array of { id: string, label: string, [sublabel]: string }
+ * @attr {Array} items - Array of { id: string, label: string, [sublabel]: string, [color]: string }
+ *                       color maps to CSS vars: 'success' | 'error' | 'warning' | 'primary' | 'muted'
  * @attr {string} selected - ID of currently expanded item (or empty)
  *
  * @fires item-select - When an item is clicked (detail: { id, label })
  * @fires item-deselect - When expanded item is collapsed
  *
- * @slot actions - Content shown below the selected item. Receives `data-item-id` context.
+ * @slot actions-{id} - Per-item action content shown below the item when selected.
+ *                      One slot per item, named by item id. e.g. slot="actions-my-item-id"
  */
 @customElement('tui-action-list')
 export class ActionList extends LitElement {
   @property({ type: Array })
-  items: Array<{ id: string; label: string; sublabel?: string }> = [];
+  items: Array<{ id: string; label: string; sublabel?: string; color?: string }> = [];
 
   @property({ type: String, reflect: true })
   selected = '';
@@ -44,15 +46,21 @@ export class ActionList extends LitElement {
         background: var(--surface-elevated);
       }
 
-      .item.active {
-        color: var(--color-primary);
-        background: var(--surface-elevated);
+      .item.active,
+      .item.active:hover {
+        background: var(--text-primary);
+        color: var(--surface-base);
       }
 
       .sublabel {
         font-size: var(--font-size-caption, 0.6rem);
         color: var(--text-muted);
         margin-top: 2px;
+      }
+
+      .item.active .sublabel,
+      .item.active:hover .sublabel {
+        color: var(--surface-elevated);
       }
 
       .action-panel {
@@ -92,25 +100,45 @@ export class ActionList extends LitElement {
     }
   }
 
+  private _colorVar(color?: string): string {
+    const map: Record<string, string> = {
+      success: 'var(--color-success)',
+      error:   'var(--color-error)',
+      warning: 'var(--color-warning)',
+      primary: 'var(--color-primary)',
+      muted:   'var(--text-muted)',
+    };
+    return color ? (map[color] ?? color) : '';
+  }
+
+  private _hasActions(id: string): boolean {
+    const slot = this.shadowRoot?.querySelector(`slot[name="actions-${id}"]`) as HTMLSlotElement | null;
+    return !!slot && slot.assignedNodes().length > 0;
+  }
+
   render() {
     if (this.items.length === 0) {
       return html`<div class="empty">No items</div>`;
     }
 
-    return html`${this.items.map((item) => html`
-      <div
-        class="item ${this.selected === item.id ? 'active' : ''}"
-        @click=${() => this._handleClick(item.id, item.label)}
-      >
-        <div>${item.label}</div>
-        ${item.sublabel ? html`<div class="sublabel">${item.sublabel}</div>` : ''}
-      </div>
-      ${this.selected === item.id ? html`
-        <div class="action-panel">
-          <slot name="actions"></slot>
+    return html`${this.items.map((item) => {
+      const colorStyle = this._colorVar(item.color);
+      const isActive = this.selected === item.id;
+      return html`
+        <div
+          class="item ${isActive ? 'active' : ''}"
+          @click=${() => this._handleClick(item.id, item.label)}
+        >
+          <div style=${colorStyle && !isActive ? `color: ${colorStyle}` : ''}>${item.label}</div>
+          ${item.sublabel ? html`<div class="sublabel">${item.sublabel}</div>` : ''}
         </div>
-      ` : ''}
-    `)}`;
+        ${isActive ? html`
+          <div class="action-panel" style=${this._hasActions(item.id) ? '' : 'display:none'}>
+            <slot name="actions-${item.id}" @slotchange=${() => this.requestUpdate()}></slot>
+          </div>
+        ` : nothing}
+      `;
+    })}`;
   }
 }
 

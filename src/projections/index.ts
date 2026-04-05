@@ -1,7 +1,7 @@
-import { RectangularProjection } from './rectangular.ts';
-import { IsometricProjection } from './isometric.ts';
-import { TriangularProjection } from './triangular.ts';
-import type { Projection } from './types.ts';
+import { RectangularProjection } from './rectangular';
+import { IsometricProjection } from './isometric';
+import { TriangularProjection } from './triangular';
+import type { Projection } from './types';
 
 export type ProjectionType = 'rectangular' | 'isometric' | 'triangular';
 
@@ -18,7 +18,7 @@ export function getProjection(type: ProjectionType, cellSize: number): Projectio
   }
 }
 
-export { RectangularProjection } from './rectangular.ts';
-export { IsometricProjection } from './isometric.ts';
-export { TriangularProjection } from './triangular.ts';
-export type { Projection, GridCoord, ScreenCoord, ProjectionBounds } from './types.ts';
+export { RectangularProjection } from './rectangular';
+export { IsometricProjection } from './isometric';
+export { TriangularProjection } from './triangular';
+export type { Projection, GridCoord, ScreenCoord, ProjectionBounds } from './types';
