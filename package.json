@@ -1,6 +1,6 @@
 {
   "name": "retro-tui",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Terminal-aesthetic UI components for the web with real-time script integration",
   "type": "module",
   "main": "dist/retro-tui.js",
