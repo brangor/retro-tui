@@ -125,6 +125,19 @@
   --font-size-caption: var(--font-size-xs);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   BASELINE STYLES
+   Wire tokens to html/body so consumers get readable defaults out of the box.
+   Without this, browsers use color:black which is invisible on dark surfaces.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+html, body {
+  background: var(--surface-base);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  color-scheme: dark;
+}
+
 .theme-home-security-interface {
   /* Semantic Colors */
   --color-primary: #3fb950;
