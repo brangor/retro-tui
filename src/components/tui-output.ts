@@ -52,28 +52,30 @@ export class Output extends LitElement {
     css`
       :host {
         display: block;
-        height: fit-content;
+        height: 100%;
+        overflow: hidden;
       }
 
       .output {
         height: 100%;
         overflow-y: auto;
         background: var(--surface-base);
-        padding: var(--spacing-sm);
-        font-size: 0.8rem;
-        line-height: 1.4;
+        padding: 4px var(--spacing-sm);
+        font-size: var(--font-size-xs, 0.6rem);
+        line-height: 1.3;
       }
 
       .line {
-        white-space: pre-wrap;
-        word-break: break-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         color: var(--text-primary);
+        padding: 1px 0;
       }
 
       .timestamp {
         color: var(--text-muted);
-        margin-right: var(--spacing-sm);
-        font-size: 0.75rem;
+        margin-right: 0.4em;
       }
 
       .empty {
