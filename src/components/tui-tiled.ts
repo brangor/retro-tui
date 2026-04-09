@@ -68,12 +68,12 @@ export function parseAreas(shorthand: string): ParsedGrid {
 
   // Row sizing rules:
   // - Full-width top row → auto (size to content)
-  // - Full-width bottom row → minmax(120px, auto) (min height for log panels)
+  // - Full-width bottom row → minmax(120px, 0.4fr) (min height for log panels, capped)
   // - All other rows → 1fr
   const rowTemplate = grid.map((cols, i) => {
     const isFullWidth = new Set(cols).size === 1;
     if (isFullWidth && i === 0) return 'auto';
-    if (isFullWidth && i === grid.length - 1) return 'minmax(120px, auto)';
+    if (isFullWidth && i === grid.length - 1) return 'minmax(120px, 0.4fr)';
     return '1fr';
   }).join(' ');
 
