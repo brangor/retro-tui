@@ -96,11 +96,12 @@ describe('compose', () => {
 
   it('composes body with named layer frames', () => {
     const frame = compose(sprite, { eyes: 'open' });
-    expect(frame[0]).to.deep.equal(['A', 'O', null, 'O', 'E']);
+    // Space between eyes is transparent — base 'C' shows through
+    expect(frame[0]).to.deep.equal(['A', 'O', 'C', 'O', 'E']);
   });
 
   it('falls back to first frame name if key not found', () => {
     const frame = compose(sprite, { eyes: 'nonexistent' });
-    expect(frame[0]).to.deep.equal(['A', 'O', null, 'O', 'E']);
+    expect(frame[0]).to.deep.equal(['A', 'O', 'C', 'O', 'E']);
   });
 });

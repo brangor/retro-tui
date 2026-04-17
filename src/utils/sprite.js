@@ -46,17 +46,15 @@ export function compose(sprite, selections) {
     const frameName = selections[layer.name];
     const frameData = layer.frames[frameName]
       || layer.frames[Object.keys(layer.frames)[0]];
-    // Write layer data directly onto frame; spaces become null (transparent holes)
-    for (let y = 0; y < layer.size.height; y++) {
-      for (let x = 0; x < layer.size.width; x++) {
-        const ty = layer.location.y + y;
-        const tx = layer.location.x + x;
-        if (ty < size.height && tx < size.width) {
-          const ch = frameData[y]?.[x];
-          frame[ty][tx] = (ch == null || ch === ' ') ? null : ch;
-        }
-      }
-    }
+    // Convert layer frame data: spaces → null (transparent), then delegate to overlay
+    const data = frameData.map(row =>
+      row.map(ch => (ch === ' ' ? null : ch))
+    );
+    frame = overlay(frame, {
+      location: layer.location,
+      size: layer.size,
+      data,
+    });
   }
 
   return frame;
