@@ -26,3 +26,38 @@ export function overlay(base, layer) {
   }
   return result;
 }
+
+export function bodyToGrid(lines, width, height) {
+  const grid = createGrid(width, height);
+  for (let y = 0; y < lines.length && y < height; y++) {
+    for (let x = 0; x < lines[y].length && x < width; x++) {
+      const ch = lines[y][x];
+      if (ch !== ' ') grid[y][x] = ch;
+    }
+  }
+  return grid;
+}
+
+export function compose(sprite, selections) {
+  const { size, body, layers } = sprite;
+  let frame = bodyToGrid(body.default, size.width, size.height);
+
+  for (const layer of layers) {
+    const frameName = selections[layer.name];
+    const frameData = layer.frames[frameName]
+      || layer.frames[Object.keys(layer.frames)[0]];
+    // Write layer data directly onto frame; spaces become null (transparent holes)
+    for (let y = 0; y < layer.size.height; y++) {
+      for (let x = 0; x < layer.size.width; x++) {
+        const ty = layer.location.y + y;
+        const tx = layer.location.x + x;
+        if (ty < size.height && tx < size.width) {
+          const ch = frameData[y]?.[x];
+          frame[ty][tx] = (ch == null || ch === ' ') ? null : ch;
+        }
+      }
+    }
+  }
+
+  return frame;
+}
