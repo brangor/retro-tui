@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sprite Renderer — Automaton</title>
+  <style>
+    body { margin: 0; background: #1a1a2e; color: #eee; }
+  </style>
+</head>
+<body>
+  <tui-app>
+    <tui-workspace slot="main">
+      <div slot="main" style="display:flex; gap:1rem; padding:1rem;">
+        <tui-panel title="Automaton">
+          <div style="padding:1rem;">
+            <tui-grid id="ruth" cols="28" rows="8" cell-width="10" cell-height="18" readonly></tui-grid>
+          </div>
+        </tui-panel>
+      </div>
+    </tui-workspace>
+  </tui-app>
+
+  <script type="module" src="./automaton.js"></script>
+</body>
+</html>

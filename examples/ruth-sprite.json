@@ -1,0 +1,98 @@
+{
+  "name": "ruth",
+  "size": { "width": 28, "height": 8 },
+
+  "body": {
+    "default": [
+      "┌─/────\\─┐              ",
+      " /      \\              ",
+      " \\      /___           ",
+      "              \\        ",
+      "      \\  __\\ |         ",
+      "   «  || |  \\  /       ",
+      "     <<| | <<\\ \\       ",
+      "      <<./   <</       "
+    ]
+  },
+
+  "layers": [
+    {
+      "name": "eyes",
+      "location": { "x": 3, "y": 1 },
+      "size": { "width": 3, "height": 2 },
+      "frames": {
+        "default":       [["^", " ", "^"], ["0", " ", "0"]],
+        "sleepy":        [["-", " ", "-"], ["=", " ", "="]],
+        "excited":       [["^", " ", "^"], ["★", " ", "★"]],
+        "suspicious":    [["\\", " ", "^"], ["0", " ", "^"]],
+        "heart_eyes":    [["^", " ", "^"], ["♥", " ", "♥"]],
+        "surprised":     [["^", " ", "^"], ["o", " ", "o"]],
+        "winking":       [["^", " ", "-"], ["0", " ", "="]],
+        "looking_left":  [[" ", " ", " "], ["<", " ", "<"]],
+        "looking_right": [[" ", " ", " "], [">", " ", ">"]],
+        "angry":         [["\\", " ", "/"], ["σ", " ", "σ"]]
+      }
+    },
+    {
+      "name": "mouth",
+      "location": { "x": 2, "y": 3 },
+      "size": { "width": 6, "height": 2 },
+      "frames": {
+        "open":    [["|", " ", " ", "/", " ", "/"], ["|", " ", "/", "\\", null, null]],
+        "partial": [["|", " ", " ", "/", " ", "/"], ["|", " ", "/", "/", null, null]],
+        "closed":  [["|", " ", " ", "/", "/", null], ["|", " ", "/", " ", null, null]],
+        "smile":   [["|", " ", " ", "\\", "_", "/"], ["|", " ", "/", " ", null, null]],
+        "panting": [["|", " ", " ", "V", " ", "/"], ["|", " ", "/", "V", null, null]]
+      }
+    },
+    {
+      "name": "tail",
+      "location": { "x": 13, "y": 0 },
+      "size": { "width": 8, "height": 3 },
+      "frames": {
+        "neutral": [
+          [" ", "~", "*", "*", "~", "~", null, null],
+          [" ", "|", "*", "*", "/", "/", "~", null],
+          [",", "/", "*", "*", "/", "/", "~", null]
+        ],
+        "waggy1": [
+          [" ", " ", "~", "*", "*", "~", null, null],
+          [" ", "/", "*", "*", "/", "~", null, null],
+          [",", "/", "*", "*", "/", "/", "~", null]
+        ],
+        "waggy2": [
+          [" ", " ", " ", "~", "*", "*", "~", null],
+          [" ", " ", "/", "*", "*", "/", "~", null],
+          [" ", ",", "/", "*", "*", "/", null, null]
+        ],
+        "waggy3": [
+          [" ", " ", " ", " ", "~", "~", "*", null],
+          [" ", " ", " ", "/", "*", "*", "~", null],
+          [" ", " ", ",", "/", "*", "*", null, null]
+        ],
+        "tucked": [
+          [" ", ".", "_", "_", ".", null, null, null],
+          [" ", "|", "*", "*", "|", null, null, null],
+          [",", "/", "*", "*", "\\", null, null, null]
+        ],
+        "alert": [
+          [" ", " ", "!", "*", "*", "!", null, null],
+          [" ", " ", "|", "*", "*", "|", null, null],
+          [" ", ",", "/", "*", "*", "|", null, null]
+        ]
+      }
+    }
+  ],
+
+  "moods": {
+    "idle_calm":  { "eyes": ["default"],    "mouth": ["closed"],                       "tail": ["neutral"] },
+    "idle_sleepy":{ "eyes": ["sleepy"],     "mouth": ["closed"],                       "tail": ["neutral"] },
+    "excited":    { "eyes": ["excited"],    "mouth": ["open", "partial", "closed"],    "tail": ["waggy1", "waggy2", "waggy3"] },
+    "found_deal": { "eyes": ["heart_eyes"], "mouth": ["smile", "smile", "panting"],    "tail": ["waggy2", "waggy3", "waggy2"] },
+    "alert":      { "eyes": ["surprised"],  "mouth": ["open"],                         "tail": ["alert"] },
+    "suspicious": { "eyes": ["suspicious"], "mouth": ["closed"],                       "tail": ["neutral"] },
+    "happy":      { "eyes": ["winking"],    "mouth": ["smile", "panting"],             "tail": ["waggy1", "waggy2"] },
+    "talking":    { "eyes": ["default"],    "mouth": ["open", "partial", "closed", "open"], "tail": ["neutral"] },
+    "searching":  { "eyes": ["looking_left", "looking_right", "looking_left", "looking_right"], "mouth": ["closed"], "tail": ["neutral", "waggy1"] }
+  }
+}
