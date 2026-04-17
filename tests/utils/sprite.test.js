@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { overlay, createGrid, bodyToGrid, compose } from '../../src/utils/sprite.js';
+import { overlay, createGrid, bodyToGrid, compose, createMoodCycler } from '../../src/utils/sprite.js';
 
 describe('createGrid', () => {
   it('creates a grid of nulls with given dimensions', () => {
@@ -103,5 +103,51 @@ describe('compose', () => {
   it('falls back to first frame name if key not found', () => {
     const frame = compose(sprite, { eyes: 'nonexistent' });
     expect(frame[0]).to.deep.equal(['A', 'O', 'C', 'O', 'E']);
+  });
+});
+
+describe('createMoodCycler', () => {
+  const moods = {
+    idle: { eyes: ['open'], mouth: ['closed'], tail: ['neutral'] },
+    excited: { eyes: ['wide'], mouth: ['open', 'closed'], tail: ['wag1', 'wag2', 'wag3'] },
+  };
+
+  it('cycles through frame names for current mood', () => {
+    const cycler = createMoodCycler(moods, 'idle');
+    const s1 = cycler.next();
+    expect(s1).to.deep.equal({ eyes: 'open', mouth: 'closed', tail: 'neutral' });
+    const s2 = cycler.next();
+    expect(s2).to.deep.equal({ eyes: 'open', mouth: 'closed', tail: 'neutral' });
+  });
+
+  it('advances each layer cycle independently', () => {
+    const cycler = createMoodCycler(moods, 'excited');
+    const s1 = cycler.next();
+    expect(s1).to.deep.equal({ eyes: 'wide', mouth: 'open', tail: 'wag1' });
+    const s2 = cycler.next();
+    expect(s2).to.deep.equal({ eyes: 'wide', mouth: 'closed', tail: 'wag2' });
+    const s3 = cycler.next();
+    expect(s3).to.deep.equal({ eyes: 'wide', mouth: 'open', tail: 'wag3' });
+  });
+
+  it('resets cycles when mood changes', () => {
+    const cycler = createMoodCycler(moods, 'excited');
+    cycler.next();
+    cycler.setMood('idle');
+    const s = cycler.next();
+    expect(s).to.deep.equal({ eyes: 'open', mouth: 'closed', tail: 'neutral' });
+  });
+
+  it('returns current mood name', () => {
+    const cycler = createMoodCycler(moods, 'idle');
+    expect(cycler.mood).to.equal('idle');
+    cycler.setMood('excited');
+    expect(cycler.mood).to.equal('excited');
+  });
+
+  it('ignores setMood with unknown name', () => {
+    const cycler = createMoodCycler(moods, 'idle');
+    cycler.setMood('nonexistent');
+    expect(cycler.mood).to.equal('idle');
   });
 });

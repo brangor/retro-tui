@@ -59,3 +59,29 @@ export function compose(sprite, selections) {
 
   return frame;
 }
+
+export function createMoodCycler(moods, initialMood) {
+  let current = initialMood;
+  let index = 0;
+
+  return {
+    get mood() { return current; },
+
+    setMood(name) {
+      if (moods[name]) {
+        current = name;
+        index = 0;
+      }
+    },
+
+    next() {
+      const mood = moods[current];
+      const selections = {};
+      for (const [layer, cycle] of Object.entries(mood)) {
+        selections[layer] = cycle[index % cycle.length];
+      }
+      index++;
+      return selections;
+    },
+  };
+}
