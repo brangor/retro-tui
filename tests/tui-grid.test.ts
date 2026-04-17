@@ -1,4 +1,4 @@
-import { describe, it } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import { expect, fixture, html } from '@open-wc/testing';
 import '../src/components/tui-grid.ts';
 
@@ -39,5 +39,44 @@ describe('tui-grid', () => {
     `) as any;
     const svg = el.shadowRoot!.querySelector('svg');
     expect(svg!.getAttribute('viewBox')).to.equal('0 0 50 60');
+  });
+});
+
+describe('tui-grid events', () => {
+  // Skip: jsdom getBoundingClientRect returns zeros, needs browser test runner
+  it.skip('fires grid-draw on pointerdown', async () => {
+    const el = await fixture(html`
+      <tui-grid cols="4" rows="4" cell-width="20" cell-height="20"></tui-grid>
+    `) as any;
+    const handler = vi.fn();
+    el.addEventListener('grid-draw', handler);
+
+    const svgEl = el.shadowRoot!.querySelector('svg')!;
+    const rect = svgEl.getBoundingClientRect();
+    svgEl.dispatchEvent(new PointerEvent('pointerdown', {
+      clientX: rect.left + 10, clientY: rect.top + 10,
+      button: 0, bubbles: true, composed: true,
+    }));
+
+    expect(handler.mock.calls.length).to.equal(1);
+    expect(handler.mock.calls[0][0].detail).to.deep.equal({ x: 0, y: 0 });
+  });
+
+  // Skip: jsdom getBoundingClientRect returns zeros, needs browser test runner
+  it.skip('does not fire grid-draw when readonly', async () => {
+    const el = await fixture(html`
+      <tui-grid cols="4" rows="4" cell-width="20" cell-height="20" readonly></tui-grid>
+    `) as any;
+    const handler = vi.fn();
+    el.addEventListener('grid-draw', handler);
+
+    const svgEl = el.shadowRoot!.querySelector('svg')!;
+    const rect = svgEl.getBoundingClientRect();
+    svgEl.dispatchEvent(new PointerEvent('pointerdown', {
+      clientX: rect.left + 10, clientY: rect.top + 10,
+      button: 0, bubbles: true, composed: true,
+    }));
+
+    expect(handler.mock.calls.length).to.equal(0);
   });
 });
