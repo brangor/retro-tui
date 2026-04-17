@@ -25,6 +25,7 @@ export { Toast, tuiToast } from './components/tui-toast';
 export { Card } from './components/tui-card';
 export { Palette } from './components/tui-palette';
 export { Canvas } from './components/tui-canvas';
+export { Grid } from './components/tui-grid';
 export { Link } from './components/tui-link';
 export { ActionList } from './components/tui-action-list';
 export { Stat } from './components/tui-stat';
