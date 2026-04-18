@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { overlay, createGrid, bodyToGrid, compose, createMoodCycler } from '../../src/utils/sprite.js';
+import type { CharGrid, Layer, SpriteDefinition, MoodCycler } from '../../src/utils/sprite.js';
 
 describe('createGrid', () => {
   it('creates a grid of nulls with given dimensions', () => {
-    const grid = createGrid(3, 2);
+    const grid: CharGrid = createGrid(3, 2);
     expect(grid).to.deep.equal([
       [null, null, null],
       [null, null, null],
@@ -15,11 +16,12 @@ describe('overlay', () => {
   it('stamps layer data onto base at the given position', () => {
     const base = createGrid(5, 3);
     base[0][0] = 'A';
-    const result = overlay(base, {
+    const layer: Layer = {
       location: { x: 1, y: 0 },
       size: { width: 2, height: 2 },
       data: [['X', 'Y'], ['Z', null]],
-    });
+    };
+    const result = overlay(base, layer);
     expect(result[0]).to.deep.equal(['A', 'X', 'Y', null, null]);
     expect(result[1]).to.deep.equal([null, 'Z', null, null, null]);
     expect(result[2]).to.deep.equal([null, null, null, null, null]);
@@ -78,7 +80,7 @@ describe('bodyToGrid', () => {
 });
 
 describe('compose', () => {
-  const sprite = {
+  const sprite: SpriteDefinition = {
     size: { width: 5, height: 2 },
     body: { default: ['ABCDE', 'FGHIJ'] },
     layers: [
@@ -92,6 +94,7 @@ describe('compose', () => {
         },
       },
     ],
+    moods: {},
   };
 
   it('composes body with named layer frames', () => {
@@ -113,7 +116,7 @@ describe('createMoodCycler', () => {
   };
 
   it('cycles through frame names for current mood', () => {
-    const cycler = createMoodCycler(moods, 'idle');
+    const cycler: MoodCycler = createMoodCycler(moods, 'idle');
     const s1 = cycler.next();
     expect(s1).to.deep.equal({ eyes: 'open', mouth: 'closed', tail: 'neutral' });
     const s2 = cycler.next();

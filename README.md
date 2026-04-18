@@ -229,7 +229,7 @@ Run `npm run dev` and navigate to the example files.
 - [x] Projection system (rectangular, isometric, triangular grids)
 - [x] Tool state management (`@lit/context`)
 - [ ] `<retro-toolbar>` hotkey support — `getHotkeyMap()` method + `hotkey` attribute on tools for display hints and user-remappable bindings
-- [ ] `<retro-grid>` (character grid from GridSketch)
+- [x] `<retro-grid>` (character grid — delivered as `<tui-grid>` with SVG text rendering and pointer events)
 - [ ] `<retro-tabs>` (tab container)
 - [ ] `<retro-split>` (resizable panes)
 - [ ] npm package distribution

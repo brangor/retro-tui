@@ -53,7 +53,7 @@ export { TriangularProjection } from './projections/triangular';
 export { ansiToHtml } from './utils/ansi.js';
 export { RetroPush } from './utils/push-client.js';
 export { renderGrid, isometricOrder } from './utils/canvas-renderer.js';
-export { createGrid, overlay, bodyToGrid, compose, createMoodCycler } from './utils/sprite.js';
+export { createGrid, overlay, bodyToGrid, compose, createMoodCycler } from './utils/sprite';
 export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './utils/borders';
 
 // Protocol
