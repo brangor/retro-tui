@@ -101,7 +101,7 @@ export class Panel extends LitElement {
   full = false;
 
   @property({ type: Boolean, reflect: true })
-  floating = true; // Default to floating
+  floating = false; // Default to floating
 
   @property({ type: String, attribute: 'snap-edge', reflect: true })
   snapEdge: 'left' | 'right' | 'top' | '' = '';
@@ -556,6 +556,7 @@ export class Panel extends LitElement {
       :host([full]) {
         flex: 1;
         min-height: 0;
+        height: 100%;
         width: 100%;
         display: flex;
         flex-direction: column;

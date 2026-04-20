@@ -152,6 +152,7 @@ export class App extends LitElement {
         flex: 1;
         min-height: 0;
         min-width: 0;
+        width: 100%;
       }
 
       /* ═══════════════════════════════════════════════════════════════════
