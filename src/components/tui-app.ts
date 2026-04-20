@@ -32,6 +32,7 @@ type FocusContext = 'workspace' | 'menu';
  * 
  * @attr {string} title - App title displayed in header
  * @attr {string} subtitle - Subtitle shown after title
+ * @attr {string} decorations - Corner decoration style: 'full' (default) | 'none' | 'header' | 'status'
  */
 @customElement('tui-app')
 export class App extends LitElement {
@@ -43,6 +44,9 @@ export class App extends LitElement {
 
   @property({ type: Boolean, reflect: true })
   compact = false;
+
+  @property({ type: String, reflect: true })
+  decorations: 'full' | 'none' | 'header' | 'status' = 'full';
 
   @state()
   private _focusContext: FocusContext = 'workspace';
@@ -224,6 +228,26 @@ export class App extends LitElement {
 
       :host([compact]) .container {
         padding-top: var(--spacing-xs);
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         DECORATION CONTROL
+         ═══════════════════════════════════════════════════════════════════ */
+
+      /* Decoration control — header corners (on :host) */
+      :host([decorations="none"])::before,
+      :host([decorations="none"])::after,
+      :host([decorations="status"])::before,
+      :host([decorations="status"])::after {
+        content: none;
+      }
+
+      /* Decoration control — status bar corners */
+      :host([decorations="none"]) .status-bar::before,
+      :host([decorations="none"]) .status-bar::after,
+      :host([decorations="header"]) .status-bar::before,
+      :host([decorations="header"]) .status-bar::after {
+        content: none;
       }
     `,
   ];

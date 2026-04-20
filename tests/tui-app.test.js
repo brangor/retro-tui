@@ -25,6 +25,41 @@ describe('tui-app', () => {
     expect(el.subtitle).to.equal('v1.0');
   });
 
+  it('defaults decorations to full', async () => {
+    const el = await fixture(html`<tui-app title="Test"></tui-app>`);
+    expect(el.decorations).to.equal('full');
+  });
+
+  it('reflects decorations attribute', async () => {
+    const el = await fixture(html`<tui-app title="Test" decorations="none"></tui-app>`);
+    expect(el.decorations).to.equal('none');
+    expect(el.hasAttribute('decorations')).to.be.true;
+  });
+
+  it('has CSS rules for decorations=none', async () => {
+    const el = await fixture(html`<tui-app title="Test" decorations="none"></tui-app>`);
+    await el.updateComplete;
+    const styles = Array.from(el.shadowRoot.querySelectorAll('style'))
+      .map(s => s.textContent).join('');
+    expect(styles).to.contain('decorations="none"');
+  });
+
+  it('has CSS rules for decorations=header hiding status corners', async () => {
+    const el = await fixture(html`<tui-app title="Test" decorations="header"></tui-app>`);
+    await el.updateComplete;
+    const styles = Array.from(el.shadowRoot.querySelectorAll('style'))
+      .map(s => s.textContent).join('');
+    expect(styles).to.contain('decorations="header"');
+  });
+
+  it('has CSS rules for decorations=status hiding header corners', async () => {
+    const el = await fixture(html`<tui-app title="Test" decorations="status"></tui-app>`);
+    await el.updateComplete;
+    const styles = Array.from(el.shadowRoot.querySelectorAll('style'))
+      .map(s => s.textContent).join('');
+    expect(styles).to.contain('decorations="status"');
+  });
+
   it('slotted main child receives flex stretch styling', async () => {
     const el = await fixture(html`
       <tui-app title="Test">
