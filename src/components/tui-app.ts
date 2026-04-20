@@ -27,7 +27,7 @@ type FocusContext = 'workspace' | 'menu';
  * 
  * @slot header - App title/branding (optional)
  * @slot menu - Menu bar items
- * @slot main - Primary workspace content (typically tui-workspace with floating panels)
+ * @slot main - Primary content area (tui-workspace, tui-tiled, or any element)
  * @slot status - Status bar content (optional)
  * 
  * @attr {string} title - App title displayed in header
@@ -142,6 +142,12 @@ export class App extends LitElement {
         min-width: 0;
         min-height: 0;
         display: flex;
+      }
+
+      .workspace-area ::slotted(*) {
+        flex: 1;
+        min-height: 0;
+        min-width: 0;
       }
 
       /* ═══════════════════════════════════════════════════════════════════
