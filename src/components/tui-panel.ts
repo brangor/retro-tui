@@ -37,6 +37,7 @@ type PanelBorder = BorderStyle;
  * @attr {string} border - Border style: single | heavy | double | rounded | none (default: single)
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
+ * @attr {boolean} full - Fill container completely (disables drag/resize, keeps collapse)
  * @attr {boolean} floating - Whether panel is floating (default: true)
  * @attr {string} snap-edge - Edge the panel is snapped to: 'left' | 'right' | 'top' | ''
  * @attr {number} position-x - X position in pixels
@@ -95,6 +96,9 @@ export class Panel extends LitElement {
 
   @property({ type: Boolean, reflect: true })
   dismissable = false;
+
+  @property({ type: Boolean, reflect: true })
+  full = false;
 
   @property({ type: Boolean, reflect: true })
   floating = true; // Default to floating
@@ -543,6 +547,29 @@ export class Panel extends LitElement {
 
       .resize-handle:hover {
         opacity: 1;
+      }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         FULL STATE
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([full]) {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      :host([full]) .panel {
+        flex: 1;
+        min-height: 0;
+      }
+
+      :host([full]) .content {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
       }
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -1004,6 +1031,13 @@ export class Panel extends LitElement {
     }
   }
 
+  willUpdate(changedProperties: Map<string, unknown>): void {
+    // Full panels must not be floating
+    if (this.full && this.floating) {
+      this.floating = false;
+    }
+  }
+
   updated(changedProperties: Map<string, unknown>): void {
     // Handle minimized positioning
     if (this.minimized) {
@@ -1076,8 +1110,8 @@ export class Panel extends LitElement {
     return html`
       <div class="panel ${this.collapsed ? 'collapsed' : ''}">
         <div
-          class="header ${this.floating ? 'draggable' : ''}"
-          @pointerdown=${this.floating ? this._onDragStart : undefined}
+          class="header ${this.floating && !this.full ? 'draggable' : ''}"
+          @pointerdown=${this.floating && !this.full ? this._onDragStart : undefined}
         >
           <span class="title"><span class="title-decor">${titleDecoration(this.border).before}</span>${this.title}<span class="title-decor">${titleDecoration(this.border).after}</span></span>
           <div class="header-controls">
@@ -1094,7 +1128,7 @@ export class Panel extends LitElement {
         <div class="content">
           <slot></slot>
         </div>
-        ${this.resizable && this.floating ? html`
+        ${this.resizable && this.floating && !this.full ? html`
           <div class="resize-handle" @pointerdown=${this._onResizeStart}></div>
         ` : ''}
       </div>

@@ -288,6 +288,56 @@ describe('tui-panel', () => {
     expect(moveEvent).to.exist;
   });
 
+  // Task 3: full attribute styling
+  it('full attribute defaults to false', async () => {
+    const el = await fixture(html`<tui-panel title="Test">Content</tui-panel>`);
+    expect(el.full).to.be.false;
+  });
+
+  it('full panel reflects attribute', async () => {
+    const el = await fixture(html`<tui-panel title="Test" full>Content</tui-panel>`);
+    await el.updateComplete;
+    expect(el.hasAttribute('full')).to.be.true;
+  });
+
+  it('full panel is not floating', async () => {
+    const el = await fixture(html`<tui-panel title="Test" full>Content</tui-panel>`);
+    await el.updateComplete;
+    expect(el.floating).to.be.false;
+  });
+
+  it('full panel has flex stretch CSS rules', async () => {
+    const el = await fixture(html`<tui-panel title="Test" full>Content</tui-panel>`);
+    await el.updateComplete;
+    const styles = Array.from(el.shadowRoot.querySelectorAll('style'))
+      .map(s => s.textContent).join('');
+    expect(styles).to.contain(':host([full])');
+  });
+
+  // Task 4: full disables drag and resize
+  it('full panel header is not draggable', async () => {
+    const el = await fixture(html`<tui-panel title="Test" full>Content</tui-panel>`);
+    await el.updateComplete;
+    const header = el.shadowRoot.querySelector('.header');
+    expect(header.classList.contains('draggable')).to.be.false;
+  });
+
+  it('full panel hides resize handle even when resizable set', async () => {
+    const el = await fixture(html`<tui-panel title="Test" full resizable>Content</tui-panel>`);
+    await el.updateComplete;
+    const handle = el.shadowRoot.querySelector('.resize-handle');
+    expect(handle).to.not.exist;
+  });
+
+  it('full panel still supports collapse', async () => {
+    const el = await fixture(html`<tui-panel title="Test" full collapsible>Content</tui-panel>`);
+    await el.updateComplete;
+    const collapseBtn = el.shadowRoot.querySelector('.header-controls .collapse-btn');
+    expect(collapseBtn).to.exist;
+    collapseBtn.click();
+    expect(el.collapsed).to.be.true;
+  });
+
   // Task 1: Fix collapsed docked panel gap
   it('docked collapsed panel has proper CSS structure', async () => {
     const el = await fixture(html`
