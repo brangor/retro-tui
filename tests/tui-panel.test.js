@@ -48,8 +48,8 @@ describe('tui-panel', () => {
   });
 
   it('emits panel-minimize event when dismiss clicked on floating panel', async () => {
-    // floating defaults to true, so floating+dismissable panels minimize instead of dismiss
-    const el = await fixture(html`<tui-panel title="Test" dismissable>Content</tui-panel>`);
+    // floating+dismissable panels minimize instead of dismiss
+    const el = await fixture(html`<tui-panel title="Test" dismissable floating>Content</tui-panel>`);
     let minimized = false;
     el.addEventListener('panel-minimize', () => { minimized = true; });
 

@@ -1091,7 +1091,7 @@ let b = class extends f {
     }, this._onEdgeTabClick = () => {
       this.restore();
     }, this._onDragStart = (e) => {
-      if (!this.floating) return;
+      if (!this.floating && !this.docked) return;
       const t = e.target;
       t.closest(".collapse-btn") || t.closest(".dismiss-btn") || (e.preventDefault(), this._isDragging = !0, this._dragStartX = e.clientX, this._dragStartY = e.clientY, this._dragOffsetX = this.positionX, this._dragOffsetY = this.positionY, document.addEventListener("pointermove", this._onDragMove), document.addEventListener("pointerup", this._onDragEnd));
     }, this._onDragMove = (e) => {
@@ -1268,8 +1268,8 @@ let b = class extends f {
       ` : c`
       <div class="panel ${this.collapsed ? "collapsed" : ""}">
         <div
-          class="header ${this.floating && !this.full ? "draggable" : ""}"
-          @pointerdown=${this.floating && !this.full ? this._onDragStart : void 0}
+          class="header ${(this.floating || this.docked) && !this.full ? "draggable" : ""}"
+          @pointerdown=${(this.floating || this.docked) && !this.full ? this._onDragStart : void 0}
         >
           <span class="title"><span class="title-decor">${Rt(this.border).before}</span>${this.title}<span class="title-decor">${Rt(this.border).after}</span></span>
           <div class="header-controls">

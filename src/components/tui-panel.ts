@@ -898,7 +898,7 @@ export class Panel extends LitElement {
   }
 
   private _onDragStart = (e: PointerEvent): void => {
-    if (!this.floating) return;
+    if (!this.floating && !this.docked) return;
     
     // Don't start drag if clicking on a control button (collapse, dismiss)
     const target = e.target as HTMLElement;
@@ -1111,8 +1111,8 @@ export class Panel extends LitElement {
     return html`
       <div class="panel ${this.collapsed ? 'collapsed' : ''}">
         <div
-          class="header ${this.floating && !this.full ? 'draggable' : ''}"
-          @pointerdown=${this.floating && !this.full ? this._onDragStart : undefined}
+          class="header ${(this.floating || this.docked) && !this.full ? 'draggable' : ''}"
+          @pointerdown=${(this.floating || this.docked) && !this.full ? this._onDragStart : undefined}
         >
           <span class="title"><span class="title-decor">${titleDecoration(this.border).before}</span>${this.title}<span class="title-decor">${titleDecoration(this.border).after}</span></span>
           <div class="header-controls">
