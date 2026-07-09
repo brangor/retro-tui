@@ -17,6 +17,8 @@ type CharGrid = (string | null)[][];
  * @attr {number} cell-height - Cell height in pixels (default: 18)
  * @attr {string} color - Text fill color (default: var(--text))
  * @attr {boolean} readonly - Disable pointer interactions
+ * @attr {boolean} fit - Scale to fill the container, preserving cell aspect ratio
+ * @attr {boolean} gridlines - Draw cell boundaries and a border around the grid
  *
  * @fires grid-draw - When a cell is clicked/drawn: { x, y }
  * @fires grid-hover - When hovering over a cell: { x, y }
@@ -43,6 +45,12 @@ export class Grid extends LitElement {
   @property({ type: Boolean, reflect: true })
   readonly = false;
 
+  @property({ type: Boolean, reflect: true })
+  fit = false;
+
+  @property({ type: Boolean, reflect: true })
+  gridlines = false;
+
   @state()
   private _grid: CharGrid = [];
 
@@ -65,8 +73,27 @@ export class Grid extends LitElement {
       svg {
         display: block;
       }
+      :host([fit]) {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      :host([fit]) svg {
+        width: 100%;
+        height: 100%;
+      }
       .hover-cell {
         fill: rgba(255, 255, 255, 0.08);
+      }
+      .grid-bg {
+        fill: var(--grid-bg, rgba(255, 255, 255, 0.02));
+        stroke: var(--grid-border-color, rgba(255, 255, 255, 0.25));
+        vector-effect: non-scaling-stroke;
+      }
+      .grid-lines {
+        fill: none;
+        stroke: var(--grid-line-color, rgba(255, 255, 255, 0.07));
+        vector-effect: non-scaling-stroke;
       }
     `,
   ];
@@ -91,8 +118,14 @@ export class Grid extends LitElement {
     const svgEl = this.shadowRoot?.querySelector('svg');
     if (!svgEl) return null;
     const rect = svgEl.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / (rect.width / this.cols));
-    const y = Math.floor((e.clientY - rect.top) / (rect.height / this.rows));
+    if (rect.width === 0 || rect.height === 0) return null;
+    // With `fit`, preserveAspectRatio letterboxes the drawing inside the
+    // element box — map through the uniform scale and centering offsets.
+    const scale = Math.min(rect.width / this._totalWidth, rect.height / this._totalHeight);
+    const offsetX = (rect.width - this._totalWidth * scale) / 2;
+    const offsetY = (rect.height - this._totalHeight * scale) / 2;
+    const x = Math.floor((e.clientX - rect.left - offsetX) / (this.cellWidth * scale));
+    const y = Math.floor((e.clientY - rect.top - offsetY) / (this.cellHeight * scale));
     if (x < 0 || x >= this.cols || y < 0 || y >= this.rows) return null;
     return { x, y };
   }
@@ -147,6 +180,17 @@ export class Grid extends LitElement {
     }
   };
 
+  private _gridlinesPath(): string {
+    const parts: string[] = [];
+    for (let x = 1; x < this.cols; x++) {
+      parts.push(`M ${x * this.cellWidth} 0 V ${this._totalHeight}`);
+    }
+    for (let y = 1; y < this.rows; y++) {
+      parts.push(`M 0 ${y * this.cellHeight} H ${this._totalWidth}`);
+    }
+    return parts.join(' ');
+  }
+
   render() {
     const cw = this.cellWidth;
     const ch = this.cellHeight;
@@ -164,6 +208,12 @@ export class Grid extends LitElement {
         @pointerleave=${this._handlePointerLeave}
         @contextmenu=${(e: Event) => e.preventDefault()}
       >
+        ${this.gridlines ? svg`
+          <rect class="grid-bg"
+            x="0" y="0"
+            width="${this._totalWidth}" height="${this._totalHeight}" />
+          <path class="grid-lines" d="${this._gridlinesPath()}" />
+        ` : null}
         ${this._hoverX >= 0 && !this.readonly ? svg`
           <rect class="hover-cell"
             x="${this._hoverX * cw}" y="${this._hoverY * ch}"

@@ -1,4 +1,4 @@
-import { css as u, LitElement as f, html as c, unsafeCSS as y, svg as te, nothing as Tt } from "lit";
+import { css as u, LitElement as f, html as c, unsafeCSS as y, svg as Ut, nothing as Tt } from "lit";
 const ue = '.theme-terminal-classic,:root{--color-primary: #00ffff;--color-primary-bg: #002b36;--color-primary-fg: #00ffff;--color-secondary: #00ff00;--color-secondary-bg: #003300;--color-secondary-fg: #00ff00;--color-error: #ff5555;--color-error-bg: #330000;--color-error-fg: #ff5555;--color-warning: #e8691e;--color-warning-bg: #331500;--color-warning-fg: #e8691e;--color-success: #50fa7b;--color-success-bg: #003300;--color-success-fg: #50fa7b;--color-info: #8be9fd;--color-info-bg: #002233;--color-info-fg: #8be9fd;--surface-base: #0a0a0a;--surface-elevated: #1a1a1a;--surface-overlay: #2a2a2a;--text-primary: #e0e0e0;--text-muted: #666666;--border-default: #333333;--border-width: 1px;--border-radius: 0px;--spacing-xs: .25rem;--spacing-sm: .5rem;--spacing-md: 1rem;--spacing-lg: 1.5rem;--font-mono: "IBM Plex Mono", "Fira Code", "Consolas", monospace;--font-size-xs: .6rem;--font-size-sm: .75rem;--font-size-md: .85rem;--font-size-lg: 1rem;--font-size-xl: 1.25rem;--font-size-label: var(--font-size-sm);--font-size-body: var(--font-size-md);--font-size-caption: var(--font-size-xs)}.theme-vibrant-scifi{--color-primary: #ff00ff;--color-primary-bg: #ff00ff;--color-primary-fg: #000000;--color-secondary: #00ffcc;--color-secondary-bg: #00ffcc;--color-secondary-fg: #000000;--color-error: #ff3366;--color-error-bg: #ff3366;--color-error-fg: #ffffff;--color-warning: #ff6622;--color-warning-bg: #ff6622;--color-warning-fg: #000000;--color-success: #00ff66;--color-success-bg: #00ff66;--color-success-fg: #000000;--color-info: #6666ff;--color-info-bg: #6666ff;--color-info-fg: #ffffff;--surface-base: #0d0d1a;--surface-elevated: #1a1a2e;--surface-overlay: #2a2a4a;--text-primary: #ffffff;--text-muted: #8888aa;--border-default: #4a4a6a;--border-width: 2px;--border-radius: 2px;--spacing-xs: .25rem;--spacing-sm: .5rem;--spacing-md: 1rem;--spacing-lg: 1.5rem;--font-mono: "IBM Plex Mono", "Fira Code", "Consolas", monospace;--font-size-xs: .6rem;--font-size-sm: .75rem;--font-size-md: .85rem;--font-size-lg: 1rem;--font-size-xl: 1.25rem;--font-size-label: var(--font-size-sm);--font-size-body: var(--font-size-md);--font-size-caption: var(--font-size-xs)}html,body{background:var(--surface-base);color:var(--text-primary);font-family:var(--font-mono);color-scheme:dark}.theme-home-security-interface{--color-primary: #3fb950;--color-primary-bg: #002b36;--color-primary-fg: #3fb950;--color-secondary: #00ff00;--color-secondary-bg: #003300;--color-secondary-fg: #00ff00;--color-error: #ff5555;--color-error-bg: #330000;--color-error-fg: #ff5555;--color-warning: #e8691e;--color-warning-bg: #331500;--color-warning-fg: #e8691e;--color-success: #3fb950;--color-success-bg: #003300;--color-success-fg: #3fb950;--color-info: #8be9fd;--color-info-bg: #002233;--color-info-fg: #8be9fd;--surface-base: #111;--surface-elevated: #1a1a1a;--surface-overlay: #2a2a2a;--text-primary: #e0e0e0;--text-muted: #666666;--border-default: #3fb950;--border-width: 3px;--border-radius: 0px;--spacing-xs: .25rem;--spacing-sm: .5rem;--spacing-md: 1rem;--spacing-lg: 1.5rem;--font-mono: "IBM Plex Mono", "Fira Code", "Consolas", monospace;--font-size-xs: .6rem;--font-size-sm: .75rem;--font-size-md: .85rem;--font-size-lg: 1rem;--font-size-xl: 1.25rem;--font-size-label: var(--font-size-sm);--font-size-body: var(--font-size-md);--font-size-caption: var(--font-size-xs)}', ee = "__retro_tui_tokens__";
 if (typeof document < "u" && !document[ee]) {
   const e = document.createElement("style");
@@ -21,7 +21,7 @@ const g = (e) => (t, r) => {
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const Mt = globalThis, Gt = Mt.ShadowRoot && (Mt.ShadyCSS === void 0 || Mt.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, pe = Symbol(), re = /* @__PURE__ */ new WeakMap();
+const Mt = globalThis, Vt = Mt.ShadowRoot && (Mt.ShadyCSS === void 0 || Mt.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, pe = Symbol(), re = /* @__PURE__ */ new WeakMap();
 let fe = class {
   constructor(t, r, s) {
     if (this._$cssResult$ = !0, s !== pe) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
@@ -30,7 +30,7 @@ let fe = class {
   get styleSheet() {
     let t = this.o;
     const r = this.t;
-    if (Gt && t === void 0) {
+    if (Vt && t === void 0) {
       const s = r !== void 0 && r.length === 1;
       s && (t = re.get(r)), t === void 0 && ((this.o = t = new CSSStyleSheet()).replaceSync(this.cssText), s && re.set(r, t));
     }
@@ -41,12 +41,12 @@ let fe = class {
   }
 };
 const ge = (e) => new fe(typeof e == "string" ? e : e + "", void 0, pe), ve = (e, t) => {
-  if (Gt) e.adoptedStyleSheets = t.map((r) => r instanceof CSSStyleSheet ? r : r.styleSheet);
+  if (Vt) e.adoptedStyleSheets = t.map((r) => r instanceof CSSStyleSheet ? r : r.styleSheet);
   else for (const r of t) {
     const s = document.createElement("style"), o = Mt.litNonce;
     o !== void 0 && s.setAttribute("nonce", o), s.textContent = r.cssText, e.appendChild(s);
   }
-}, oe = Gt ? (e) => e : (e) => e instanceof CSSStyleSheet ? ((t) => {
+}, oe = Vt ? (e) => e : (e) => e instanceof CSSStyleSheet ? ((t) => {
   let r = "";
   for (const s of t.cssRules) r += s.cssText;
   return ge(r);
@@ -56,7 +56,7 @@ const ge = (e) => new fe(typeof e == "string" ? e : e + "", void 0, pe), ve = (e
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: be, defineProperty: me, getOwnPropertyDescriptor: ye, getOwnPropertyNames: _e, getOwnPropertySymbols: xe, getPrototypeOf: we } = Object, X = globalThis, se = X.trustedTypes, $e = se ? se.emptyScript : "", Ut = X.reactiveElementPolyfillSupport, mt = (e, t) => e, Ht = { toAttribute(e, t) {
+const { is: be, defineProperty: me, getOwnPropertyDescriptor: ye, getOwnPropertyNames: _e, getOwnPropertySymbols: xe, getPrototypeOf: we } = Object, X = globalThis, se = X.trustedTypes, $e = se ? se.emptyScript : "", qt = X.reactiveElementPolyfillSupport, mt = (e, t) => e, Ht = { toAttribute(e, t) {
   switch (t) {
     case Boolean:
       e = e ? $e : null;
@@ -84,7 +84,7 @@ const { is: be, defineProperty: me, getOwnPropertyDescriptor: ye, getOwnProperty
       }
   }
   return r;
-} }, Vt = (e, t) => !be(e, t), ie = { attribute: !0, type: String, converter: Ht, reflect: !1, useDefault: !1, hasChanged: Vt };
+} }, Ft = (e, t) => !be(e, t), ie = { attribute: !0, type: String, converter: Ht, reflect: !1, useDefault: !1, hasChanged: Ft };
 Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), X.litPropertyMetadata ?? (X.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
 class bt extends HTMLElement {
   static addInitializer(t) {
@@ -213,7 +213,7 @@ class bt extends HTMLElement {
     var a;
     if (t !== void 0) {
       const l = this.constructor;
-      if (o === !1 && (i = this[t]), s ?? (s = l.getPropertyOptions(t)), !((s.hasChanged ?? Vt)(i, r) || s.useDefault && s.reflect && i === ((a = this._$Ej) == null ? void 0 : a.get(t)) && !this.hasAttribute(l._$Eu(t, s)))) return;
+      if (o === !1 && (i = this[t]), s ?? (s = l.getPropertyOptions(t)), !((s.hasChanged ?? Ft)(i, r) || s.useDefault && s.reflect && i === ((a = this._$Ej) == null ? void 0 : a.get(t)) && !this.hasAttribute(l._$Eu(t, s)))) return;
       this.C(t, r, s);
     }
     this.isUpdatePending === !1 && (this._$ES = this._$EP());
@@ -289,13 +289,13 @@ class bt extends HTMLElement {
   firstUpdated(t) {
   }
 }
-bt.elementStyles = [], bt.shadowRootOptions = { mode: "open" }, bt[mt("elementProperties")] = /* @__PURE__ */ new Map(), bt[mt("finalized")] = /* @__PURE__ */ new Map(), Ut == null || Ut({ ReactiveElement: bt }), (X.reactiveElementVersions ?? (X.reactiveElementVersions = [])).push("2.1.2");
+bt.elementStyles = [], bt.shadowRootOptions = { mode: "open" }, bt[mt("elementProperties")] = /* @__PURE__ */ new Map(), bt[mt("finalized")] = /* @__PURE__ */ new Map(), qt == null || qt({ ReactiveElement: bt }), (X.reactiveElementVersions ?? (X.reactiveElementVersions = [])).push("2.1.2");
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const ze = { attribute: !0, type: String, converter: Ht, reflect: !1, hasChanged: Vt }, Se = (e = ze, t, r) => {
+const ze = { attribute: !0, type: String, converter: Ht, reflect: !1, hasChanged: Ft }, Se = (e = ze, t, r) => {
   const { kind: s, metadata: o } = r;
   let i = globalThis.litPropertyMetadata.get(o);
   if (i === void 0 && globalThis.litPropertyMetadata.set(o, i = /* @__PURE__ */ new Map()), s === "setter" && ((e = Object.create(e)).wrapped = !0), i.set(r.name, e), s === "accessor") {
@@ -657,7 +657,7 @@ tt([
 T = tt([
   g("tui-app")
 ], T);
-var Pe = Object.defineProperty, ke = Object.getOwnPropertyDescriptor, Ft = (e, t, r, s) => {
+var Pe = Object.defineProperty, ke = Object.getOwnPropertyDescriptor, Kt = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? ke(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && Pe(t, r, o), o;
@@ -898,13 +898,13 @@ D.styles = [
       }
     `
 ];
-Ft([
+Kt([
   _()
 ], D.prototype, "_bounds", 2);
-Ft([
+Kt([
   _()
 ], D.prototype, "_snapPreview", 2);
-D = Ft([
+D = Kt([
   g("tui-workspace")
 ], D);
 var Oe = Object.defineProperty, De = Object.getOwnPropertyDescriptor, Lt = (e, t, r, s) => {
@@ -1960,7 +1960,7 @@ function ce(e) {
   const o = (8 + (e - 232) * 10).toString(16).padStart(2, "0");
   return `#${o}${o}${o}`;
 }
-function Kt(e) {
+function Zt(e) {
   if (!e) return "";
   let t = e.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const r = /\x1b\[([0-9;]+)m/g;
@@ -1979,11 +1979,11 @@ function Kt(e) {
         const p = ce(l[h + 2]);
         s += `<span style="background-color: ${p}">`, i.push("256bg"), h += 2;
       } else if (d === 38 && l[h + 1] === 2 && l.length > h + 4) {
-        const p = l[h + 2], x = l[h + 3], w = l[h + 4];
-        s += `<span style="color: rgb(${p},${x},${w})">`, i.push("tcfg"), h += 4;
+        const p = l[h + 2], x = l[h + 3], $ = l[h + 4];
+        s += `<span style="color: rgb(${p},${x},${$})">`, i.push("tcfg"), h += 4;
       } else if (d === 48 && l[h + 1] === 2 && l.length > h + 4) {
-        const p = l[h + 2], x = l[h + 3], w = l[h + 4];
-        s += `<span style="background-color: rgb(${p},${x},${w})">`, i.push("tcbg"), h += 4;
+        const p = l[h + 2], x = l[h + 3], $ = l[h + 4];
+        s += `<span style="background-color: rgb(${p},${x},${$})">`, i.push("tcbg"), h += 4;
       } else if (ae[d]) {
         const p = `ansi-${ae[d]}`;
         s += `<span class="${p}">`, i.push(p);
@@ -2016,7 +2016,7 @@ let Y = class extends f {
 `).map((s) => ({
       id: Date.now() + Math.random(),
       text: s,
-      html: Kt(s),
+      html: Zt(s),
       timestamp: t
     }));
     this._lines = [...this._lines, ...r].slice(-this.maxLines), this.autoscroll && this._isNearBottom() && this.updateComplete.then(() => this.scrollToBottom());
@@ -2286,7 +2286,7 @@ let M = class extends f {
 `).map((r) => ({
       id: Date.now() + Math.random(),
       text: r,
-      html: Kt(r),
+      html: Zt(r),
       type: "output"
     }));
     this._lines = [...this._lines, ...t], this.updateComplete.then(() => this.scrollToBottom());
@@ -2490,7 +2490,7 @@ let it = class extends f {
     super(...arguments), this.content = "", this.attr = "", this.variant = "";
   }
   render() {
-    const e = this.attr.split(/\s+/).filter(Boolean).map((r) => `tui-${r}`).join(" "), t = Kt(this.content || this.textContent || "");
+    const e = this.attr.split(/\s+/).filter(Boolean).map((r) => `tui-${r}`).join(" "), t = Zt(this.content || this.textContent || "");
     return c`<pre class="${e}" .innerHTML=${t}></pre>`;
   }
 };
@@ -2550,7 +2550,7 @@ it = Nt([
  * Copyright 2021 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-let Be = class extends Event {
+let We = class extends Event {
   constructor(t, r, s, o) {
     super("context-request", { bubbles: !0, composed: !0 }), this.context = t, this.contextTarget = r, this.callback = s, this.subscribe = o ?? !1;
   }
@@ -2582,7 +2582,7 @@ class he {
     this.unsubscribe && (this.unsubscribe(), this.unsubscribe = void 0);
   }
   dispatchRequest() {
-    this.host.dispatchEvent(new Be(this.context, this.host, this.t, this.subscribe));
+    this.host.dispatchEvent(new We(this.context, this.host, this.t, this.subscribe));
   }
 }
 /**
@@ -2590,7 +2590,7 @@ class he {
  * Copyright 2022 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-function We({ context: e, subscribe: t }) {
+function Be({ context: e, subscribe: t }) {
   return (r, s) => {
     typeof s == "object" ? s.addInitializer(function() {
       new he(this, { context: e, callback: (o) => {
@@ -2639,7 +2639,7 @@ var qe = Object.defineProperty, Ge = Object.getOwnPropertyDescriptor, I = (e, t,
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && qe(t, r, o), o;
 };
-let z = class extends f {
+let S = class extends f {
   constructor() {
     super(...arguments), this.variant = "default", this.size = "md", this.selected = !1, this.disabled = !1, this.block = !1;
   }
@@ -2654,11 +2654,11 @@ let z = class extends f {
     `;
   }
 };
-z.shadowRootOptions = {
+S.shadowRootOptions = {
   ...f.shadowRootOptions,
   delegatesFocus: !0
 };
-z.styles = [
+S.styles = [
   v,
   u`
       /* ═══════════════════════════════════════════════════════════════════
@@ -2932,32 +2932,32 @@ z.styles = [
 ];
 I([
   n({ reflect: !0 })
-], z.prototype, "variant", 2);
+], S.prototype, "variant", 2);
 I([
   n({ reflect: !0 })
-], z.prototype, "size", 2);
+], S.prototype, "size", 2);
 I([
   n({ attribute: "selection-style" })
-], z.prototype, "selectionStyle", 2);
+], S.prototype, "selectionStyle", 2);
 I([
   n({ attribute: "tool-id" })
-], z.prototype, "toolId", 2);
+], S.prototype, "toolId", 2);
 I([
-  We({ context: Ue, subscribe: !0 })
-], z.prototype, "toolState", 2);
-I([
-  n({ type: Boolean, reflect: !0 })
-], z.prototype, "selected", 2);
+  Be({ context: Ue, subscribe: !0 })
+], S.prototype, "toolState", 2);
 I([
   n({ type: Boolean, reflect: !0 })
-], z.prototype, "disabled", 2);
+], S.prototype, "selected", 2);
 I([
   n({ type: Boolean, reflect: !0 })
-], z.prototype, "block", 2);
-z = I([
+], S.prototype, "disabled", 2);
+I([
+  n({ type: Boolean, reflect: !0 })
+], S.prototype, "block", 2);
+S = I([
   g("tui-button")
-], z);
-var Ve = Object.defineProperty, Fe = Object.getOwnPropertyDescriptor, P = (e, t, r, s) => {
+], S);
+var Ve = Object.defineProperty, Fe = Object.getOwnPropertyDescriptor, k = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Fe(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && Ve(t, r, o), o;
@@ -2979,10 +2979,10 @@ It.styles = [
       }
     `
 ];
-P([
+k([
   _()
 ], It.prototype, "_openMenu", 2);
-It = P([
+It = k([
   g("tui-menu")
 ], It);
 let at = class extends f {
@@ -3062,16 +3062,16 @@ at.styles = [
       }
     `
 ];
-P([
+k([
   n({ type: String })
 ], at.prototype, "label", 2);
-P([
+k([
   n({ type: String })
 ], at.prototype, "hotkey", 2);
-P([
+k([
   _()
 ], at.prototype, "_open", 2);
-at = P([
+at = k([
   g("tui-menu-item")
 ], at);
 let nt = class extends f {
@@ -3142,24 +3142,24 @@ nt.styles = [
       }
     `
 ];
-P([
+k([
   n({ type: String })
 ], nt.prototype, "label", 2);
-P([
+k([
   n({ type: String })
 ], nt.prototype, "shortcut", 2);
-P([
+k([
   n({ type: Boolean, reflect: !0 })
 ], nt.prototype, "danger", 2);
-nt = P([
+nt = k([
   g("tui-menu-action")
 ], nt);
-let qt = class extends f {
+let Gt = class extends f {
   render() {
     return c``;
   }
 };
-qt.styles = u`
+Gt.styles = u`
     :host {
       display: block;
       height: 1px;
@@ -3167,9 +3167,9 @@ qt.styles = u`
       margin: var(--spacing-xs) 0;
     }
   `;
-qt = P([
+Gt = k([
   g("tui-menu-divider")
-], qt);
+], Gt);
 var Ke = Object.defineProperty, Ze = Object.getOwnPropertyDescriptor, pt = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Ze(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
@@ -4358,8 +4358,8 @@ class cr {
     return `M ${a},${l - o / 2} L ${a + s / 2},${l} L ${a},${l + o / 2} L ${a - s / 2},${l} Z`;
   }
   getBoundsPath() {
-    const t = this.tileWidth, r = this.tileHeight, s = this._gridWidth, o = this._gridHeight, i = this.getOriginX(o), a = i, l = 0, h = i + s * (t / 2), d = s * (r / 2), p = i + (s - o) * (t / 2), x = (s + o) * (r / 2), w = i - o * (t / 2), C = o * (r / 2);
-    return `M ${a},${l} L ${h},${d} L ${p},${x} L ${w},${C} Z`;
+    const t = this.tileWidth, r = this.tileHeight, s = this._gridWidth, o = this._gridHeight, i = this.getOriginX(o), a = i, l = 0, h = i + s * (t / 2), d = s * (r / 2), p = i + (s - o) * (t / 2), x = (s + o) * (r / 2), $ = i - o * (t / 2), P = o * (r / 2);
+    return `M ${a},${l} L ${h},${d} L ${p},${x} L ${$},${P} Z`;
   }
   getDimensions(t, r) {
     const s = this.tileWidth, o = this.tileHeight;
@@ -4428,12 +4428,12 @@ function U(e, t) {
       throw new Error(`Unknown projection type: ${e}`);
   }
 }
-var dr = Object.defineProperty, pr = Object.getOwnPropertyDescriptor, k = (e, t, r, s) => {
+var dr = Object.defineProperty, pr = Object.getOwnPropertyDescriptor, O = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? pr(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && dr(t, r, o), o;
 };
-let $ = class extends f {
+let z = class extends f {
   constructor() {
     super(...arguments), this.width = 16, this.height = 16, this.cellSize = 20, this.readonly = !1, this.showGrid = !0, this.continuous = !1, this.projection = "rectangular", this.hoverX = -1, this.hoverY = -1, this.projectionEngine = null, this.isDrawing = !1, this.startX = -1, this.startY = -1, this.lastX = -1, this.lastY = -1, this.lastPointerCoords = null, this.currentPointerId = null, this.handlePointerDown = (e) => {
       if (this.readonly || e.button !== 0) return;
@@ -4555,10 +4555,10 @@ let $ = class extends f {
   interpolatePoints(e, t, r, s) {
     const o = [], i = r - e, a = s - t, l = Math.sqrt(i * i + a * a), h = Math.max(1, Math.ceil(l / (this.cellSize / 2)));
     for (let d = 0; d <= h; d++) {
-      const p = d / h, x = e + i * p, w = t + a * p, C = this.screenToGrid(x, w);
-      if (C) {
+      const p = d / h, x = e + i * p, $ = t + a * p, P = this.screenToGrid(x, $);
+      if (P) {
         const vt = o[o.length - 1];
-        (!vt || vt.x !== C.x || vt.y !== C.y) && o.push(C);
+        (!vt || vt.x !== P.x || vt.y !== P.y) && o.push(P);
       }
     }
     return o;
@@ -4678,7 +4678,7 @@ let $ = class extends f {
     e >= 0 && e < this.width && t >= 0 && t < this.height ? (this.hoverX = e, this.hoverY = t) : (this.hoverX = -1, this.hoverY = -1);
   }
 };
-$.styles = [
+z.styles = [
   v,
   u`
       :host {
@@ -4735,47 +4735,47 @@ $.styles = [
       }
     `
 ];
-k([
+O([
   n({ type: Number })
-], $.prototype, "width", 2);
-k([
+], z.prototype, "width", 2);
+O([
   n({ type: Number })
-], $.prototype, "height", 2);
-k([
+], z.prototype, "height", 2);
+O([
   n({ type: Number, attribute: "cell-size" })
-], $.prototype, "cellSize", 2);
-k([
+], z.prototype, "cellSize", 2);
+O([
   n({ type: Boolean, reflect: !0 })
-], $.prototype, "readonly", 2);
-k([
+], z.prototype, "readonly", 2);
+O([
   n({ type: Boolean, attribute: "show-grid" })
-], $.prototype, "showGrid", 2);
-k([
+], z.prototype, "showGrid", 2);
+O([
   n({ type: Boolean })
-], $.prototype, "continuous", 2);
-k([
+], z.prototype, "continuous", 2);
+O([
   n({ type: String })
-], $.prototype, "projection", 2);
-k([
+], z.prototype, "projection", 2);
+O([
   _()
-], $.prototype, "hoverX", 2);
-k([
+], z.prototype, "hoverX", 2);
+O([
   _()
-], $.prototype, "hoverY", 2);
-k([
+], z.prototype, "hoverY", 2);
+O([
   _()
-], $.prototype, "projectionEngine", 2);
-$ = k([
+], z.prototype, "projectionEngine", 2);
+z = O([
   g("tui-canvas")
-], $);
-var ur = Object.defineProperty, fr = Object.getOwnPropertyDescriptor, O = (e, t, r, s) => {
+], z);
+var ur = Object.defineProperty, fr = Object.getOwnPropertyDescriptor, C = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? fr(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && ur(t, r, o), o;
 };
-let S = class extends f {
+let w = class extends f {
   constructor() {
-    super(...arguments), this.cols = 16, this.rows = 16, this.cellWidth = 10, this.cellHeight = 18, this.color = "var(--text, #2ecc71)", this.readonly = !1, this._grid = [], this._hoverX = -1, this._hoverY = -1, this._isDrawing = !1, this._handlePointerDown = (e) => {
+    super(...arguments), this.cols = 16, this.rows = 16, this.cellWidth = 10, this.cellHeight = 18, this.color = "var(--text, #2ecc71)", this.readonly = !1, this.fit = !1, this.gridlines = !1, this._grid = [], this._hoverX = -1, this._hoverY = -1, this._isDrawing = !1, this._handlePointerDown = (e) => {
       if (this.readonly || e.button !== 0) return;
       e.target.setPointerCapture(e.pointerId), e.preventDefault(), this._isDrawing = !0;
       const t = this._screenToGrid(e);
@@ -4821,11 +4821,21 @@ let S = class extends f {
     return this.rows * this.cellHeight;
   }
   _screenToGrid(e) {
-    var i;
-    const t = (i = this.shadowRoot) == null ? void 0 : i.querySelector("svg");
+    var h;
+    const t = (h = this.shadowRoot) == null ? void 0 : h.querySelector("svg");
     if (!t) return null;
-    const r = t.getBoundingClientRect(), s = Math.floor((e.clientX - r.left) / (r.width / this.cols)), o = Math.floor((e.clientY - r.top) / (r.height / this.rows));
-    return s < 0 || s >= this.cols || o < 0 || o >= this.rows ? null : { x: s, y: o };
+    const r = t.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) return null;
+    const s = Math.min(r.width / this._totalWidth, r.height / this._totalHeight), o = (r.width - this._totalWidth * s) / 2, i = (r.height - this._totalHeight * s) / 2, a = Math.floor((e.clientX - r.left - o) / (this.cellWidth * s)), l = Math.floor((e.clientY - r.top - i) / (this.cellHeight * s));
+    return a < 0 || a >= this.cols || l < 0 || l >= this.rows ? null : { x: a, y: l };
+  }
+  _gridlinesPath() {
+    const e = [];
+    for (let t = 1; t < this.cols; t++)
+      e.push(`M ${t * this.cellWidth} 0 V ${this._totalHeight}`);
+    for (let t = 1; t < this.rows; t++)
+      e.push(`M 0 ${t * this.cellHeight} H ${this._totalWidth}`);
+    return e.join(" ");
   }
   render() {
     const e = this.cellWidth, t = this.cellHeight, r = t * 0.85;
@@ -4841,14 +4851,20 @@ let S = class extends f {
         @pointerleave=${this._handlePointerLeave}
         @contextmenu=${(s) => s.preventDefault()}
       >
-        ${this._hoverX >= 0 && !this.readonly ? te`
+        ${this.gridlines ? Ut`
+          <rect class="grid-bg"
+            x="0" y="0"
+            width="${this._totalWidth}" height="${this._totalHeight}" />
+          <path class="grid-lines" d="${this._gridlinesPath()}" />
+        ` : null}
+        ${this._hoverX >= 0 && !this.readonly ? Ut`
           <rect class="hover-cell"
             x="${this._hoverX * e}" y="${this._hoverY * t}"
             width="${e}" height="${t}" />
         ` : null}
         ${this._grid.map(
       (s, o) => s.map(
-        (i, a) => i != null ? te`
+        (i, a) => i != null ? Ut`
               <text
                 x="${a * e + e / 2}"
                 y="${o * t + t / 2}"
@@ -4865,7 +4881,7 @@ let S = class extends f {
     `;
   }
 };
-S.styles = [
+w.styles = [
   v,
   u`
       :host {
@@ -4876,42 +4892,67 @@ S.styles = [
       svg {
         display: block;
       }
+      :host([fit]) {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      :host([fit]) svg {
+        width: 100%;
+        height: 100%;
+      }
       .hover-cell {
         fill: rgba(255, 255, 255, 0.08);
       }
+      .grid-bg {
+        fill: var(--grid-bg, rgba(255, 255, 255, 0.02));
+        stroke: var(--grid-border-color, rgba(255, 255, 255, 0.25));
+        vector-effect: non-scaling-stroke;
+      }
+      .grid-lines {
+        fill: none;
+        stroke: var(--grid-line-color, rgba(255, 255, 255, 0.07));
+        vector-effect: non-scaling-stroke;
+      }
     `
 ];
-O([
+C([
   n({ type: Number })
-], S.prototype, "cols", 2);
-O([
+], w.prototype, "cols", 2);
+C([
   n({ type: Number })
-], S.prototype, "rows", 2);
-O([
+], w.prototype, "rows", 2);
+C([
   n({ type: Number, attribute: "cell-width" })
-], S.prototype, "cellWidth", 2);
-O([
+], w.prototype, "cellWidth", 2);
+C([
   n({ type: Number, attribute: "cell-height" })
-], S.prototype, "cellHeight", 2);
-O([
+], w.prototype, "cellHeight", 2);
+C([
   n({ type: String })
-], S.prototype, "color", 2);
-O([
+], w.prototype, "color", 2);
+C([
   n({ type: Boolean, reflect: !0 })
-], S.prototype, "readonly", 2);
-O([
+], w.prototype, "readonly", 2);
+C([
+  n({ type: Boolean, reflect: !0 })
+], w.prototype, "fit", 2);
+C([
+  n({ type: Boolean, reflect: !0 })
+], w.prototype, "gridlines", 2);
+C([
   _()
-], S.prototype, "_grid", 2);
-O([
+], w.prototype, "_grid", 2);
+C([
   _()
-], S.prototype, "_hoverX", 2);
-O([
+], w.prototype, "_hoverX", 2);
+C([
   _()
-], S.prototype, "_hoverY", 2);
-S = O([
+], w.prototype, "_hoverY", 2);
+w = C([
   g("tui-grid")
-], S);
-var gr = Object.defineProperty, vr = Object.getOwnPropertyDescriptor, Bt = (e, t, r, s) => {
+], w);
+var gr = Object.defineProperty, vr = Object.getOwnPropertyDescriptor, Wt = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? vr(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && gr(t, r, o), o;
@@ -4988,19 +5029,19 @@ ct.styles = [
       }
     `
 ];
-Bt([
+Wt([
   n({ type: String })
 ], ct.prototype, "href", 2);
-Bt([
+Wt([
   n({ type: String, reflect: !0 })
 ], ct.prototype, "type", 2);
-Bt([
+Wt([
   _()
 ], ct.prototype, "_copied", 2);
-ct = Bt([
+ct = Wt([
   g("tui-link")
 ], ct);
-var br = Object.defineProperty, mr = Object.getOwnPropertyDescriptor, Zt = (e, t, r, s) => {
+var br = Object.defineProperty, mr = Object.getOwnPropertyDescriptor, Jt = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? mr(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && br(t, r, o), o;
@@ -5112,16 +5153,16 @@ yt.styles = [
       }
     `
 ];
-Zt([
+Jt([
   n({ type: Array })
 ], yt.prototype, "items", 2);
-Zt([
+Jt([
   n({ type: String, reflect: !0 })
 ], yt.prototype, "selected", 2);
-yt = Zt([
+yt = Jt([
   g("tui-action-list")
 ], yt);
-var yr = Object.defineProperty, _r = Object.getOwnPropertyDescriptor, Wt = (e, t, r, s) => {
+var yr = Object.defineProperty, _r = Object.getOwnPropertyDescriptor, Bt = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? _r(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && yr(t, r, o), o;
@@ -5170,16 +5211,16 @@ ht.styles = [
       :host([color="muted"]) .value { color: var(--text-muted); }
     `
 ];
-Wt([
+Bt([
   n({ type: String })
 ], ht.prototype, "label", 2);
-Wt([
+Bt([
   n({ type: String })
 ], ht.prototype, "value", 2);
-Wt([
+Bt([
   n({ type: String, reflect: !0 })
 ], ht.prototype, "color", 2);
-ht = Wt([
+ht = Bt([
   g("tui-stat")
 ], ht);
 var xr = Object.defineProperty, wr = Object.getOwnPropertyDescriptor, Et = (e, t, r, s) => {
@@ -5284,7 +5325,7 @@ Et([
 _t = Et([
   g("tui-strip-item")
 ], _t);
-var $r = Object.defineProperty, zr = Object.getOwnPropertyDescriptor, Jt = (e, t, r, s) => {
+var $r = Object.defineProperty, zr = Object.getOwnPropertyDescriptor, Qt = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? zr(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && $r(t, r, o), o;
@@ -5339,13 +5380,13 @@ xt.styles = [
       }
     `
 ];
-Jt([
+Qt([
   n({ type: String })
 ], xt.prototype, "app", 2);
-Jt([
+Qt([
   n({ type: String })
 ], xt.prototype, "section", 2);
-xt = Jt([
+xt = Qt([
   g("tui-titlebar")
 ], xt);
 var Sr = Object.defineProperty, Er = Object.getOwnPropertyDescriptor, Ct = (e, t, r, s) => {
@@ -5599,7 +5640,7 @@ var Dr = Object.defineProperty, Tr = Object.getOwnPropertyDescriptor, ft = (e, t
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && Dr(t, r, o), o;
 };
-let B = class extends f {
+let W = class extends f {
   constructor() {
     super(...arguments), this.checked = !1, this.disabled = !1, this.name = "", this.value = "", this.label = "";
   }
@@ -5635,7 +5676,7 @@ let B = class extends f {
     `;
   }
 };
-B.styles = [
+W.styles = [
   v,
   u`
       :host { display: inline-block; }
@@ -5677,28 +5718,28 @@ B.styles = [
 ];
 ft([
   n({ type: Boolean, reflect: !0 })
-], B.prototype, "checked", 2);
+], W.prototype, "checked", 2);
 ft([
   n({ type: Boolean, reflect: !0 })
-], B.prototype, "disabled", 2);
+], W.prototype, "disabled", 2);
 ft([
   n()
-], B.prototype, "name", 2);
+], W.prototype, "name", 2);
 ft([
   n()
-], B.prototype, "value", 2);
+], W.prototype, "value", 2);
 ft([
   n()
-], B.prototype, "label", 2);
-B = ft([
+], W.prototype, "label", 2);
+W = ft([
   g("tui-checkbox")
-], B);
+], W);
 var Mr = Object.defineProperty, Hr = Object.getOwnPropertyDescriptor, gt = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Hr(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && Mr(t, r, o), o;
 };
-let W = class extends f {
+let B = class extends f {
   constructor() {
     super(...arguments), this.checked = !1, this.disabled = !1, this.name = "", this.value = "", this.label = "";
   }
@@ -5734,7 +5775,7 @@ let W = class extends f {
     `;
   }
 };
-W.styles = [
+B.styles = [
   v,
   u`
       :host { display: inline-block; }
@@ -5776,22 +5817,22 @@ W.styles = [
 ];
 gt([
   n({ type: Boolean, reflect: !0 })
-], W.prototype, "checked", 2);
+], B.prototype, "checked", 2);
 gt([
   n({ type: Boolean, reflect: !0 })
-], W.prototype, "disabled", 2);
+], B.prototype, "disabled", 2);
 gt([
   n()
-], W.prototype, "name", 2);
+], B.prototype, "name", 2);
 gt([
   n()
-], W.prototype, "value", 2);
+], B.prototype, "value", 2);
 gt([
   n()
-], W.prototype, "label", 2);
-W = gt([
+], B.prototype, "label", 2);
+B = gt([
   g("tui-radio")
-], W);
+], B);
 var Rr = Object.defineProperty, Ir = Object.getOwnPropertyDescriptor, Pt = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Ir(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
@@ -6055,17 +6096,17 @@ function eo({ grid: e, projection: t, cellRenderer: r, regions: s, sortOrder: o 
     const x = e[p][d];
     if (x)
       if (s)
-        for (const w of s) {
-          const C = r(d, p, x, w);
-          if (!C) continue;
-          const vt = t.getCellPath(d, p, w);
-          h += de(vt, C);
+        for (const $ of s) {
+          const P = r(d, p, x, $);
+          if (!P) continue;
+          const vt = t.getCellPath(d, p, $);
+          h += de(vt, P);
         }
       else {
-        const w = r(d, p, x);
-        if (!w) continue;
-        const C = t.getCellPath(d, p);
-        h += de(C, w);
+        const $ = r(d, p, x);
+        if (!$) continue;
+        const P = t.getCellPath(d, p);
+        h += de(P, $);
       }
   }
   return h;
@@ -6204,10 +6245,10 @@ class no {
     r && (r.handleEvent(t), t.type === "dismiss" && this.unregister(t.id));
   }
 }
-var Br = Object.defineProperty, Wr = Object.getOwnPropertyDescriptor, Ot = (e, t, r, s) => {
-  for (var o = s > 1 ? void 0 : s ? Wr(t, r) : t, i = e.length - 1, a; i >= 0; i--)
+var Wr = Object.defineProperty, Br = Object.getOwnPropertyDescriptor, Ot = (e, t, r, s) => {
+  for (var o = s > 1 ? void 0 : s ? Br(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
-  return s && o && Br(t, r, o), o;
+  return s && o && Wr(t, r, o), o;
 };
 let Q = class extends f {
   constructor() {
@@ -6269,7 +6310,7 @@ Ot([
 Q = Ot([
   g("tui-progress")
 ], Q);
-var Ur = Object.defineProperty, qr = Object.getOwnPropertyDescriptor, Qt = (e, t, r, s) => {
+var Ur = Object.defineProperty, qr = Object.getOwnPropertyDescriptor, te = (e, t, r, s) => {
   for (var o = s > 1 ? void 0 : s ? qr(t, r) : t, i = e.length - 1, a; i >= 0; i--)
     (a = e[i]) && (o = (s ? a(t, r, o) : a(o)) || o);
   return s && o && Ur(t, r, o), o;
@@ -6321,40 +6362,40 @@ wt.styles = [
       .empty { color: var(--text-muted); font-style: italic; padding: var(--spacing-sm); }
     `
 ];
-Qt([
+te([
   n({ type: String })
 ], wt.prototype, "state", 2);
-Qt([
+te([
   n({ type: String })
 ], wt.prototype, "message", 2);
-wt = Qt([
+wt = te([
   g("tui-status")
 ], wt);
 export {
   yt as ActionList,
   T as App,
   Xt as BORDER_CHARS,
-  z as Button,
-  $ as Canvas,
+  S as Button,
+  z as Canvas,
   R as Card,
-  B as Checkbox,
+  W as Checkbox,
   Z as CheckboxGroup,
   M as Console,
   no as EventRouter,
-  S as Grid,
+  w as Grid,
   N as Input,
   cr as IsometricProjection,
   ct as Link,
   It as Menu,
   nt as MenuAction,
-  qt as MenuDivider,
+  Gt as MenuDivider,
   at as MenuItem,
   q as Modal,
   Y as Output,
   F as Palette,
   b as Panel,
   Q as Progress,
-  W as Radio,
+  B as Radio,
   J as RadioGroup,
   lr as RectangularProjection,
   ao as RetroEmitter,
@@ -6377,7 +6418,7 @@ export {
   H as Toolbar,
   hr as TriangularProjection,
   D as Workspace,
-  Kt as ansiToHtml,
+  Zt as ansiToHtml,
   Nr as bodyToGrid,
   oo as compose,
   Xr as createGrid,

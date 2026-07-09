@@ -40,6 +40,32 @@ describe('tui-grid', () => {
     const svg = el.shadowRoot!.querySelector('svg');
     expect(svg!.getAttribute('viewBox')).to.equal('0 0 50 60');
   });
+
+  it('renders no gridlines by default', async () => {
+    const el = await fixture(html`<tui-grid cols="3" rows="2"></tui-grid>`);
+    expect(el.shadowRoot!.querySelector('.grid-lines')).to.not.exist;
+    expect(el.shadowRoot!.querySelector('.grid-bg')).to.not.exist;
+  });
+
+  it('renders cell boundaries and background when gridlines is set', async () => {
+    const el = await fixture(html`
+      <tui-grid cols="3" rows="2" cell-width="10" cell-height="20" gridlines></tui-grid>
+    `);
+    const bg = el.shadowRoot!.querySelector('.grid-bg');
+    expect(bg).to.exist;
+    expect(bg!.getAttribute('width')).to.equal('30');
+    expect(bg!.getAttribute('height')).to.equal('40');
+    const lines = el.shadowRoot!.querySelector('.grid-lines');
+    expect(lines).to.exist;
+    // 2 interior vertical lines + 1 interior horizontal line
+    expect(lines!.getAttribute('d')).to.equal('M 10 0 V 40 M 20 0 V 40 M 0 20 H 30');
+  });
+
+  it('reflects the fit attribute for container-filling layout', async () => {
+    const el = await fixture(html`<tui-grid fit></tui-grid>`) as any;
+    expect(el.fit).to.equal(true);
+    expect(el.hasAttribute('fit')).to.equal(true);
+  });
 });
 
 describe('tui-grid events', () => {
