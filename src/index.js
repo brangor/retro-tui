@@ -40,7 +40,6 @@ export { RadioGroup } from './components/tui-radio-group';
 
 // Utilities
 export { ansiToHtml } from './utils/ansi.js';
-export { RetroPush } from './utils/push-client.js';
 export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './utils/borders';
 
 // Styles (design-language assets, importable by extensions like retro-tui-lab)

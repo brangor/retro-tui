@@ -1,7 +1,7 @@
 /**
  * Demo page logic - connects components to the push server
  */
-import { retroPush } from './utils/push-client.js';
+import { retroPush } from './push-client.js';
 
 // Get component references
 const buildOutput = document.getElementById('build-output');
