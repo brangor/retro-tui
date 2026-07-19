@@ -11,10 +11,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        isosketch: resolve(__dirname, 'examples/isosketch.html'),
-        quiltsketch: resolve(__dirname, 'examples/quiltsketch-demo.html'),
         panels: resolve(__dirname, 'examples/panels-demo.html'),
-        paint: resolve(__dirname, 'examples/paint/index.html'),
+        inputs: resolve(__dirname, 'examples/inputs-demo.html'),
       },
     },
   },

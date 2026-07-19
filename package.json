@@ -27,7 +27,6 @@
     "typecheck": "tsc --noEmit",
     "server": "node examples/push-server/server/index.js",
     "start": "concurrently \"npm run dev\" \"npm run server\"",
-    "example:paint": "vite examples/paint",
     "test": "vitest",
     "test:run": "vitest run",
     "prepare": "npm run build",
