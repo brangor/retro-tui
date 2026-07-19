@@ -67,13 +67,3 @@ export interface TuiEvent {
   data: Record<string, unknown>;
   timestamp?: number;
 }
-
-/** Validates that an object has the required event envelope fields */
-export function validateEvent(event: TuiEvent): boolean {
-  return (
-    typeof event.channel === 'string' && event.channel.length > 0 &&
-    typeof event.type === 'string' && event.type.length > 0 &&
-    typeof event.id === 'string' && event.id.length > 0 &&
-    event.data != null && typeof event.data === 'object'
-  );
-}

@@ -56,11 +56,6 @@ export { renderGrid, isometricOrder } from './utils/canvas-renderer.js';
 export { createGrid, overlay, bodyToGrid, compose, createMoodCycler } from './utils/sprite';
 export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './utils/borders';
 
-// Protocol
-export { validateEvent } from './protocol/types';
-export { RetroEmitter } from './protocol/emitter';
-export { EventRouter } from './protocol/event-router';
-
 // New components
 export { Progress } from './components/tui-progress';
 export { Status } from './components/tui-status';

@@ -13,9 +13,6 @@
       "import": "./dist/tokens.css",
       "types": "./dist/tokens.css.d.ts"
     },
-    "./emitter": {
-      "import": "./src/protocol/emitter.ts"
-    },
     "./src/*": "./src/*"
   },
   "files": [
