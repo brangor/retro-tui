@@ -4,14 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-RetroTUI is a Lit-based web component library that creates terminal-aesthetic UI components with real-time WebSocket-based update capabilities. Components render with dark terminal styling and support ANSI color codes.
+RetroTUI is a Lit-based web component library — a terminal-aesthetic design language for building small app UIs in the browser. It provides components, a token/theme system, and ANSI/border utilities. It is **not** a canvas engine, realtime system, or window manager.
+
+**Scope fence:** New additions must be a terminal-aesthetic UI primitive usable across multiple small apps. Canvas/projection/tool-state work lives in `../retro-tui-lab`. The push server pattern lives in `examples/push-server/`. If you're considering adding something that doesn't pass that test, update this fence section first.
 
 ## Commands
 
 ```bash
-npm start          # Run dev server (:3000) + push server (:3001) concurrently
-npm run dev        # Dev server only
-npm run server     # Push server only
+npm run dev        # Dev server on :3000
+npm run server     # Push server (examples/push-server/server) on :3001
+npm start          # Both concurrently
 npm run build      # Build library to dist/
 npm run build:site # Build GitHub Pages site to site/
 npm run typecheck  # TypeScript type checking (tsc --noEmit)
@@ -21,29 +23,35 @@ npm run test:run   # Run tests once (vitest run)
 
 Run a single test file:
 ```bash
-npx vitest run src/components/tui-button.test.ts
+npx vitest run tests/tui-button.test.js
 ```
 
-Tests use Vitest with jsdom environment and `@open-wc/testing` for web component fixtures. Test files live alongside source (`src/**/*.test.{js,ts}`) and in `tests/`.
+Tests use Vitest with jsdom environment and `@open-wc/testing` for web component fixtures. Test files live in `tests/`.
 
 ## Architecture
 
 ```
-┌──────────────────┐     HTTP POST     ┌──────────────────┐     WebSocket    ┌──────────────────┐
-│  Shell/Node      │ ──────────────→   │  Push Server     │ ←──────────────→ │   Browser        │
-│  Scripts         │                   │  :3001           │                   │   (Lit UI)       │
-└──────────────────┘                   └──────────────────┘                   └──────────────────┘
+┌──────────────────┐
+│   Browser        │  Imports retro-tui components + tokens
+│   (Lit UI)       │  No runtime server dependency
+└──────────────────┘
+
+examples/push-server/ — optional recipe for live dashboard use cases
+  ┌─────────────┐  HTTP POST  ┌─────────────┐  WebSocket  ┌─────────────┐
+  │ Shell/Node  │ ──────────► │ Push Server │ ◄──────────► │   Browser   │
+  └─────────────┘             │  :3001      │              └─────────────┘
+                              └─────────────┘
 ```
 
 ### Key Directories
 
-- `src/components/` - Lit web components (all prefixed `tui-*` in filenames and tag names)
-- `src/state/tool-state.ts` - Tool state management using `@lit/context`
-- `src/projections/` - Grid projection system (rectangular, isometric, triangular) with registry
-- `src/utils/` - ANSI converter, push client, canvas renderer, border utilities
-- `src/styles/shared.js` - Shared CSS variables and ANSI color classes
-- `server/index.js` - WebSocket push server
-- `examples/` - Demo apps (isosketch, quiltsketch, paint)
+- `src/components/` — Lit web components (all prefixed `tui-*`)
+- `src/utils/` — ANSI converter (`ansi.js`), border drawing chars (`borders.ts`)
+- `src/styles/shared.js` — Shared CSS variables and ANSI color classes (exported as `sharedStyles`)
+- `src/styles/tokens.css` — Design token system (semantic colors, surfaces, spacing, typography, themes)
+- `src/styles/inject-tokens.ts` — Auto-imports tokens.css on library load
+- `src/protocol/types.ts` — Type definitions used by component props (no runtime)
+- `examples/` — Demo pages; `push-server/` is a standalone recipe
 
 ### Component Patterns
 
@@ -58,33 +66,30 @@ Components supporting text output (`tui-output`, `tui-console`, `tui-text`) use 
 
 ### Library Entry Point
 
-`src/index.js` re-exports all components organized as:
+`src/index.js` exports:
 - **Layout**: App, Workspace, Sidebar
-- **Atoms**: Panel, Output, Table, Console, Text, Menu, Statusbar, Modal, Button, Toolbar, Toast, Card, Palette, Canvas
-- **State & Projections**: ToolState, projection implementations
-- **Utilities**: ansiToHtml, RetroPush, canvas renderer, borders
+- **Atoms**: Panel, Output, Table, Console, Text, Menu, Statusbar, Modal, Button, Toolbar, Toast, Card, Palette, Link, ActionList, Stat, StatusStrip, Titlebar, Tiled
+- **Form**: Input, Checkbox, Radio, CheckboxGroup, RadioGroup
+- **Utilities**: ansiToHtml, BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS, sharedStyles
+- **New**: Progress, Status
 
 ### Build Output
 
-Vite library mode produces `dist/retro-tui.js` (ESM) and `dist/retro-tui.umd.cjs`. External dependency: `lit`.
+Vite library mode produces `dist/retro-tui.js` (ESM). External dependency: `lit`.
 
-### Push Protocol
+### Token System
 
-POST to `http://localhost:3001/push`:
-```json
-{
-  "channel": "build",
-  "type": "log",
-  "data": "Build succeeded"
-}
-```
+`src/styles/tokens.css` defines three themes (apply as body class):
+- `.theme-terminal-classic` (default) — dark green-on-black
+- `.theme-vibrant-scifi` — bright cyan/magenta
+- `.theme-home-security-interface` — amber-on-dark
 
-Types: `log`, `error`, `warn`, `info`, `clear`, `status`. Helper scripts: `./push.sh` and `./push.js`.
+Semantic tokens: `--color-primary`, `--color-error`, `--color-success`, `--color-info` (+ `-bg`/`-fg` variants), `--surface-base/elevated/overlay`, `--text-primary/muted`, `--spacing-xs/sm/md/lg`, `--font-mono`.
 
-### Styling System
+### Out of scope
 
-CSS custom properties defined in `src/styles/shared.js`:
-- `--bg`, `--text` - Base colors
-- `--cyan`, `--green`, `--yellow`, `--magenta`, `--red` - Accent colors
-- `.ansi-*` classes - Map ANSI codes to colors
-- `.tui-bold`, `.tui-reverse`, `.tui-blink` - Text attribute utilities
+- Canvas/grid projections/ToolState → `../retro-tui-lab`
+- Push server/client → `examples/push-server/` (copy into your project)
+- Routing, forms validation, advanced state management → build on top
+- Mobile/responsive layouts — terminal UIs target desktop
+- Extending the panel workspace (floating/docking) — feature-frozen at current level
