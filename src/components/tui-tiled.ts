@@ -77,19 +77,41 @@ export function parseAreas(shorthand: string): ParsedGrid {
     }
   }
 
-  // Row sizing rules (settled 2026-08-14 — see vault plan scope-fence-baseline):
-  // - Full-width top row    → auto  (size to content, e.g. status bars)
-  // - Full-width bottom row → 120px (fixed; log/console panels stay compact and
-  //                            scroll INTERNALLY rather than growing to eat the
-  //                            main row — minmax(...,auto) was rejected: it lets a
-  //                            busy footer crush MAIN in a height-bounded grid)
-  // - All other rows        → 1fr
-  const rowTemplate = grid.map((cols, i) => {
+  // Row sizing contract — see docs/api/tui-tiled.md. Two passes:
+  //
+  //   1. Classify. A full-width FIRST row is chrome (auto, sizes to content —
+  //      status/title strips). A full-width LAST row is a fixed log/console strip
+  //      (FOOTER_ROW, so it stays compact and scrolls INTERNALLY rather than
+  //      growing to eat the main row). Everything else flexes. Both chrome rules
+  //      require more than one row — a lone row is always content.
+  //
+  //   2. Enforce the stretch invariant. A height-bounded grid needs at least one
+  //      1fr row to absorb the frame. With none, every row is content-sized or
+  //      fixed, so the layout collapses to its content and leaves dead space
+  //      below (what 'main | footer' did before 2026-08-14). If pass 1 produced
+  //      no 1fr, the first non-footer row is promoted.
+  //
+  // Reaching pass 2 requires a two-row layout that is full-width on BOTH rows:
+  // for 3+ rows the middle rows are neither first nor last, so they are always
+  // 1fr. The general form is kept regardless — it states the intent rather than
+  // the special case.
+  //
+  // minmax(FOOTER_ROW, auto) was rejected for the footer: under a busy log it
+  // lets the footer devour the frame and crush the main row.
+  const lastIndex = grid.length - 1;
+  const sizes = grid.map((cols, i) => {
     const isFullWidth = new Set(cols).size === 1;
-    if (isFullWidth && i === 0) return 'auto';
-    if (isFullWidth && i === grid.length - 1) return FOOTER_ROW;
+    if (grid.length > 1 && isFullWidth && i === 0) return 'auto';
+    if (grid.length > 1 && isFullWidth && i === lastIndex) return FOOTER_ROW;
     return '1fr';
-  }).join(' ');
+  });
+
+  if (!sizes.includes('1fr')) {
+    const promoteAt = sizes.findIndex(size => size !== FOOTER_ROW);
+    sizes[promoteAt === -1 ? 0 : promoteAt] = '1fr';
+  }
+
+  const rowTemplate = sizes.join(' ');
 
   return { areas, rows: rowTemplate, cols: colTemplate, slotNames };
 }

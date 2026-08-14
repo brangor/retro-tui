@@ -46,11 +46,34 @@ describe('parseAreas', () => {
     expect(result.rows).toBe('1fr 1fr');
   });
 
-  it('handles single-row full-width as auto (top rule wins)', () => {
+  it('sizes a lone full-width row as flexible, not auto', () => {
+    // The chrome rules (auto top / fixed bottom) require more than one row —
+    // a single row is always content and must fill the frame.
     const result = parseAreas('main');
-    expect(result.rows).toBe('auto');
+    expect(result.rows).toBe('1fr');
     expect(result.cols).toBe('1fr');
     expect(result.slotNames).toEqual(['main']);
+  });
+
+  it('keeps a flexible row when a two-row layout is all full-width', () => {
+    // 'main | footer' is the console preset. Without a 1fr row, MAIN shrink-wraps
+    // its content and the frame is left with dead space below the footer.
+    const result = parseAreas('main | footer');
+    expect(result.rows).toBe(`1fr ${FOOTER}`);
+  });
+
+  it('gives every preset at least one flexible row', () => {
+    // A height-bounded grid needs one 1fr row to absorb the frame height.
+    const shorthands = [
+      'status status | main aside-1 | main aside-2', // monitor
+      'primary secondary | detail detail',           // viewer
+      'main | footer',                               // console
+      'main aside | footer footer',                  // console-split
+      'left center right',                           // triad
+    ];
+    for (const shorthand of shorthands) {
+      expect(parseAreas(shorthand).rows.split(' '), shorthand).toContain('1fr');
+    }
   });
 
   it('handles the monitor preset pattern', () => {
