@@ -1,8 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { consume } from '@lit/context';
 import { sharedStyles } from '../styles/shared.js';
-import { ToolState, toolContext } from '../state/tool-state.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -57,9 +55,6 @@ export class Button extends LitElement {
 
   @property({ attribute: 'tool-id' })
   toolId?: string;
-
-  @consume({ context: toolContext, subscribe: true })
-  private toolState?: ToolState;
 
   @property({ type: Boolean, reflect: true })
   selected = false;
@@ -342,13 +337,6 @@ export class Button extends LitElement {
       }
     `,
   ];
-
-  protected updated(changedProperties: Map<string, unknown>) {
-    super.updated(changedProperties);
-    if (this.toolId && this.toolState) {
-      this.selected = this.toolState.isActive(this.toolId);
-    }
-  }
 
   render() {
     return html`

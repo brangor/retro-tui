@@ -1,7 +1,7 @@
 {
   "name": "retro-tui",
-  "version": "2.2.5",
-  "description": "Terminal-aesthetic UI components for the web with real-time script integration",
+  "version": "3.0.0",
+  "description": "Terminal-aesthetic Lit components and tokens for building small app UIs.",
   "type": "module",
   "main": "dist/retro-tui.js",
   "module": "dist/retro-tui.js",
@@ -12,9 +12,6 @@
     "./tokens.css": {
       "import": "./dist/tokens.css",
       "types": "./dist/tokens.css.d.ts"
-    },
-    "./emitter": {
-      "import": "./src/protocol/emitter.ts"
     },
     "./src/*": "./src/*"
   },
@@ -28,9 +25,8 @@
     "build:site": "vite build --config vite.site.config.js",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "server": "node server/index.js",
+    "server": "node examples/push-server/server/index.js",
     "start": "concurrently \"npm run dev\" \"npm run server\"",
-    "example:paint": "vite examples/paint",
     "test": "vitest",
     "test:run": "vitest run",
     "prepare": "npm run build",

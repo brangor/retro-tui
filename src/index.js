@@ -24,8 +24,6 @@ export { Toolbar, Tool } from './components/tui-toolbar';
 export { Toast, tuiToast } from './components/tui-toast';
 export { Card } from './components/tui-card';
 export { Palette } from './components/tui-palette';
-export { Canvas } from './components/tui-canvas';
-export { Grid } from './components/tui-grid';
 export { Link } from './components/tui-link';
 export { ActionList } from './components/tui-action-list';
 export { Stat } from './components/tui-stat';
@@ -40,26 +38,12 @@ export { Radio } from './components/tui-radio';
 export { CheckboxGroup } from './components/tui-checkbox-group';
 export { RadioGroup } from './components/tui-radio-group';
 
-// Tool State
-export { ToolState, toolContext } from './state/tool-state';
-
-// Projections
-export { getProjection } from './projections/index';
-export { RectangularProjection } from './projections/rectangular';
-export { IsometricProjection } from './projections/isometric';
-export { TriangularProjection } from './projections/triangular';
-
 // Utilities
 export { ansiToHtml } from './utils/ansi.js';
-export { RetroPush } from './utils/push-client.js';
-export { renderGrid, isometricOrder } from './utils/canvas-renderer.js';
-export { createGrid, overlay, bodyToGrid, compose, createMoodCycler } from './utils/sprite';
 export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './utils/borders';
 
-// Protocol
-export { validateEvent } from './protocol/types';
-export { RetroEmitter } from './protocol/emitter';
-export { EventRouter } from './protocol/event-router';
+// Styles (design-language assets, importable by extensions like retro-tui-lab)
+export { sharedStyles } from './styles/shared.js';
 
 // New components
 export { Progress } from './components/tui-progress';
