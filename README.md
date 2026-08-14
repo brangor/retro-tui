@@ -1,6 +1,6 @@
 # RetroTUI
 
-Terminal-aesthetic UI components for the web with real-time script integration.
+Terminal-aesthetic Lit web components and design tokens for building small app UIs in the browser.
 
 ```
 ╔════════════════════════════════════════════════════════════════╗
@@ -16,68 +16,57 @@ Terminal-aesthetic UI components for the web with real-time script integration.
 ╚════════════════════════════════════════════════════════════════╝
 ```
 
+## Scope
+
+Terminal-aesthetic Lit components and tokens for building small app UIs.
+**Not** a canvas engine, **not** a realtime system, **not** a window manager.
+
+New additions must be a terminal-aesthetic UI primitive usable across multiple
+small apps. If a proposed addition doesn't pass that test, update this section first.
+
+### Out of scope
+
+- **Canvas / grid projections / ToolState / sprites** → [`../retro-tui-lab`](../retro-tui-lab)
+- **Push server + client** → [`examples/push-server/`](examples/push-server/) (copy the recipe into your project)
+- **Window management** (floating/docking panels) — feature-frozen at the current level
+- **Routing, form validation, advanced state management** — build on top
+- **Mobile / responsive layouts** — terminal UIs target desktop
+
 ## Features
 
-- **Lit Web Components** - Works anywhere (React, Vue, plain HTML)
-- **Terminal aesthetic** - Dark theme, monospace, box-drawing borders
-- **Real-time updates** - Push from shell/node scripts via WebSocket
-- **ANSI color support** - Standard terminal colors in web UI
-- **Zero-config** - Just import and use
-- **Projection system** - Rectangular, isometric, and triangular grid projections
-- **Tool state management** - Declarative tool/group state via `@lit/context`
+- **Lit Web Components** — work anywhere (React, Vue, plain HTML)
+- **Terminal aesthetic** — dark theme, monospace, box-drawing borders
+- **ANSI color support** — standard terminal colors in web UI
+- **Themeable token system** — three built-in themes, all driven by CSS custom properties
+- **Zero runtime server dependency** — import the components and go
 
 ## Quick Start
 
 ```bash
-cd retro-tui
 npm install
-npm start
+npm run dev        # Vite dev server at http://localhost:3000
 ```
 
-This starts:
-- Vite dev server at `http://localhost:3000`
-- Push server at `http://localhost:3001`
-
-## Push Updates from Scripts
-
-### From shell:
-
-```bash
-./push.sh log "Build started..."
-./push.sh error "Something went wrong!"
-./push.sh --channel=deploy log "Deploying to production"
-
-# Pipe output
-npm run build 2>&1 | while read line; do ./push.sh log "$line"; done
-```
-
-### From Node:
+Import components and tokens from the library entry point:
 
 ```javascript
-import { push, log } from './push.js';
-
-await log('Build started...');
-await push({ channel: 'status', type: 'update', data: { Service: 'API', Status: 'online' } });
-```
-
-### From curl:
-
-```bash
-curl -X POST http://localhost:3001/push \
-  -H "Content-Type: application/json" \
-  -d '{"channel":"build","type":"log","data":"Hello from curl!"}'
+import 'retro-tui';                       // registers all <tui-*> elements + tokens
+// or cherry-pick:
+import { Panel, Output, Console } from 'retro-tui';
 ```
 
 ## Components
 
-### `<retro-panel>`
+All elements are prefixed `tui-*` and register on import.
+
+### `<tui-panel>`
 
 Collapsible panel with header.
 
 ```html
-<retro-panel title="Output" color="cyan" collapsible>
+<tui-panel title="Output" color="cyan" collapsible>
   Content here
-</retro-panel>
+</tui-panel>
 ```
 
 | Attribute | Type | Description |
@@ -87,12 +76,12 @@ Collapsible panel with header.
 | `collapsible` | boolean | Enable collapse toggle |
 | `collapsed` | boolean | Current collapsed state |
 
-### `<retro-output>`
+### `<tui-output>`
 
 Scrolling log output with ANSI color support.
 
 ```html
-<retro-output id="log" max-lines="500" autoscroll timestamps></retro-output>
+<tui-output id="log" max-lines="500" autoscroll timestamps></tui-output>
 
 <script>
   document.getElementById('log').append('Hello world!');
@@ -111,12 +100,12 @@ Scrolling log output with ANSI color support.
 | `append(text)` | Add a line (supports ANSI) |
 | `clear()` | Clear all output |
 
-### `<retro-table>`
+### `<tui-table>`
 
 ASCII-styled data table.
 
 ```html
-<retro-table id="table"></retro-table>
+<tui-table id="table"></tui-table>
 
 <script>
   const table = document.getElementById('table');
@@ -135,17 +124,17 @@ ASCII-styled data table.
 | `setData(columns, rows)` | Set table data |
 | `upsertRow(key, data)` | Add or update a row |
 
-### `<retro-console>`
+### `<tui-console>`
 
 Interactive command console with history.
 
 ```html
-<retro-console id="console" prompt="❯ "></retro-console>
+<tui-console id="console" prompt="❯ "></tui-console>
 
 <script>
-  const console = document.getElementById('console');
-  console.addEventListener('command', (e) => {
-    console.print(`You typed: ${e.detail}`);
+  const el = document.getElementById('console');
+  el.addEventListener('command', (e) => {
+    el.print(`You typed: ${e.detail}`);
   });
 </script>
 ```
@@ -160,80 +149,65 @@ Interactive command console with history.
 | `print(text)` | Print output (supports ANSI) |
 | `clear()` | Clear console |
 
-### `<retro-text>`
+### `<tui-text>`
 
 Static text with ANSI color support.
 
 ```html
-<retro-text>
+<tui-text>
   \x1b[32m✓\x1b[0m Build successful
   \x1b[33m⚠\x1b[0m 3 warnings
-</retro-text>
+</tui-text>
 ```
 
-## Push Protocol
+### Full component inventory
 
-Messages are JSON with this structure:
+- **Layout**: `tui-app`, `tui-workspace`, `tui-sidebar`, `tui-tiled`
+- **Atoms**: `tui-panel`, `tui-output`, `tui-table`, `tui-console`, `tui-text`, `tui-menu`, `tui-statusbar`, `tui-modal`, `tui-button`, `tui-toolbar`, `tui-toast`, `tui-card`, `tui-palette`, `tui-link`, `tui-action-list`, `tui-stat`, `tui-status-strip`, `tui-titlebar`, `tui-progress`, `tui-status`
+- **Form**: `tui-input`, `tui-checkbox`, `tui-radio`, `tui-checkbox-group`, `tui-radio-group`
+- **Utilities**: `ansiToHtml`, `BORDER_CHARS`, `getBorderChars`, `titleDecoration`, `STATE_BORDERS`, `sharedStyles`, `parseAreas`
 
-```json
-{
-  "channel": "build",
-  "type": "log",
-  "data": "Your message here"
-}
-```
+## Theming
 
-### Channels
+`src/styles/tokens.css` defines three themes (apply as a `<body>` class):
 
-Arbitrary strings. Suggested:
-- `build` - Build/compile output
-- `status` - Service status updates
-- `deploy` - Deployment logs
-- `game` - Game state updates
+- `.theme-terminal-classic` (default) — dark green-on-black
+- `.theme-vibrant-scifi` — bright cyan/magenta
+- `.theme-home-security-interface` — amber-on-dark
 
-### Types
+Components read semantic tokens (`--color-primary`, `--surface-base`, `--text-primary`, `--spacing-*`, `--font-mono`, …), so theming is CSS-only.
 
-- `log` - Plain log message
-- `error` - Error message (shown in red)
-- `warn` - Warning (shown in yellow)
-- `info` - Info (shown in cyan)
-- `clear` - Clear the output
-- `status` - Status update (for tables)
+## Live dashboards (optional recipe)
+
+RetroTUI has no runtime server dependency. If you want to push updates into a UI
+from shell/node scripts over WebSocket, copy the standalone recipe in
+[`examples/push-server/`](examples/push-server/) into your project — it includes
+the server, client, push scripts, and the JSON protocol shape.
 
 ## Architecture
 
 ```
-┌──────────────┐     HTTP POST     ┌──────────────┐     WebSocket    ┌──────────────┐
-│ Shell/Node   │ ───────────────► │ Push Server  │ ◄──────────────► │   Browser    │
-│   Scripts    │                   │  :3001       │                   │   (Lit UI)   │
-└──────────────┘                   └──────────────┘                   └──────────────┘
+┌──────────────────┐  Imports retro-tui components + tokens
+│   Browser        │  No runtime server dependency
+│   (Lit UI)       │
+└──────────────────┘
 ```
-
-`<tui-canvas>` supports a `projection` attribute (`rectangular` | `isometric` | `triangular`) for different grid layouts. `ToolState` provides declarative tool management with exclusive/non-exclusive groups via `@lit/context`.
-
-## Examples
-
-- `examples/isosketch.html` - Isometric tile map editor (Diablo-style minimaps)
-- `examples/quiltsketch-demo.html` - Triangle quilt pattern designer
-
-Run `npm run dev` and navigate to the example files.
 
 ## Roadmap
 
 - [x] Core components (panel, output, table, console)
-- [x] Push server with WebSocket
-- [x] Shell/Node push scripts
-- [x] `<retro-menu>` (menu bar)
-- [x] `<retro-toolbar>` (tool buttons)
+- [x] `<tui-menu>` (menu bar)
+- [x] `<tui-toolbar>` (tool buttons)
 - [x] Design token system (themeable components)
-- [x] Projection system (rectangular, isometric, triangular grids)
-- [x] Tool state management (`@lit/context`)
-- [ ] `<retro-toolbar>` hotkey support — `getHotkeyMap()` method + `hotkey` attribute on tools for display hints and user-remappable bindings
-- [x] `<retro-grid>` (character grid — delivered as `<tui-grid>` with SVG text rendering and pointer events)
-- [ ] `<retro-tabs>` (tab container)
-- [ ] `<retro-split>` (resizable panes)
+- [x] `<tui-grid>` (character grid) — **moved to [retro-tui-lab](../retro-tui-lab)**
+- [x] Projection system — **moved to [retro-tui-lab](../retro-tui-lab)**
+- [x] Tool state management (`@lit/context`) — **moved to [retro-tui-lab](../retro-tui-lab)**
+- [x] Push server + shell/node scripts — **moved to [examples/push-server/](examples/push-server/)**
+- [ ] `<tui-toolbar>` hotkey support — `getHotkeyMap()` method + `hotkey` attribute for display hints and remappable bindings
+- [ ] `<tui-tabs>` (tab container)
+- [ ] `<tui-split>` (resizable panes)
 - [ ] npm package distribution
-- [ ] CDN build for script tag usage
+- [ ] CDN build for script-tag usage
 
 ## License
 
