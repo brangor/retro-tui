@@ -73,7 +73,7 @@ All elements are prefixed `tui-*` and register on import.
 Collapsible panel with header.
 
 ```html
-<tui-panel title="Output" color="cyan" collapsible>
+<tui-panel title="Output" color="primary" collapsible>
   Content here
 </tui-panel>
 ```
@@ -175,6 +175,10 @@ Static text with ANSI color support.
 - **Atoms**: `tui-panel`, `tui-output`, `tui-table`, `tui-console`, `tui-text`, `tui-menu`, `tui-statusbar`, `tui-modal`, `tui-button`, `tui-toolbar`, `tui-toast`, `tui-card`, `tui-palette`, `tui-link`, `tui-action-list`, `tui-stat`, `tui-status-strip`, `tui-titlebar`, `tui-progress`, `tui-status`
 - **Form**: `tui-input`, `tui-checkbox`, `tui-radio`, `tui-checkbox-group`, `tui-radio-group`
 - **Utilities**: `ansiToHtml`, `BORDER_CHARS`, `getBorderChars`, `titleDecoration`, `STATE_BORDERS`, `sharedStyles`, `parseAreas`
+
+> Components taking a `color` attribute share one vocabulary — `primary`,
+> `secondary`, `success`, `warning`, `error`, `info`, `muted`.
+> See [docs/api/semantic-colors.md](docs/api/semantic-colors.md).
 
 > `tui-tiled` infers row heights from the layout shape and exposes
 > `--tui-tiled-footer-height`. See [docs/api/tui-tiled.md](docs/api/tui-tiled.md).
