@@ -20,11 +20,25 @@ describe('tui-status', () => {
   });
 
   it('renders different states with correct classes', async () => {
-    for (const state of ['success', 'error', 'info', 'warn', 'pending']) {
+    for (const state of ['success', 'error', 'info', 'warning', 'pending']) {
       const el = await fixture(html`<tui-status state="${state}" message="test"></tui-status>`);
       const badge = el.shadowRoot.querySelector('.badge');
       expect(badge.classList.contains(state)).to.be.true;
     }
+  });
+
+  it('uses the warning spelling and the warning token', async () => {
+    // `warn` was the odd one out, and it rendered in --color-info, so warnings
+    // appeared light blue rather than amber. --color-warning went unused.
+    const el = await fixture(html`<tui-status state="warning" message="careful"></tui-status>`);
+    const badge = el.shadowRoot.querySelector('.badge');
+    expect(badge.classList.contains('warning')).to.be.true;
+    expect(el.shadowRoot.querySelector('.indicator').textContent.trim()).to.equal('⚠');
+
+    const css = el.constructor.styles.map((s) => s.cssText).join('\n');
+    expect(css).to.contain('.badge.warning');
+    expect(css).to.match(/\.badge\.warning[^}]*--color-warning/);
+    expect(css).to.match(/\.badge\.info[^}]*--color-info/);
   });
 
   it('shows indicator symbol per state', async () => {

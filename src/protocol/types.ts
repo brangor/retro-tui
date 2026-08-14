@@ -10,6 +10,9 @@ export type StandardEventType =
 
 export interface LogData {
   message: string;
+  // Deliberately 'warn', not 'warning': this is a log level following the
+  // console.warn/syslog convention, not the visual semantic vocabulary used by
+  // component `color`/`state` attributes. See docs/api/semantic-colors.md.
   level?: 'info' | 'warn' | 'error';
 }
 
@@ -31,7 +34,7 @@ export interface TableUpsertData {
 }
 
 export interface StatusData {
-  state: 'success' | 'error' | 'info' | 'warn' | 'pending';
+  state: 'success' | 'error' | 'info' | 'warning' | 'pending';
   message: string;
 }
 
