@@ -44,6 +44,7 @@ export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './
 
 // Styles (design-language assets, importable by extensions like retro-tui-lab)
 export { sharedStyles } from './styles/shared.js';
+export { SEMANTIC_COLORS, SEMANTIC_TOKENS } from './styles/semantics.ts';
 
 // New components
 export { Progress } from './components/tui-progress';
