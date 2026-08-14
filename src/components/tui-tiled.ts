@@ -17,6 +17,17 @@ interface ParsedGrid {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// SIZING CONTRACT
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** Default height of a full-width bottom row. Override per-instance with the
+ *  `--tui-tiled-footer-height` custom property. See docs/api/tui-tiled.md. */
+export const DEFAULT_FOOTER_HEIGHT = '120px';
+
+/** The grid-template-rows value used for a full-width bottom row. */
+const FOOTER_ROW = `var(--tui-tiled-footer-height, ${DEFAULT_FOOTER_HEIGHT})`;
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // PRESETS
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -76,7 +87,7 @@ export function parseAreas(shorthand: string): ParsedGrid {
   const rowTemplate = grid.map((cols, i) => {
     const isFullWidth = new Set(cols).size === 1;
     if (isFullWidth && i === 0) return 'auto';
-    if (isFullWidth && i === grid.length - 1) return '120px';
+    if (isFullWidth && i === grid.length - 1) return FOOTER_ROW;
     return '1fr';
   }).join(' ');
 

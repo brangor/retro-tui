@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { parseAreas } from '../src/components/tui-tiled.ts';
 
+// Mirrors FOOTER_ROW in src/components/tui-tiled.ts. Stated literally so a
+// change to the contract fails these tests loudly rather than tracking silently.
+const FOOTER = 'var(--tui-tiled-footer-height, 120px)';
+
 describe('parseAreas', () => {
   it('parses a single row into one-row grid', () => {
     const result = parseAreas('left center right');
@@ -27,14 +31,14 @@ describe('parseAreas', () => {
     expect(result.rows).toBe('auto 1fr');
   });
 
-  it('applies fixed 120px height for full-width bottom row', () => {
+  it('applies the footer token height for full-width bottom row', () => {
     const result = parseAreas('main aside | footer footer');
-    expect(result.rows).toBe('1fr 120px');
+    expect(result.rows).toBe(`1fr ${FOOTER}`);
   });
 
   it('applies auto top and fixed bottom when both are full-width', () => {
     const result = parseAreas('header header | main sidebar | footer footer');
-    expect(result.rows).toBe('auto 1fr 120px');
+    expect(result.rows).toBe(`auto 1fr ${FOOTER}`);
   });
 
   it('uses 1fr for non-full-width rows', () => {
@@ -59,7 +63,7 @@ describe('parseAreas', () => {
 
   it('handles the console-split preset pattern', () => {
     const result = parseAreas('main aside | footer footer');
-    expect(result.rows).toBe('1fr 120px');
+    expect(result.rows).toBe(`1fr ${FOOTER}`);
     expect(result.cols).toBe('1fr 1fr');
     expect(result.slotNames).toEqual(['main', 'aside', 'footer']);
   });
@@ -67,6 +71,6 @@ describe('parseAreas', () => {
   it('handles uneven column counts across rows', () => {
     const result = parseAreas('a b c | d d d');
     expect(result.cols).toBe('1fr 1fr 1fr');
-    expect(result.rows).toBe('1fr 120px');
+    expect(result.rows).toBe(`1fr ${FOOTER}`);
   });
 });
