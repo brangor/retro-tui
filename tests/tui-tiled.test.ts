@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
+import { fixture, html } from '@open-wc/testing';
 import { parseAreas } from '../src/components/tui-tiled.ts';
+import '../src/components/tui-tiled.ts';
 
 // Mirrors FOOTER_ROW in src/components/tui-tiled.ts. Stated literally so a
 // change to the contract fails these tests loudly rather than tracking silently.
@@ -95,5 +97,112 @@ describe('parseAreas', () => {
     const result = parseAreas('a b c | d d d');
     expect(result.cols).toBe('1fr 1fr 1fr');
     expect(result.rows).toBe(`1fr ${FOOTER}`);
+  });
+});
+
+describe('<tui-tiled> rendering', () => {
+  const gridOf = (el: HTMLElement) =>
+    el.shadowRoot!.querySelector('.grid') as HTMLElement;
+
+  it('applies the resolved grid template to the shadow DOM', async () => {
+    const el = await fixture(html`<tui-tiled preset="console-split"></tui-tiled>`);
+    const grid = gridOf(el);
+    expect(grid.style.gridTemplateAreas).toBe('"main aside" "footer footer"');
+    expect(grid.style.gridTemplateRows).toBe(`1fr ${FOOTER}`);
+    expect(grid.style.gridTemplateColumns).toBe('1fr 1fr');
+  });
+
+  it('resolves every preset to its documented template', async () => {
+    const expected: Record<string, string> = {
+      'monitor':       'auto 1fr 1fr',
+      'viewer':        `1fr ${FOOTER}`,
+      'console':       `1fr ${FOOTER}`,
+      'console-split': `1fr ${FOOTER}`,
+      'triad':         '1fr',
+    };
+    for (const [preset, rows] of Object.entries(expected)) {
+      const el = await fixture(html`<tui-tiled preset=${preset}></tui-tiled>`);
+      expect(gridOf(el).style.gridTemplateRows, `preset=${preset}`).toBe(rows);
+    }
+  });
+
+  it('renders one zone and one named slot per area', async () => {
+    const el = await fixture(html`<tui-tiled preset="console-split"></tui-tiled>`);
+    const zones = el.shadowRoot!.querySelectorAll('.zone');
+    const slots = [...el.shadowRoot!.querySelectorAll('slot')].map(s => s.name);
+    expect(zones.length).toBe(3);
+    expect(slots).toEqual(['main', 'aside', 'footer']);
+  });
+
+  it('assigns each zone to its grid area', async () => {
+    const el = await fixture(html`<tui-tiled preset="triad"></tui-tiled>`);
+    const areas = [...el.shadowRoot!.querySelectorAll('.zone')]
+      .map(z => (z as HTMLElement).style.gridArea);
+    expect(areas).toEqual(['left', 'center', 'right']);
+  });
+
+  it('prefers preset over a custom areas shorthand for layout', async () => {
+    // With both set, `areas` supplies display labels, not the grid itself.
+    const el = await fixture(
+      html`<tui-tiled preset="triad" areas="a b | c d"></tui-tiled>`
+    );
+    expect(gridOf(el).style.gridTemplateAreas).toBe('"left center right"');
+  });
+
+  it('uses a custom areas shorthand when no preset is set', async () => {
+    const el = await fixture(html`<tui-tiled areas="a b | c c"></tui-tiled>`);
+    const grid = gridOf(el);
+    expect(grid.style.gridTemplateAreas).toBe('"a b" "c c"');
+    expect(grid.style.gridTemplateRows).toBe(`1fr ${FOOTER}`);
+  });
+
+  it('renders nothing without a preset or areas', async () => {
+    const el = await fixture(html`<tui-tiled></tui-tiled>`);
+    expect(el.shadowRoot!.querySelector('.grid')).toBeNull();
+  });
+
+  it('applies the gap attribute', async () => {
+    const el = await fixture(html`<tui-tiled preset="triad" gap="4px"></tui-tiled>`);
+    expect(gridOf(el).style.gap).toBe('4px');
+  });
+
+  it('renders no zone labels by default', async () => {
+    const el = await fixture(html`<tui-tiled preset="triad"></tui-tiled>`);
+    expect(el.shadowRoot!.querySelector('.zone-label')).toBeNull();
+    expect(el.shadowRoot!.querySelector('.zone-titlebar')).toBeNull();
+  });
+
+  it('renders caption labels from slot names', async () => {
+    const el = await fixture(html`<tui-tiled preset="triad" labels="caption"></tui-tiled>`);
+    const labels = [...el.shadowRoot!.querySelectorAll('.zone-label')]
+      .map(n => n.textContent?.trim());
+    expect(labels).toEqual(['left', 'center', 'right']);
+  });
+
+  it('renders titlebar labels and marks the zones', async () => {
+    const el = await fixture(html`<tui-tiled preset="triad" labels="titlebar"></tui-tiled>`);
+    const bars = [...el.shadowRoot!.querySelectorAll('.zone-titlebar')]
+      .map(n => n.textContent?.trim());
+    expect(bars).toEqual(['left', 'center', 'right']);
+    expect(el.shadowRoot!.querySelectorAll('.zone.has-titlebar').length).toBe(3);
+  });
+
+  it('maps areas onto preset slots as display labels', async () => {
+    const el = await fixture(html`
+      <tui-tiled preset="console-split" areas="DOWNLOAD | HISTORY | CONSOLE" labels="caption"></tui-tiled>
+    `);
+    const labels = [...el.shadowRoot!.querySelectorAll('.zone-label')]
+      .map(n => n.textContent?.trim());
+    const slots = [...el.shadowRoot!.querySelectorAll('slot')].map(s => s.name);
+    expect(labels).toEqual(['DOWNLOAD', 'HISTORY', 'CONSOLE']);
+    // Slot names stay the preset's — only the visible label changes.
+    expect(slots).toEqual(['main', 'aside', 'footer']);
+  });
+
+  it('references the footer token rather than a hardcoded height', async () => {
+    // jsdom does no layout, so this asserts the override PATH exists. Whether
+    // an override resolves to real pixels is the browser-mode follow-up.
+    const el = await fixture(html`<tui-tiled preset="console"></tui-tiled>`);
+    expect(gridOf(el).style.gridTemplateRows).toContain('--tui-tiled-footer-height');
   });
 });
