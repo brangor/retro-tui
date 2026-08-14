@@ -17,4 +17,16 @@ describe('package contract', () => {
     // `npm run server` runs examples/push-server/server/index.js, which imports ws.
     expect(pkg.devDependencies).toHaveProperty('ws');
   });
+
+  it('declares types before import in the main export condition', () => {
+    // TypeScript resolves conditions in order — a `types` key after `import`
+    // is never reached, and consumers silently fall back to `any`.
+    const keys = Object.keys(pkg.exports['.']);
+    expect(keys[0]).toBe('types');
+    expect(keys).toContain('import');
+  });
+
+  it('exposes a top-level types field for pre-exports resolvers', () => {
+    expect(pkg.types).toBe('dist/types/index.d.ts');
+  });
 });

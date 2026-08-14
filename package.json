@@ -5,8 +5,10 @@
   "type": "module",
   "main": "dist/retro-tui.js",
   "module": "dist/retro-tui.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/retro-tui.js"
     },
     "./tokens.css": {
@@ -21,7 +23,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run build:types",
+    "build:types": "tsc --emitDeclarationOnly --declaration",
     "build:site": "vite build --config vite.site.config.js",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
