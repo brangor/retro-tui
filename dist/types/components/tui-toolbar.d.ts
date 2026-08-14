@@ -1,8 +1,8 @@
 import { LitElement } from 'lit';
+import type { SelectionStyle } from '../styles/semantics.js';
 import './tui-button.ts';
 type ToolbarOrientation = 'vertical' | 'horizontal';
 type ButtonSize = 'sm' | 'md' | 'lg';
-type SelectionStyle = 'invert' | 'border';
 interface ToolDefinition {
     id: string;
     icon?: string;
@@ -32,7 +32,7 @@ export declare class Toolbar extends LitElement {
     orientation: ToolbarOrientation;
     selected: string;
     size: ButtonSize;
-    selectionStyle: SelectionStyle | '';
+    selectionStyle: SelectionStyle;
     tools: ToolDefinition[];
     showHotkeys: boolean;
     static styles: import("lit").CSSResult[];

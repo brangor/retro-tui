@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+import type { SelectionStyle } from '../styles/semantics.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -8,7 +9,6 @@ import { sharedStyles } from '../styles/shared.js';
 
 type ButtonVariant = 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu' | 'outline';
 type ButtonSize = 'sm' | 'md' | 'lg';
-type SelectionStyle = 'invert' | 'border';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT

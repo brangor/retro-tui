@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+import type { SelectionStyle } from '../styles/semantics.js';
 import './tui-button.ts'; // Import tui-button for use
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -9,7 +10,6 @@ import './tui-button.ts'; // Import tui-button for use
 
 type ToolbarOrientation = 'vertical' | 'horizontal';
 type ButtonSize = 'sm' | 'md' | 'lg';
-type SelectionStyle = 'invert' | 'border';
 
 interface ToolDefinition {
   id: string;
@@ -53,7 +53,7 @@ export class Toolbar extends LitElement {
   size: ButtonSize = 'md';
 
   @property({ attribute: 'selection-style' })
-  selectionStyle: SelectionStyle | '' = '';
+  selectionStyle: SelectionStyle = '';
 
   @property({ type: Array })
   tools: ToolDefinition[] = [];

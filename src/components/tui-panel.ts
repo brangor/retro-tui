@@ -2,14 +2,13 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { titleDecoration, type BorderStyle } from '../utils/borders.js';
+import type { SemanticColor, SelectionStyle } from '../styles/semantics.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-type PanelColor = 'primary' | 'secondary' | 'error' | 'success' | 'info' | 'cyan' | 'green' | 'magenta' | 'yellow' | 'red' | '';
 type PanelVariant = 'bright' | 'classic';
-type SelectionStyle = 'invert' | 'border' | '';
 type PanelBorder = BorderStyle;
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -33,7 +32,7 @@ type PanelBorder = BorderStyle;
  * - active: strongest emphasis (header highlight or heavy shadow)
  *
  * @attr {string} title - Panel title
- * @attr {string} color - Semantic color: primary | secondary | error | success | info
+ * @attr {string} color - Semantic color. See docs/api/semantic-colors.md
  * @attr {string} border - Border style: single | heavy | double | rounded | none (default: single)
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
@@ -68,7 +67,7 @@ export class Panel extends LitElement {
   title = '';
 
   @property({ type: String })
-  color: PanelColor = '';
+  color: SemanticColor = '';
 
   @property({ type: String, reflect: true })
   border: PanelBorder = 'single';
@@ -196,7 +195,7 @@ export class Panel extends LitElement {
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         SEMANTIC COLORS (new)
+         SEMANTIC COLORS — see docs/api/semantic-colors.md
          Each sets the triplet: --panel-color, --panel-color-bg, --panel-color-fg
          ═══════════════════════════════════════════════════════════════════ */
 
@@ -230,39 +229,18 @@ export class Panel extends LitElement {
         --panel-color-fg: var(--color-info-fg);
       }
 
-      /* ═══════════════════════════════════════════════════════════════════
-         LEGACY COLORS (backwards compatibility)
-         Maps old names to semantic tokens
-         ═══════════════════════════════════════════════════════════════════ */
-
-      :host([color="cyan"]) {
-        --panel-color: var(--color-primary);
-        --panel-color-bg: var(--color-primary-bg);
-        --panel-color-fg: var(--color-primary-fg);
+      :host([color="warning"]) {
+        --panel-color: var(--color-warning);
+        --panel-color-bg: var(--color-warning-bg);
+        --panel-color-fg: var(--color-warning-fg);
       }
 
-      :host([color="green"]) {
-        --panel-color: var(--color-secondary);
-        --panel-color-bg: var(--color-secondary-bg);
-        --panel-color-fg: var(--color-secondary-fg);
-      }
-
-      :host([color="magenta"]) {
-        --panel-color: var(--color-primary);
-        --panel-color-bg: var(--color-primary-bg);
-        --panel-color-fg: var(--color-primary-fg);
-      }
-
-      :host([color="yellow"]) {
-        --panel-color: var(--color-info);
-        --panel-color-bg: var(--color-info-bg);
-        --panel-color-fg: var(--color-info-fg);
-      }
-
-      :host([color="red"]) {
-        --panel-color: var(--color-error);
-        --panel-color-bg: var(--color-error-bg);
-        --panel-color-fg: var(--color-error-fg);
+      /* muted has no -bg/-fg companions in tokens.css — surface-elevated is
+         the correct neutral ground for a de-emphasised panel. */
+      :host([color="muted"]) {
+        --panel-color: var(--text-muted);
+        --panel-color-bg: var(--surface-elevated);
+        --panel-color-fg: var(--text-muted);
       }
 
       /* ═══════════════════════════════════════════════════════════════════
