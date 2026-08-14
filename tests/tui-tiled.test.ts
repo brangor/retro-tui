@@ -27,14 +27,14 @@ describe('parseAreas', () => {
     expect(result.rows).toBe('auto 1fr');
   });
 
-  it('applies minmax sizing for full-width bottom row', () => {
+  it('applies fixed 120px height for full-width bottom row', () => {
     const result = parseAreas('main aside | footer footer');
-    expect(result.rows).toBe('1fr minmax(120px, auto)');
+    expect(result.rows).toBe('1fr 120px');
   });
 
-  it('applies auto top and minmax bottom when both are full-width', () => {
+  it('applies auto top and fixed bottom when both are full-width', () => {
     const result = parseAreas('header header | main sidebar | footer footer');
-    expect(result.rows).toBe('auto 1fr minmax(120px, auto)');
+    expect(result.rows).toBe('auto 1fr 120px');
   });
 
   it('uses 1fr for non-full-width rows', () => {
@@ -59,7 +59,7 @@ describe('parseAreas', () => {
 
   it('handles the console-split preset pattern', () => {
     const result = parseAreas('main aside | footer footer');
-    expect(result.rows).toBe('1fr minmax(120px, auto)');
+    expect(result.rows).toBe('1fr 120px');
     expect(result.cols).toBe('1fr 1fr');
     expect(result.slotNames).toEqual(['main', 'aside', 'footer']);
   });
@@ -67,6 +67,6 @@ describe('parseAreas', () => {
   it('handles uneven column counts across rows', () => {
     const result = parseAreas('a b c | d d d');
     expect(result.cols).toBe('1fr 1fr 1fr');
-    expect(result.rows).toBe('1fr minmax(120px, auto)');
+    expect(result.rows).toBe('1fr 120px');
   });
 });

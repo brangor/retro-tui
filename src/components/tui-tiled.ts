@@ -66,10 +66,13 @@ export function parseAreas(shorthand: string): ParsedGrid {
     }
   }
 
-  // Row sizing rules:
-  // - Full-width top row → auto (size to content)
-  // - Full-width bottom row → fixed height, scrollable (log panels)
-  // - All other rows → 1fr
+  // Row sizing rules (settled 2026-08-14 — see vault plan scope-fence-baseline):
+  // - Full-width top row    → auto  (size to content, e.g. status bars)
+  // - Full-width bottom row → 120px (fixed; log/console panels stay compact and
+  //                            scroll INTERNALLY rather than growing to eat the
+  //                            main row — minmax(...,auto) was rejected: it lets a
+  //                            busy footer crush MAIN in a height-bounded grid)
+  // - All other rows        → 1fr
   const rowTemplate = grid.map((cols, i) => {
     const isFullWidth = new Set(cols).size === 1;
     if (isFullWidth && i === 0) return 'auto';
