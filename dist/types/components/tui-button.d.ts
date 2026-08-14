@@ -1,7 +1,7 @@
 import { LitElement } from 'lit';
+import type { SelectionStyle } from '../styles/semantics.js';
 type ButtonVariant = 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu' | 'outline';
 type ButtonSize = 'sm' | 'md' | 'lg';
-type SelectionStyle = 'invert' | 'border';
 /**
  * <tui-button> - Terminal-styled button
  *

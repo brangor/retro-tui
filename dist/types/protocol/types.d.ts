@@ -19,7 +19,7 @@ export interface TableUpsertData {
     row: Record<string, unknown>;
 }
 export interface StatusData {
-    state: 'success' | 'error' | 'info' | 'warn' | 'pending';
+    state: 'success' | 'error' | 'info' | 'warning' | 'pending';
     message: string;
 }
 export interface CheckboxData {

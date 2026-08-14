@@ -1,8 +1,7 @@
 import { LitElement } from 'lit';
 import { type BorderStyle } from '../utils/borders.js';
-type PanelColor = 'primary' | 'secondary' | 'error' | 'success' | 'info' | 'cyan' | 'green' | 'magenta' | 'yellow' | 'red' | '';
+import type { SemanticColor, SelectionStyle } from '../styles/semantics.js';
 type PanelVariant = 'bright' | 'classic';
-type SelectionStyle = 'invert' | 'border' | '';
 type PanelBorder = BorderStyle;
 /**
  * <tui-panel> - Floating panel with terminal aesthetic
@@ -21,7 +20,7 @@ type PanelBorder = BorderStyle;
  * - active: strongest emphasis (header highlight or heavy shadow)
  *
  * @attr {string} title - Panel title
- * @attr {string} color - Semantic color: primary | secondary | error | success | info
+ * @attr {string} color - Semantic color. See docs/api/semantic-colors.md
  * @attr {string} border - Border style: single | heavy | double | rounded | none (default: single)
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
@@ -52,7 +51,7 @@ type PanelBorder = BorderStyle;
  */
 export declare class Panel extends LitElement {
     title: string;
-    color: PanelColor;
+    color: SemanticColor;
     border: PanelBorder;
     variant: PanelVariant;
     selectionStyle: SelectionStyle;

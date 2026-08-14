@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-type StatusbarColor = 'cyan' | 'green' | 'magenta' | 'yellow';
+import type { SemanticColor } from '../styles/semantics.js';
 /**
  * <tui-statusbar> - Status bar for displaying context info
  *
@@ -10,7 +10,7 @@ type StatusbarColor = 'cyan' | 'green' | 'magenta' | 'yellow';
  * @attr {string} color - Border color: cyan | green | magenta | yellow
  */
 export declare class Statusbar extends LitElement {
-    color: StatusbarColor;
+    color: SemanticColor;
     static styles: import("lit").CSSResult[];
     render(): import("lit-html").TemplateResult<1>;
 }
@@ -34,4 +34,3 @@ declare global {
         'tui-status-item': StatusItem;
     }
 }
-export {};

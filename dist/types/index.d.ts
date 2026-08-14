@@ -30,3 +30,4 @@ export { Toast, tuiToast } from "./components/tui-toast";
 export { StatusStrip, StripItem } from "./components/tui-status-strip";
 export { Tiled, parseAreas } from "./components/tui-tiled";
 export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from "./utils/borders";
+export { SEMANTIC_COLORS, SEMANTIC_TOKENS } from "./styles/semantics";

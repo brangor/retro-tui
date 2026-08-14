@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-type StripItemColor = 'success' | 'warning' | 'error' | 'primary' | 'muted' | '';
+import type { SemanticColor } from '../styles/semantics.js';
 /**
  * <tui-status-strip> - Single-line status bar with box-draw separators
  *
@@ -17,11 +17,11 @@ export declare class StatusStrip extends LitElement {
 /**
  * <tui-strip-item> - Single item in a status strip
  *
- * @attr {string} color - Semantic color: success | warning | error | primary | muted
+ * @attr {string} color - Semantic color. See docs/api/semantic-colors.md
  * @attr {string} indicator - Optional indicator: '●' for active, '○' for inactive
  */
 export declare class StripItem extends LitElement {
-    color: StripItemColor;
+    color: SemanticColor;
     indicator: string;
     static styles: import("lit").CSSResult[];
     render(): import("lit-html").TemplateResult<1>;
@@ -32,4 +32,3 @@ declare global {
         'tui-strip-item': StripItem;
     }
 }
-export {};

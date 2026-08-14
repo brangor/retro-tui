@@ -56,7 +56,7 @@ const nt = (t) => new at(typeof t == "string" ? t : t + "", void 0, st), lt = (t
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: ct, defineProperty: dt, getOwnPropertyDescriptor: pt, getOwnPropertyNames: ht, getOwnPropertySymbols: ut, getPrototypeOf: ft } = Object, I = globalThis, Ze = I.trustedTypes, bt = Ze ? Ze.emptyScript : "", je = I.reactiveElementPolyfillSupport, pe = (t, e) => t, Ce = { toAttribute(t, e) {
+const { is: ct, defineProperty: dt, getOwnPropertyDescriptor: pt, getOwnPropertyNames: ht, getOwnPropertySymbols: ut, getPrototypeOf: ft } = Object, A = globalThis, Ze = A.trustedTypes, bt = Ze ? Ze.emptyScript : "", je = A.reactiveElementPolyfillSupport, pe = (t, e) => t, Ce = { toAttribute(t, e) {
   switch (e) {
     case Boolean:
       t = t ? bt : null;
@@ -85,7 +85,7 @@ const { is: ct, defineProperty: dt, getOwnPropertyDescriptor: pt, getOwnProperty
   }
   return r;
 } }, Be = (t, e) => !ct(t, e), Je = { attribute: !0, type: String, converter: Ce, reflect: !1, useDefault: !1, hasChanged: Be };
-Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), I.litPropertyMetadata ?? (I.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
+Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), A.litPropertyMetadata ?? (A.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
 class de extends HTMLElement {
   static addInitializer(e) {
     this._$Ei(), (this.l ?? (this.l = [])).push(e);
@@ -289,7 +289,7 @@ class de extends HTMLElement {
   firstUpdated(e) {
   }
 }
-de.elementStyles = [], de.shadowRootOptions = { mode: "open" }, de[pe("elementProperties")] = /* @__PURE__ */ new Map(), de[pe("finalized")] = /* @__PURE__ */ new Map(), je == null || je({ ReactiveElement: de }), (I.reactiveElementVersions ?? (I.reactiveElementVersions = [])).push("2.1.2");
+de.elementStyles = [], de.shadowRootOptions = { mode: "open" }, de[pe("elementProperties")] = /* @__PURE__ */ new Map(), de[pe("finalized")] = /* @__PURE__ */ new Map(), je == null || je({ ReactiveElement: de }), (A.reactiveElementVersions ?? (A.reactiveElementVersions = [])).push("2.1.2");
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -1054,14 +1054,14 @@ Te([
 Z = Te([
   u("tui-sidebar")
 ], Z);
-const Ae = {
+const Ie = {
   single: { tl: "┌", tr: "┐", bl: "└", br: "┘", h: "─", v: "│" },
   heavy: { tl: "┏", tr: "┓", bl: "┗", br: "┛", h: "━", v: "┃" },
   double: { tl: "╔", tr: "╗", bl: "╚", br: "╝", h: "═", v: "║" },
   rounded: { tl: "╭", tr: "╮", bl: "╰", br: "╯", h: "─", v: "│" }
 };
 function zt(t) {
-  return t === "none" ? null : Ae[t];
+  return t === "none" ? null : Ie[t];
 }
 function ke(t) {
   const e = zt(t);
@@ -1070,7 +1070,7 @@ function ke(t) {
     after: ` ${e.h}${e.tr}`
   } : { before: "", after: "" };
 }
-const Pr = {
+const Or = {
   neutral: "single",
   hover: "heavy",
   selected: "double"
@@ -1323,7 +1323,7 @@ m.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         SEMANTIC COLORS (new)
+         SEMANTIC COLORS — see docs/api/semantic-colors.md
          Each sets the triplet: --panel-color, --panel-color-bg, --panel-color-fg
          ═══════════════════════════════════════════════════════════════════ */
 
@@ -1357,39 +1357,18 @@ m.styles = [
         --panel-color-fg: var(--color-info-fg);
       }
 
-      /* ═══════════════════════════════════════════════════════════════════
-         LEGACY COLORS (backwards compatibility)
-         Maps old names to semantic tokens
-         ═══════════════════════════════════════════════════════════════════ */
-
-      :host([color="cyan"]) {
-        --panel-color: var(--color-primary);
-        --panel-color-bg: var(--color-primary-bg);
-        --panel-color-fg: var(--color-primary-fg);
+      :host([color="warning"]) {
+        --panel-color: var(--color-warning);
+        --panel-color-bg: var(--color-warning-bg);
+        --panel-color-fg: var(--color-warning-fg);
       }
 
-      :host([color="green"]) {
-        --panel-color: var(--color-secondary);
-        --panel-color-bg: var(--color-secondary-bg);
-        --panel-color-fg: var(--color-secondary-fg);
-      }
-
-      :host([color="magenta"]) {
-        --panel-color: var(--color-primary);
-        --panel-color-bg: var(--color-primary-bg);
-        --panel-color-fg: var(--color-primary-fg);
-      }
-
-      :host([color="yellow"]) {
-        --panel-color: var(--color-info);
-        --panel-color-bg: var(--color-info-bg);
-        --panel-color-fg: var(--color-info-fg);
-      }
-
-      :host([color="red"]) {
-        --panel-color: var(--color-error);
-        --panel-color-bg: var(--color-error-bg);
-        --panel-color-fg: var(--color-error-fg);
+      /* muted has no -bg/-fg companions in tokens.css — surface-elevated is
+         the correct neutral ground for a de-emphasised panel. */
+      :host([color="muted"]) {
+        --panel-color: var(--text-muted);
+        --panel-color-bg: var(--surface-elevated);
+        --panel-color-fg: var(--text-muted);
       }
 
       /* ═══════════════════════════════════════════════════════════════════
@@ -2136,10 +2115,10 @@ ie([
 M = ie([
   u("tui-output")
 ], M);
-var Pt = Object.defineProperty, Ot = Object.getOwnPropertyDescriptor, Ie = (t, e, r, s) => {
-  for (var o = s > 1 ? void 0 : s ? Ot(e, r) : e, i = t.length - 1, a; i >= 0; i--)
+var Ot = Object.defineProperty, Pt = Object.getOwnPropertyDescriptor, Ae = (t, e, r, s) => {
+  for (var o = s > 1 ? void 0 : s ? Pt(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
-  return s && o && Pt(e, r, o), o;
+  return s && o && Ot(e, r, o), o;
 };
 let J = class extends h {
   constructor() {
@@ -2256,16 +2235,16 @@ J.styles = [
       }
     `
 ];
-Ie([
+Ae([
   n({ type: String })
 ], J.prototype, "border", 2);
-Ie([
+Ae([
   x()
 ], J.prototype, "_columns", 2);
-Ie([
+Ae([
   x()
 ], J.prototype, "_rows", 2);
-J = Ie([
+J = Ae([
   u("tui-table")
 ], J);
 var Dt = Object.defineProperty, Tt = Object.getOwnPropertyDescriptor, K = (t, e, r, s) => {
@@ -2480,10 +2459,10 @@ K([
 k = K([
   u("tui-console")
 ], k);
-var At = Object.defineProperty, It = Object.getOwnPropertyDescriptor, Me = (t, e, r, s) => {
-  for (var o = s > 1 ? void 0 : s ? It(e, r) : e, i = t.length - 1, a; i >= 0; i--)
+var It = Object.defineProperty, At = Object.getOwnPropertyDescriptor, Me = (t, e, r, s) => {
+  for (var o = s > 1 ? void 0 : s ? At(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
-  return s && o && At(e, r, o), o;
+  return s && o && It(e, r, o), o;
 };
 let Q = class extends h {
   constructor() {
@@ -2867,7 +2846,7 @@ var Ht = Object.defineProperty, jt = Object.getOwnPropertyDescriptor, E = (t, e,
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Ht(e, r, o), o;
 };
-let Pe = class extends h {
+let Oe = class extends h {
   constructor() {
     super(...arguments), this._openMenu = null;
   }
@@ -2875,7 +2854,7 @@ let Pe = class extends h {
     return l`<slot></slot>`;
   }
 };
-Pe.styles = [
+Oe.styles = [
   b,
   p`
       :host {
@@ -2886,10 +2865,10 @@ Pe.styles = [
 ];
 E([
   x()
-], Pe.prototype, "_openMenu", 2);
-Pe = E([
+], Oe.prototype, "_openMenu", 2);
+Oe = E([
   u("tui-menu")
-], Pe);
+], Oe);
 let ee = class extends h {
   constructor() {
     super(...arguments), this.label = "", this.hotkey = "", this._open = !1, this._outsideClickHandler = null;
@@ -3080,15 +3059,15 @@ var Nt = Object.defineProperty, Lt = Object.getOwnPropertyDescriptor, ae = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Nt(e, r, o), o;
 };
-let Oe = class extends h {
+let Pe = class extends h {
   constructor() {
-    super(...arguments), this.color = "magenta";
+    super(...arguments), this.color = "primary";
   }
   render() {
     return l`<slot></slot>`;
   }
 };
-Oe.styles = [
+Pe.styles = [
   b,
   p`
       :host {
@@ -3104,9 +3083,14 @@ Oe.styles = [
         letter-spacing: 0.05em;
       }
 
-      :host([color="cyan"]) { --bar-color: var(--color-primary); border-color: var(--color-primary); }
-      :host([color="green"]) { --bar-color: var(--color-secondary); border-color: var(--color-secondary); }
-      :host([color="yellow"]) { --bar-color: var(--color-secondary); border-color: var(--color-secondary); }
+      /* Semantic colours — see docs/api/semantic-colors.md */
+      :host([color="primary"])   { --bar-color: var(--color-primary);   border-color: var(--color-primary); }
+      :host([color="secondary"]) { --bar-color: var(--color-secondary); border-color: var(--color-secondary); }
+      :host([color="success"])   { --bar-color: var(--color-success);   border-color: var(--color-success); }
+      :host([color="warning"])   { --bar-color: var(--color-warning);   border-color: var(--color-warning); }
+      :host([color="error"])     { --bar-color: var(--color-error);     border-color: var(--color-error); }
+      :host([color="info"])      { --bar-color: var(--color-info);      border-color: var(--color-info); }
+      :host([color="muted"])     { --bar-color: var(--text-muted);      border-color: var(--border-default); }
 
       /* Style slotted status-items with dividers */
       ::slotted(tui-status-item) {
@@ -3120,10 +3104,10 @@ Oe.styles = [
 ];
 ae([
   n({ type: String, reflect: !0 })
-], Oe.prototype, "color", 2);
-Oe = ae([
+], Pe.prototype, "color", 2);
+Pe = ae([
   u("tui-statusbar")
-], Oe);
+], Pe);
 let re = class extends h {
   constructor() {
     super(...arguments), this.label = "", this.value = "", this.highlight = !1;
@@ -3377,7 +3361,7 @@ var Yt = Object.defineProperty, Ut = Object.getOwnPropertyDescriptor, $ = (t, e,
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Yt(e, r, o), o;
 };
-let P = class extends h {
+let O = class extends h {
   constructor() {
     super(...arguments), this.orientation = "vertical", this.selected = "", this.size = "md", this.selectionStyle = "", this.tools = [], this.showHotkeys = !0;
   }
@@ -3420,7 +3404,7 @@ let P = class extends h {
     `;
   }
 };
-P.styles = [
+O.styles = [
   b,
   p`
       :host {
@@ -3503,25 +3487,25 @@ P.styles = [
 ];
 $([
   n({ reflect: !0 })
-], P.prototype, "orientation", 2);
+], O.prototype, "orientation", 2);
 $([
   n()
-], P.prototype, "selected", 2);
+], O.prototype, "selected", 2);
 $([
   n({ reflect: !0 })
-], P.prototype, "size", 2);
+], O.prototype, "size", 2);
 $([
   n({ attribute: "selection-style" })
-], P.prototype, "selectionStyle", 2);
+], O.prototype, "selectionStyle", 2);
 $([
   n({ type: Array })
-], P.prototype, "tools", 2);
+], O.prototype, "tools", 2);
 $([
   n({ type: Boolean, attribute: "show-hotkeys" })
-], P.prototype, "showHotkeys", 2);
-P = $([
+], O.prototype, "showHotkeys", 2);
+O = $([
   u("tui-toolbar")
-], P);
+], O);
 let B = class extends h {
   constructor() {
     super(...arguments), this.toolId = "", this.icon = "", this.active = !1, this.size = "md";
@@ -3782,7 +3766,7 @@ W = ve([
   u("tui-toast")
 ], W);
 let ze = null;
-function Or(t, e) {
+function Pr(t, e) {
   ze || (ze = document.createElement("tui-toast"), document.body.appendChild(ze)), ze.show(t, e);
 }
 var Ft = Object.defineProperty, Vt = Object.getOwnPropertyDescriptor, G = (t, e, r, s) => {
@@ -3790,8 +3774,8 @@ var Ft = Object.defineProperty, Vt = Object.getOwnPropertyDescriptor, G = (t, e,
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Ft(e, r, o), o;
 };
-const D = Ae.single, T = Ae.heavy, A = Ae.double;
-let O = class extends h {
+const D = Ie.single, T = Ie.heavy, I = Ie.double;
+let P = class extends h {
   constructor() {
     super(...arguments), this.rank = "", this.suit = "", this.faceDown = !1, this.selected = !1, this.disabled = !1, this.size = "md";
   }
@@ -3835,7 +3819,7 @@ let O = class extends h {
     `;
   }
 };
-O.styles = [
+P.styles = [
   b,
   p`
       :host {
@@ -3944,7 +3928,7 @@ O.styles = [
       .card:hover:not(.disabled) .card-bottom::after { content: '${y(T.br)}'; color: var(--text-primary); }
 
       /* ═══════════════════════════════════════════════════════════════════
-         SELECTED STATE - Double line border ${y(A.tl)}${y(A.h)}${y(A.h)}${y(A.tr)}
+         SELECTED STATE - Double line border ${y(I.tl)}${y(I.h)}${y(I.h)}${y(I.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       :host([selected]) .card {
@@ -3952,10 +3936,10 @@ O.styles = [
         box-shadow: 3px 3px 0 rgba(88, 166, 255, 0.2);
       }
 
-      :host([selected]) .card::before { content: '${y(A.tl)}'; color: var(--color-primary); }
-      :host([selected]) .card::after { content: '${y(A.tr)}'; color: var(--color-primary); }
-      :host([selected]) .card-bottom::before { content: '${y(A.bl)}'; color: var(--color-primary); }
-      :host([selected]) .card-bottom::after { content: '${y(A.br)}'; color: var(--color-primary); }
+      :host([selected]) .card::before { content: '${y(I.tl)}'; color: var(--color-primary); }
+      :host([selected]) .card::after { content: '${y(I.tr)}'; color: var(--color-primary); }
+      :host([selected]) .card-bottom::before { content: '${y(I.bl)}'; color: var(--color-primary); }
+      :host([selected]) .card-bottom::after { content: '${y(I.br)}'; color: var(--color-primary); }
 
       /* Selected + hover */
       :host([selected]) .card:hover:not(.disabled) {
@@ -4051,25 +4035,25 @@ O.styles = [
 ];
 G([
   n({ type: String })
-], O.prototype, "rank", 2);
+], P.prototype, "rank", 2);
 G([
   n({ type: String })
-], O.prototype, "suit", 2);
+], P.prototype, "suit", 2);
 G([
   n({ type: Boolean, attribute: "face-down", reflect: !0 })
-], O.prototype, "faceDown", 2);
+], P.prototype, "faceDown", 2);
 G([
   n({ type: Boolean, reflect: !0 })
-], O.prototype, "selected", 2);
+], P.prototype, "selected", 2);
 G([
   n({ type: Boolean, reflect: !0 })
-], O.prototype, "disabled", 2);
+], P.prototype, "disabled", 2);
 G([
   n({ type: String, reflect: !0 })
-], O.prototype, "size", 2);
-O = G([
+], P.prototype, "size", 2);
+P = G([
   u("tui-card")
-], O);
+], P);
 var Kt = Object.defineProperty, Gt = Object.getOwnPropertyDescriptor, ge = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Gt(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
@@ -4457,11 +4441,13 @@ se.styles = [
         font-variant-numeric: tabular-nums;
       }
 
-      :host([color="primary"]) .value { color: var(--color-primary); }
-      :host([color="success"]) .value { color: var(--color-success); }
-      :host([color="warning"]) .value { color: var(--color-warning); }
-      :host([color="error"]) .value { color: var(--color-error); }
-      :host([color="muted"]) .value { color: var(--text-muted); }
+      :host([color="primary"])   .value { color: var(--color-primary); }
+      :host([color="secondary"]) .value { color: var(--color-secondary); }
+      :host([color="success"])   .value { color: var(--color-success); }
+      :host([color="warning"])   .value { color: var(--color-warning); }
+      :host([color="error"])     .value { color: var(--color-error); }
+      :host([color="info"])      .value { color: var(--color-info); }
+      :host([color="muted"])     .value { color: var(--text-muted); }
     `
 ];
 He([
@@ -4557,11 +4543,13 @@ ue.styles = [
         color: var(--text-muted);
       }
 
-      :host([color="success"]) { color: var(--color-success); }
-      :host([color="warning"]) { color: var(--color-warning); }
-      :host([color="error"]) { color: var(--color-error); }
-      :host([color="primary"]) { color: var(--color-primary); }
-      :host([color="muted"]) { color: var(--text-muted); }
+      :host([color="primary"])   { color: var(--color-primary); }
+      :host([color="secondary"]) { color: var(--color-secondary); }
+      :host([color="success"])   { color: var(--color-success); }
+      :host([color="warning"])   { color: var(--color-warning); }
+      :host([color="error"])     { color: var(--color-error); }
+      :host([color="info"])      { color: var(--color-info); }
+      :host([color="muted"])     { color: var(--text-muted); }
 
       .separator {
         color: var(--border-default);
@@ -5286,6 +5274,23 @@ we([
 q = we([
   u("tui-radio-group")
 ], q);
+const Dr = [
+  "primary",
+  "secondary",
+  "success",
+  "warning",
+  "error",
+  "info",
+  "muted"
+], Tr = {
+  primary: "--color-primary",
+  secondary: "--color-secondary",
+  success: "--color-success",
+  warning: "--color-warning",
+  error: "--color-error",
+  info: "--color-info",
+  muted: "--text-muted"
+};
 var wr = Object.defineProperty, $r = Object.getOwnPropertyDescriptor, $e = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? $r(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
@@ -5359,7 +5364,7 @@ var zr = Object.defineProperty, Er = Object.getOwnPropertyDescriptor, qe = (t, e
 const Sr = {
   success: "✓",
   error: "✗",
-  warn: "⚠",
+  warning: "⚠",
   info: "ℹ",
   pending: "…"
 };
@@ -5393,11 +5398,15 @@ be.styles = [
         padding: var(--spacing-sm); font-size: 0.8rem;
         border-left: 3px solid transparent;
       }
+      /* Each state uses its own semantic token — see docs/api/semantic-colors.md.
+         Before 4.0.0 the warn state pointed at --color-info and info pointed at
+         --color-primary, so warnings rendered light blue and --color-warning
+         went unused entirely. */
       .badge.success { border-left-color: var(--color-success); color: var(--color-success); }
-      .badge.error { border-left-color: var(--color-error); color: var(--color-error); }
-      .badge.warn { border-left-color: var(--color-info); color: var(--color-info); }
-      .badge.info { border-left-color: var(--color-primary); color: var(--color-primary); }
-      .badge.pending { border-left-color: var(--text-muted); color: var(--text-muted); }
+      .badge.error   { border-left-color: var(--color-error);   color: var(--color-error); }
+      .badge.warning { border-left-color: var(--color-warning); color: var(--color-warning); }
+      .badge.info    { border-left-color: var(--color-info);    color: var(--color-info); }
+      .badge.pending { border-left-color: var(--text-muted);    color: var(--text-muted); }
       .indicator { flex-shrink: 0; }
       .message { color: var(--text-primary); }
       .empty { color: var(--text-muted); font-style: italic; padding: var(--spacing-sm); }
@@ -5415,15 +5424,15 @@ be = qe([
 export {
   he as ActionList,
   C as App,
-  Ae as BORDER_CHARS,
+  Ie as BORDER_CHARS,
   z as Button,
-  O as Card,
+  P as Card,
   H as Checkbox,
   X as CheckboxGroup,
   k as Console,
   R as Input,
   oe as Link,
-  Pe as Menu,
+  Oe as Menu,
   te as MenuAction,
   Ne as MenuDivider,
   ee as MenuItem,
@@ -5434,13 +5443,15 @@ export {
   F as Progress,
   j as Radio,
   q as RadioGroup,
-  Pr as STATE_BORDERS,
+  Dr as SEMANTIC_COLORS,
+  Tr as SEMANTIC_TOKENS,
+  Or as STATE_BORDERS,
   Z as Sidebar,
   se as Stat,
   be as Status,
   re as StatusItem,
   De as StatusStrip,
-  Oe as Statusbar,
+  Pe as Statusbar,
   ue as StripItem,
   J as Table,
   Q as Text,
@@ -5448,12 +5459,12 @@ export {
   fe as Titlebar,
   W as Toast,
   B as Tool,
-  P as Toolbar,
+  O as Toolbar,
   S as Workspace,
   Ye as ansiToHtml,
   zt as getBorderChars,
   pr as parseAreas,
   b as sharedStyles,
   ke as titleDecoration,
-  Or as tuiToast
+  Pr as tuiToast
 };
