@@ -15,6 +15,10 @@ export default defineConfig({
     lib: {
       entry: 'src/index.js',
       name: 'RetroTUI',
+      // ESM only. Vite defaults to ['es','umd']; the UMD output referenced a
+      // window.lit global that Lit has never shipped, so it failed on load for
+      // every script-tag user. That audience is served by vite.cdn.config.js.
+      formats: ['es'],
       fileName: 'retro-tui',
     },
     rollupOptions: {
