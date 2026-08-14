@@ -1,8 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-
-type StripItemColor = 'success' | 'warning' | 'error' | 'primary' | 'muted' | '';
+import type { SemanticColor } from '../styles/semantics.js';
 
 /**
  * <tui-status-strip> - Single-line status bar with box-draw separators
@@ -64,13 +63,13 @@ export class StatusStrip extends LitElement {
 /**
  * <tui-strip-item> - Single item in a status strip
  *
- * @attr {string} color - Semantic color: success | warning | error | primary | muted
+ * @attr {string} color - Semantic color. See docs/api/semantic-colors.md
  * @attr {string} indicator - Optional indicator: '●' for active, '○' for inactive
  */
 @customElement('tui-strip-item')
 export class StripItem extends LitElement {
   @property({ type: String, reflect: true })
-  color: StripItemColor = '';
+  color: SemanticColor = '';
 
   @property({ type: String })
   indicator = '';
@@ -89,11 +88,13 @@ export class StripItem extends LitElement {
         color: var(--text-muted);
       }
 
-      :host([color="success"]) { color: var(--color-success); }
-      :host([color="warning"]) { color: var(--color-warning); }
-      :host([color="error"]) { color: var(--color-error); }
-      :host([color="primary"]) { color: var(--color-primary); }
-      :host([color="muted"]) { color: var(--text-muted); }
+      :host([color="primary"])   { color: var(--color-primary); }
+      :host([color="secondary"]) { color: var(--color-secondary); }
+      :host([color="success"])   { color: var(--color-success); }
+      :host([color="warning"])   { color: var(--color-warning); }
+      :host([color="error"])     { color: var(--color-error); }
+      :host([color="info"])      { color: var(--color-info); }
+      :host([color="muted"])     { color: var(--text-muted); }
 
       .separator {
         color: var(--border-default);

@@ -1,15 +1,14 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-
-type StatColor = 'primary' | 'success' | 'warning' | 'error' | 'muted' | '';
+import type { SemanticColor } from '../styles/semantics.js';
 
 /**
  * <tui-stat> - Right-aligned label/value stat display
  *
  * @attr {string} label - Uppercase label text
  * @attr {string} value - Value text
- * @attr {string} color - Semantic color for value: primary | success | warning | error | muted
+ * @attr {string} color - Semantic color for value. See docs/api/semantic-colors.md
  */
 @customElement('tui-stat')
 export class Stat extends LitElement {
@@ -20,7 +19,7 @@ export class Stat extends LitElement {
   value = '';
 
   @property({ type: String, reflect: true })
-  color: StatColor = '';
+  color: SemanticColor = '';
 
   static styles = [
     sharedStyles,
@@ -48,11 +47,13 @@ export class Stat extends LitElement {
         font-variant-numeric: tabular-nums;
       }
 
-      :host([color="primary"]) .value { color: var(--color-primary); }
-      :host([color="success"]) .value { color: var(--color-success); }
-      :host([color="warning"]) .value { color: var(--color-warning); }
-      :host([color="error"]) .value { color: var(--color-error); }
-      :host([color="muted"]) .value { color: var(--text-muted); }
+      :host([color="primary"])   .value { color: var(--color-primary); }
+      :host([color="secondary"]) .value { color: var(--color-secondary); }
+      :host([color="success"])   .value { color: var(--color-success); }
+      :host([color="warning"])   .value { color: var(--color-warning); }
+      :host([color="error"])     .value { color: var(--color-error); }
+      :host([color="info"])      .value { color: var(--color-info); }
+      :host([color="muted"])     .value { color: var(--text-muted); }
     `,
   ];
 
