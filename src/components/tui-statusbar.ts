@@ -1,12 +1,11 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
+import type { SemanticColor } from '../styles/semantics.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
-
-type StatusbarColor = 'cyan' | 'green' | 'magenta' | 'yellow';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // STATUSBAR COMPONENT
@@ -24,7 +23,7 @@ type StatusbarColor = 'cyan' | 'green' | 'magenta' | 'yellow';
 @customElement('tui-statusbar')
 export class Statusbar extends LitElement {
   @property({ type: String, reflect: true })
-  color: StatusbarColor = 'magenta';
+  color: SemanticColor = 'primary';
 
   static styles = [
     sharedStyles,
@@ -42,9 +41,14 @@ export class Statusbar extends LitElement {
         letter-spacing: 0.05em;
       }
 
-      :host([color="cyan"]) { --bar-color: var(--color-primary); border-color: var(--color-primary); }
-      :host([color="green"]) { --bar-color: var(--color-secondary); border-color: var(--color-secondary); }
-      :host([color="yellow"]) { --bar-color: var(--color-secondary); border-color: var(--color-secondary); }
+      /* Semantic colours — see docs/api/semantic-colors.md */
+      :host([color="primary"])   { --bar-color: var(--color-primary);   border-color: var(--color-primary); }
+      :host([color="secondary"]) { --bar-color: var(--color-secondary); border-color: var(--color-secondary); }
+      :host([color="success"])   { --bar-color: var(--color-success);   border-color: var(--color-success); }
+      :host([color="warning"])   { --bar-color: var(--color-warning);   border-color: var(--color-warning); }
+      :host([color="error"])     { --bar-color: var(--color-error);     border-color: var(--color-error); }
+      :host([color="info"])      { --bar-color: var(--color-info);      border-color: var(--color-info); }
+      :host([color="muted"])     { --bar-color: var(--text-muted);      border-color: var(--border-default); }
 
       /* Style slotted status-items with dividers */
       ::slotted(tui-status-item) {
