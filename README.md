@@ -55,6 +55,15 @@ import 'retro-tui';                       // registers all <tui-*> elements + to
 import { Panel, Output, Console } from 'retro-tui';
 ```
 
+No build step? A self-contained build works from a plain script tag:
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/npm/retro-tui/dist/retro-tui.cdn.js"></script>
+```
+
+Two builds ship: `retro-tui` for bundlers, `retro-tui/cdn` for a plain script
+tag. See [docs/api/distribution.md](docs/api/distribution.md).
+
 ## Components
 
 All elements are prefixed `tui-*` and register on import.
