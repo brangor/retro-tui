@@ -124,7 +124,12 @@ export function parseAreas(shorthand: string): ParsedGrid {
  * <tui-tiled> - CSS grid layout with named slots and preset templates
  *
  * A pure layout component. Compose with tui-titlebar and tui-status-strip
- * for app shell chrome.
+ * for app shell chrome — chrome goes OUTSIDE the grid, not in it.
+ *
+ * Row sizing is inferred from the layout shape: a full-width first row sizes to
+ * content, a full-width last row takes a fixed footer height, everything else
+ * flexes — and at least one row always flexes. Full contract, including the
+ * ambiguous two-row case: docs/api/tui-tiled.md
  *
  * @attr {string} preset - Named layout: 'monitor' | 'viewer' | 'console' | 'console-split' | 'triad'
  * @attr {string} areas - Custom grid-template-areas shorthand. '|' separates rows. Overrides preset.
@@ -132,6 +137,7 @@ export function parseAreas(shorthand: string): ParsedGrid {
  *                        e.g. preset="console-split" areas="DOWNLOAD | HISTORY | CONSOLE"
  * @attr {string} gap - CSS grid gap value (default: '1px')
  * @attr {string} labels - Zone label style: 'caption' (small overlay) | 'titlebar' (full bar) | '' (none)
+ * @cssprop --tui-tiled-footer-height - Height of a full-width bottom row (default: 120px)
  */
 @customElement('tui-tiled')
 export class Tiled extends LitElement {

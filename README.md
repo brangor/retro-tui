@@ -167,6 +167,9 @@ Static text with ANSI color support.
 - **Form**: `tui-input`, `tui-checkbox`, `tui-radio`, `tui-checkbox-group`, `tui-radio-group`
 - **Utilities**: `ansiToHtml`, `BORDER_CHARS`, `getBorderChars`, `titleDecoration`, `STATE_BORDERS`, `sharedStyles`, `parseAreas`
 
+> `tui-tiled` infers row heights from the layout shape and exposes
+> `--tui-tiled-footer-height`. See [docs/api/tui-tiled.md](docs/api/tui-tiled.md).
+
 ## Theming
 
 `src/styles/tokens.css` defines three themes (apply as a `<body>` class):
