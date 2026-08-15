@@ -4,6 +4,12 @@ import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import type { TuiEvent, InputData } from '../protocol/types';
 
+/**
+ * Text input.
+ *
+ * @fires tui-input - On every keystroke (detail: { value })
+ * @fires tui-change - When the value is committed (detail: { value })
+ */
 @customElement('tui-input')
 export class Input extends LitElement {
   @property({ reflect: true })

@@ -27,7 +27,7 @@ interface ConsoleLine {
  * @attr {string} prompt-attr - Space-separated text attributes for the prompt (bold, dim, italic, etc.)
  * @attr {number} history-size - Max history entries (default: 100)
  * 
- * @fires tui-console-command - When a command is submitted { detail: string }
+ * @fires tui-console-command - When a command is submitted (detail: { command: string })
  * 
  * @method print(text) - Print output to console
  * @method clear() - Clear console output
@@ -227,7 +227,7 @@ export class Console extends LitElement {
 
     // Emit event
     this.dispatchEvent(new CustomEvent('tui-console-command', {
-      detail: cmd,
+      detail: { command: cmd },
       bubbles: true,
       composed: true,
     }));

@@ -143,7 +143,7 @@ Interactive command console with history.
 <script>
   const el = document.getElementById('console');
   el.addEventListener('tui-console-command', (e) => {
-    el.print(`You typed: ${e.detail}`);
+    el.print(`You typed: ${e.detail.command}`);
   });
 </script>
 ```

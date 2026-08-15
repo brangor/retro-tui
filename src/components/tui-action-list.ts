@@ -11,8 +11,8 @@ import { sharedStyles } from '../styles/shared.js';
  *                       color maps to CSS vars: 'success' | 'error' | 'warning' | 'primary' | 'muted'
  * @attr {string} selected - ID of currently expanded item (or empty)
  *
- * @fires tui-item-select - When an item is clicked (detail: { id, label })
- * @fires tui-item-deselect - When expanded item is collapsed
+ * @fires tui-list-item-select - When an item is clicked (detail: { id, label })
+ * @fires tui-list-item-deselect - When expanded item is collapsed (detail: { id, label })
  *
  * @slot actions-{id} - Per-item action content shown below the item when selected.
  *                      One slot per item, named by item id. e.g. slot="actions-my-item-id"
@@ -88,12 +88,13 @@ export class ActionList extends LitElement {
   private _handleClick(id: string, label: string): void {
     if (this.selected === id) {
       this.selected = '';
-      this.dispatchEvent(new CustomEvent('tui-item-deselect', {
+      this.dispatchEvent(new CustomEvent('tui-list-item-deselect', {
+        detail: { id, label },
         bubbles: true, composed: true,
       }));
     } else {
       this.selected = id;
-      this.dispatchEvent(new CustomEvent('tui-item-select', {
+      this.dispatchEvent(new CustomEvent('tui-list-item-select', {
         detail: { id, label },
         bubbles: true, composed: true,
       }));

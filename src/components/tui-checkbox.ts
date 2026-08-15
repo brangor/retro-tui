@@ -4,6 +4,11 @@ import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import type { TuiEvent, CheckboxData } from '../protocol/types';
 
+/**
+ * Checkbox input.
+ *
+ * @fires tui-change - When the checked state changes (detail: { checked, value, name })
+ */
 @customElement('tui-checkbox')
 export class Checkbox extends LitElement {
   @property({ type: Boolean, reflect: true })

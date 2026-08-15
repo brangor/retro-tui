@@ -20,6 +20,7 @@ import { titleDecoration, type BorderStyle } from '../utils/borders.js';
  * @attr {boolean} open - Whether modal is visible
  * @attr {boolean} closable - Show close button (default: true)
  * 
+ * @fires tui-modal-open - When modal is opened
  * @fires tui-modal-close - When modal is closed
  * 
  * @slot - Modal content

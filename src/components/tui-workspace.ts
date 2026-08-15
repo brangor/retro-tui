@@ -11,8 +11,8 @@ import { sharedStyles } from '../styles/shared.js';
  * @slot main - The primary content area (canvas)
  * @slot floating - Floating panels that sit above main content
  * 
- * @fires tui-bounds-change - When workspace bounds change
- * @fires tui-layout-change - When panel layout changes
+ * @fires tui-workspace-bounds-change - When workspace bounds change
+ * @fires tui-workspace-layout-change - When panel layout changes
  */
 @customElement('tui-workspace')
 export class Workspace extends LitElement {
@@ -155,7 +155,7 @@ export class Workspace extends LitElement {
       this._resizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
           this._bounds = entry.contentRect;
-          this.dispatchEvent(new CustomEvent('tui-bounds-change', {
+          this.dispatchEvent(new CustomEvent('tui-workspace-bounds-change', {
             detail: { bounds: this._bounds },
             bubbles: true,
             composed: true,
@@ -351,7 +351,7 @@ export class Workspace extends LitElement {
       height: (p as any).panelHeight ?? p.offsetHeight,
     }));
     
-    this.dispatchEvent(new CustomEvent('tui-layout-change', {
+    this.dispatchEvent(new CustomEvent('tui-workspace-layout-change', {
       detail: { panels: layout, bounds: this._bounds },
       bubbles: true,
       composed: true,

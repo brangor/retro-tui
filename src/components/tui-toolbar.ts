@@ -215,6 +215,8 @@ export class Toolbar extends LitElement {
  * @attr {string} icon - Icon character to display
  * @attr {boolean} active - Whether this tool is active
  * @attr {string} size - Button size: 'sm' | 'md' | 'lg'
+ *
+ * @fires tui-tool-select - When this tool is clicked (detail: { tool })
  */
 @customElement('tui-tool')
 export class Tool extends LitElement {

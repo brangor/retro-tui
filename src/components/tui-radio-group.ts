@@ -5,6 +5,11 @@ import { sharedStyles } from '../styles/shared.js';
 import type { TuiEvent } from '../protocol/types';
 import type { Radio } from './tui-radio';
 
+/**
+ * Groups `tui-radio` children and reports the selected value.
+ *
+ * @fires tui-change - When the selection changes (detail: { value, name })
+ */
 @customElement('tui-radio-group')
 export class RadioGroup extends LitElement {
   @property()

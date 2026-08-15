@@ -25,7 +25,7 @@ type Palettes = Record<string, string[]>;
  * @fires tui-palette-change - When tab is clicked
  *   detail: { palette: string, firstChar: string }
  *
- * @fires tui-char-select - When character is clicked
+ * @fires tui-palette-char-select - When character is clicked
  *   detail: { char: string }
  */
 @customElement('tui-palette')
@@ -127,7 +127,7 @@ export class Palette extends LitElement {
   }
 
   private _selectChar(char: string): void {
-    this.dispatchEvent(new CustomEvent('tui-char-select', {
+    this.dispatchEvent(new CustomEvent('tui-palette-char-select', {
       bubbles: true,
       composed: true,
       detail: { char },
