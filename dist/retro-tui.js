@@ -1804,7 +1804,7 @@ v([
   n({ type: String })
 ], m.prototype, "title", 2);
 v([
-  n({ type: String })
+  n({ type: String, reflect: !0 })
 ], m.prototype, "color", 2);
 v([
   n({ type: String, reflect: !0 })
@@ -4808,7 +4808,7 @@ let H = class extends p {
     this.value = e.value, this.dispatchEvent(new CustomEvent("tui-input", {
       bubbles: !0,
       composed: !0,
-      detail: { value: this.value }
+      detail: { value: this.value, name: this.name }
     }));
   }
   _onChange(t) {
@@ -4816,7 +4816,7 @@ let H = class extends p {
     this.value = e.value, this.dispatchEvent(new CustomEvent("tui-change", {
       bubbles: !0,
       composed: !0,
-      detail: { value: this.value }
+      detail: { value: this.value, name: this.name }
     }));
   }
   render() {

@@ -2082,7 +2082,7 @@ y([
   n({ type: String })
 ], g.prototype, "title", 2);
 y([
-  n({ type: String })
+  n({ type: String, reflect: !0 })
 ], g.prototype, "color", 2);
 y([
   n({ type: String, reflect: !0 })
@@ -5086,7 +5086,7 @@ let L = class extends f {
     this.value = e.value, this.dispatchEvent(new CustomEvent("tui-input", {
       bubbles: !0,
       composed: !0,
-      detail: { value: this.value }
+      detail: { value: this.value, name: this.name }
     }));
   }
   _onChange(t) {
@@ -5094,7 +5094,7 @@ let L = class extends f {
     this.value = e.value, this.dispatchEvent(new CustomEvent("tui-change", {
       bubbles: !0,
       composed: !0,
-      detail: { value: this.value }
+      detail: { value: this.value, name: this.name }
     }));
   }
   render() {
