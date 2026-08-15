@@ -47,11 +47,11 @@ describe('tui-panel', () => {
     expect(dismissBtn).to.not.exist;
   });
 
-  it('emits panel-minimize event when dismiss clicked on floating panel', async () => {
+  it('emits tui-panel-minimize event when dismiss clicked on floating panel', async () => {
     // floating+dismissable panels minimize instead of dismiss
     const el = await fixture(html`<tui-panel title="Test" dismissable floating>Content</tui-panel>`);
     let minimized = false;
-    el.addEventListener('panel-minimize', () => { minimized = true; });
+    el.addEventListener('tui-panel-minimize', () => { minimized = true; });
 
     const dismissBtn = el.shadowRoot.querySelector('.dismiss-btn');
     dismissBtn.click();
@@ -60,10 +60,10 @@ describe('tui-panel', () => {
     expect(el.minimized).to.be.true;
   });
 
-  it('emits panel-dismiss event when dismiss clicked on non-floating panel', async () => {
+  it('emits tui-panel-dismiss event when dismiss clicked on non-floating panel', async () => {
     const el = await fixture(html`<tui-panel title="Test" dismissable .floating=${false}>Content</tui-panel>`);
     let dismissed = false;
-    el.addEventListener('panel-dismiss', () => { dismissed = true; });
+    el.addEventListener('tui-panel-dismiss', () => { dismissed = true; });
 
     const dismissBtn = el.shadowRoot.querySelector('.dismiss-btn');
     dismissBtn.click();
@@ -90,10 +90,10 @@ describe('tui-panel', () => {
     expect(el.positionY).to.equal(50);
   });
 
-  it('emits panel-move event during drag', async () => {
+  it('emits tui-panel-move event during drag', async () => {
     const el = await fixture(html`<tui-panel title="Test" floating>Content</tui-panel>`);
     let moveEvent = null;
-    el.addEventListener('panel-move', (e) => { moveEvent = e.detail; });
+    el.addEventListener('tui-panel-move', (e) => { moveEvent = e.detail; });
     
     const header = el.shadowRoot.querySelector('.header');
     
@@ -129,10 +129,10 @@ describe('tui-panel', () => {
     expect(el.panelHeight).to.equal(200);
   });
 
-  it('emits panel-resize event during resize', async () => {
+  it('emits tui-panel-resize event during resize', async () => {
     const el = await fixture(html`<tui-panel title="Test" floating resizable panel-width="200" panel-height="150">Content</tui-panel>`);
     let resizeEvent = null;
-    el.addEventListener('panel-resize', (e) => { resizeEvent = e.detail; });
+    el.addEventListener('tui-panel-resize', (e) => { resizeEvent = e.detail; });
     
     const handle = el.shadowRoot.querySelector('.resize-handle');
     
@@ -172,10 +172,10 @@ describe('tui-panel', () => {
     expect(el.hasAttribute('docked')).to.be.true;
   });
 
-  it('emits panel-drag-end event when drag completes', async () => {
+  it('emits tui-panel-drag-end event when drag completes', async () => {
     const el = await fixture(html`<tui-panel title="Test" floating>Content</tui-panel>`);
     let dragEndEvent = null;
-    el.addEventListener('panel-drag-end', (e) => { dragEndEvent = e.detail; });
+    el.addEventListener('tui-panel-drag-end', (e) => { dragEndEvent = e.detail; });
     
     const header = el.shadowRoot.querySelector('.header');
     
@@ -273,11 +273,11 @@ describe('tui-panel', () => {
     expect(header.classList.contains('draggable')).to.be.true;
   });
 
-  it('docked panel emits panel-move on drag', async () => {
+  it('docked panel emits tui-panel-move on drag', async () => {
     const el = await fixture(html`<tui-panel title="Test" docked="left">Content</tui-panel>`);
     
     let moveEvent = null;
-    el.addEventListener('panel-move', (e) => { moveEvent = e.detail; });
+    el.addEventListener('tui-panel-move', (e) => { moveEvent = e.detail; });
     
     const header = el.shadowRoot.querySelector('.header');
     

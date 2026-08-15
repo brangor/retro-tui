@@ -20,7 +20,7 @@ import { titleDecoration, type BorderStyle } from '../utils/borders.js';
  * @attr {boolean} open - Whether modal is visible
  * @attr {boolean} closable - Show close button (default: true)
  * 
- * @fires close - When modal is closed
+ * @fires tui-modal-close - When modal is closed
  * 
  * @slot - Modal content
  * @slot footer - Footer content (buttons, etc.)
@@ -201,7 +201,7 @@ export class Modal extends LitElement {
    */
   show() {
     this.open = true;
-    this.dispatchEvent(new CustomEvent('open', { bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent('tui-modal-open', { bubbles: true, composed: true }));
   }
 
   /**
@@ -209,7 +209,7 @@ export class Modal extends LitElement {
    */
   close() {
     this.open = false;
-    this.dispatchEvent(new CustomEvent('close', { bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent('tui-modal-close', { bubbles: true, composed: true }));
   }
 
   render() {

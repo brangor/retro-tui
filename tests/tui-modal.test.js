@@ -30,4 +30,22 @@ describe('tui-modal', () => {
     expect(el.open).to.be.true;
     expect(el.hasAttribute('open')).to.be.true;
   });
+
+  // These were bare `open` / `close` before 5.0.0 — `close` shadowed the native
+  // <dialog> event, and both reach document because they are bubbles+composed.
+  it('emits tui-modal-open when shown', async () => {
+    const el = await fixture(html`<tui-modal></tui-modal>`);
+    let fired = false;
+    el.addEventListener('tui-modal-open', () => { fired = true; });
+    el.show();
+    expect(fired).to.be.true;
+  });
+
+  it('emits tui-modal-close when closed', async () => {
+    const el = await fixture(html`<tui-modal open></tui-modal>`);
+    let fired = false;
+    el.addEventListener('tui-modal-close', () => { fired = true; });
+    el.close();
+    expect(fired).to.be.true;
+  });
 });

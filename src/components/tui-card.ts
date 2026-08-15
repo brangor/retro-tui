@@ -37,7 +37,7 @@ type CardSize = 'sm' | 'md' | 'lg';
  * @attr {boolean} disabled - Card cannot be interacted with
  * @attr {string} size - 'sm' | 'md' | 'lg'
  * 
- * @fires card-click - When card is clicked
+ * @fires tui-card-click - When card is clicked
  *   detail: { rank, suit }
  * 
  * @slot - Custom content (overrides rank/suit display)
@@ -284,7 +284,7 @@ export class Card extends LitElement {
   private _handleClick(): void {
     if (this.disabled) return;
     
-    this.dispatchEvent(new CustomEvent('card-click', {
+    this.dispatchEvent(new CustomEvent('tui-card-click', {
       bubbles: true,
       composed: true,
       detail: { rank: this.rank, suit: this.suit }

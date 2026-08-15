@@ -50,14 +50,14 @@ type PanelBorder = BorderStyle;
  * @attr {boolean} active - Panel is active/focused
  * @attr {string} persist-id - LocalStorage key for state persistence
  *
- * @fires toggle - When panel is collapsed/expanded
- * @fires panel-move - When panel is dragged
- * @fires panel-drag-end - When panel drag ends
- * @fires panel-dismiss - When panel is dismissed (only if not floating+dismissable)
- * @fires panel-minimize - When panel minimizes to edge tab
- * @fires panel-restore - When panel restores from minimized state
- * @fires panel-resize - When panel is resized
- * @fires focus-request - When panel wants focus
+ * @fires tui-panel-toggle - When panel is collapsed/expanded
+ * @fires tui-panel-move - When panel is dragged
+ * @fires tui-panel-drag-end - When panel drag ends
+ * @fires tui-panel-dismiss - When panel is dismissed (only if not floating+dismissable)
+ * @fires tui-panel-minimize - When panel minimizes to edge tab
+ * @fires tui-panel-restore - When panel restores from minimized state
+ * @fires tui-panel-resize - When panel is resized
+ * @fires tui-panel-focus-request - When panel wants focus
  *
  * @slot - Panel content
  */
@@ -674,7 +674,7 @@ export class Panel extends LitElement {
   ];
 
   private _handleClick = (): void => {
-    this.dispatchEvent(new CustomEvent('focus-request', {
+    this.dispatchEvent(new CustomEvent('tui-panel-focus-request', {
       bubbles: true,
       composed: true,
       detail: { panel: this }
@@ -714,7 +714,7 @@ export class Panel extends LitElement {
         localStorage.setItem(`tui-panel-${this.persistId}`, String(this.collapsed));
       }
 
-      this.dispatchEvent(new CustomEvent('toggle', {
+      this.dispatchEvent(new CustomEvent('tui-panel-toggle', {
         detail: { collapsed: this.collapsed },
         bubbles: true,
         composed: true,
@@ -742,7 +742,7 @@ export class Panel extends LitElement {
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
 
-    const event = new CustomEvent('panel-dismiss', {
+    const event = new CustomEvent('tui-panel-dismiss', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
       composed: true,
@@ -790,7 +790,7 @@ export class Panel extends LitElement {
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
 
-    this.dispatchEvent(new CustomEvent('panel-minimize', {
+    this.dispatchEvent(new CustomEvent('tui-panel-minimize', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
       composed: true,
@@ -825,7 +825,7 @@ export class Panel extends LitElement {
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
 
-    this.dispatchEvent(new CustomEvent('panel-restore', {
+    this.dispatchEvent(new CustomEvent('tui-panel-restore', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
       composed: true,
@@ -904,7 +904,7 @@ export class Panel extends LitElement {
     this.positionX = this._dragOffsetX + deltaX;
     this.positionY = this._dragOffsetY + deltaY;
     
-    this.dispatchEvent(new CustomEvent('panel-move', {
+    this.dispatchEvent(new CustomEvent('tui-panel-move', {
       detail: { 
         panelId: this.id || this.title,
         x: this.positionX, 
@@ -921,7 +921,7 @@ export class Panel extends LitElement {
     document.removeEventListener('pointermove', this._onDragMove);
     document.removeEventListener('pointerup', this._onDragEnd);
     
-    this.dispatchEvent(new CustomEvent('panel-drag-end', {
+    this.dispatchEvent(new CustomEvent('tui-panel-drag-end', {
       detail: { 
         panelId: this.id || this.title,
         x: this.positionX,
@@ -965,7 +965,7 @@ export class Panel extends LitElement {
     this.panelWidth = newWidth;
     this.panelHeight = newHeight;
     
-    this.dispatchEvent(new CustomEvent('panel-resize', {
+    this.dispatchEvent(new CustomEvent('tui-panel-resize', {
       detail: { 
         panelId: this.id || this.title,
         width: this.panelWidth, 

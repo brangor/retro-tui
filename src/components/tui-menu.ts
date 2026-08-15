@@ -183,7 +183,7 @@ export class MenuItem extends LitElement {
  * @attr {string} label - Action label
  * @attr {string} shortcut - Keyboard shortcut hint
  * @attr {boolean} danger - Style as destructive action
- * @fires action - When activated
+ * @fires tui-menu-action - When activated
  */
 @customElement('tui-menu-action')
 export class MenuAction extends LitElement {
@@ -246,7 +246,7 @@ export class MenuAction extends LitElement {
 
   private _handleClick() {
     this.dispatchEvent(
-      new CustomEvent('action', {
+      new CustomEvent('tui-menu-action', {
         bubbles: true,
         composed: true,
       })

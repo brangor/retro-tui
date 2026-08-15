@@ -28,7 +28,7 @@ interface ToolDefinition {
  *
  * Uses <tui-button variant="icon"> internally for consistent styling.
  * Supports vertical (default) or horizontal orientation.
- * Emits tool-select event when a tool is clicked.
+ * Emits tui-tool-select event when a tool is clicked.
  *
  * @attr {string} orientation - 'vertical' | 'horizontal'
  * @attr {string} selected - Currently selected tool id
@@ -36,7 +36,7 @@ interface ToolDefinition {
  * @attr {string} selection-style - Selection feedback: 'invert' | 'border'
  * @attr {boolean} show-hotkeys - Show keyboard shortcuts next to tools (default: true)
  *
- * @fires tool-select - When a tool button is clicked
+ * @fires tui-tool-select - When a tool button is clicked
  *   detail: { tool: string }
  *
  * @slot - Tool buttons (or use .tools property)
@@ -153,7 +153,7 @@ export class Toolbar extends LitElement {
   private _handleClick(toolId: string) {
     this.selected = toolId;
     this.dispatchEvent(
-      new CustomEvent('tool-select', {
+      new CustomEvent('tui-tool-select', {
         bubbles: true,
         composed: true,
         detail: { tool: toolId },
@@ -238,7 +238,7 @@ export class Tool extends LitElement {
 
   private _handleClick() {
     this.dispatchEvent(
-      new CustomEvent('tool-select', {
+      new CustomEvent('tui-tool-select', {
         bubbles: true,
         composed: true,
         detail: { tool: this.toolId },
