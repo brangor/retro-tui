@@ -175,6 +175,11 @@ Static text with ANSI color support.
 - **Atoms**: `tui-panel`, `tui-output`, `tui-table`, `tui-console`, `tui-text`, `tui-menu`, `tui-statusbar`, `tui-modal`, `tui-button`, `tui-toolbar`, `tui-toast`, `tui-card`, `tui-palette`, `tui-link`, `tui-action-list`, `tui-stat`, `tui-status-strip`, `tui-titlebar`, `tui-progress`, `tui-status`
 - **Form**: `tui-input`, `tui-checkbox`, `tui-radio`, `tui-checkbox-group`, `tui-radio-group`
 - **Utilities**: `ansiToHtml`, `BORDER_CHARS`, `getBorderChars`, `titleDecoration`, `STATE_BORDERS`, `sharedStyles`, `parseAreas`, `SEMANTIC_COLORS`, `SEMANTIC_TOKENS`
+- **Types**: `SemanticColor`, `ControlSize`, `SelectionStyle`
+
+> **Upgrading from 2.x or 3.x?** `latest` sat at 2.2.5 for a long time, so most
+> existing installs are several majors behind. Start at
+> [docs/guides/upgrading.md](docs/guides/upgrading.md).
 
 > Choosing between components: [docs/guides/component-selection.md](docs/guides/component-selection.md).
 
