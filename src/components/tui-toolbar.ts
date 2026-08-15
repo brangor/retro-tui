@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import type { SelectionStyle } from '../styles/semantics.js';
+import type { ControlSize, SelectionStyle } from '../styles/semantics.js';
 import './tui-button.ts'; // Import tui-button for use
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -9,7 +9,6 @@ import './tui-button.ts'; // Import tui-button for use
 // ═══════════════════════════════════════════════════════════════════════════════
 
 type ToolbarOrientation = 'vertical' | 'horizontal';
-type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ToolDefinition {
   id: string;
@@ -50,7 +49,7 @@ export class Toolbar extends LitElement {
   selected = '';
 
   @property({ reflect: true })
-  size: ButtonSize = 'md';
+  size: ControlSize = 'md';
 
   @property({ attribute: 'selection-style' })
   selectionStyle: SelectionStyle = '';
@@ -230,7 +229,7 @@ export class Tool extends LitElement {
   active = false;
 
   @property()
-  size: ButtonSize = 'md';
+  size: ControlSize = 'md';
 
   static styles = css`
     :host {

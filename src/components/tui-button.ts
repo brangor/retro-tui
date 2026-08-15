@@ -1,14 +1,13 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import type { SelectionStyle, SemanticColor } from '../styles/semantics.js';
+import type { ControlSize, SelectionStyle, SemanticColor } from '../styles/semantics.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
 type ButtonVariant = 'default' | 'filled' | 'outline' | 'ghost' | 'icon' | 'menu';
-type ButtonSize = 'sm' | 'md' | 'lg';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
@@ -55,7 +54,7 @@ export class Button extends LitElement {
   color: SemanticColor = '';
 
   @property({ reflect: true })
-  size: ButtonSize = 'md';
+  size: ControlSize = 'md';
 
   @property({ attribute: 'selection-style' })
   selectionStyle?: SelectionStyle;
