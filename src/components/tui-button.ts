@@ -21,8 +21,10 @@ type ButtonSize = 'sm' | 'md' | 'lg';
  * Supports two selection feedback styles: color inversion or border weight changes.
  *
  * @attr {string} variant - Treatment: 'default' | 'filled' | 'outline' | 'ghost' | 'icon' | 'menu'
- * @attr {string} color - Semantic colour for the filled and outline treatments:
- *                        'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'muted'
+ * @attr {string} color - Semantic accent: 'primary' | 'secondary' | 'success' | 'warning' |
+ *                        'error' | 'info' | 'muted'. Only the 'filled' and 'outline'
+ *                        treatments read it; 'default', 'ghost', 'icon' and 'menu' carry
+ *                        their own colours and ignore it.
  * @attr {string} size - Button sizing: 'sm' | 'md' | 'lg'
  * @attr {string} selection-style - Selection feedback: 'invert' | 'border' (inherits from --selection-style CSS property)
  * @attr {boolean} selected - Toggle/selected state for toolbar use
@@ -92,8 +94,8 @@ export class Button extends LitElement {
         --_btn-hover-color: var(--tui-button-hover-color, var(--_btn-color));
         --_btn-hover-border-color: var(--tui-button-hover-border-color, var(--text-muted));
 
-        /* Accent used by the filled and outline treatments. Defaults to primary so
-           variant="filled" alone reproduces the old variant="primary" exactly. */
+        /* The accent the filled and outline treatments paint with. The color
+           attribute overrides it; unset, both treatments read as primary. */
         --_btn-accent: var(--color-primary);
 
         /* Size tokens */
@@ -181,6 +183,10 @@ export class Button extends LitElement {
       :host([color="warning"])   { --_btn-accent: var(--color-warning); }
       :host([color="error"])     { --_btn-accent: var(--color-error); }
       :host([color="info"])      { --_btn-accent: var(--color-info); }
+
+      /* muted is a de-emphasis accent, meant for the outline treatment. Under
+         filled it becomes the background behind --surface-base text, which does
+         not clear AA contrast in the dark themes — reach for ghost instead. */
       :host([color="muted"])     { --_btn-accent: var(--text-muted); }
 
       /* ═══════════════════════════════════════════════════════════════════

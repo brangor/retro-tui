@@ -21,6 +21,17 @@ describe('tui-button', () => {
     expect(el.variant).to.equal('filled');
   });
 
+  it('reflects color attribute', async () => {
+    const el = await fixture(html`<tui-button variant="filled" color="error">Click</tui-button>`);
+    expect(el.getAttribute('color')).to.equal('error');
+    expect(el.color).to.equal('error');
+  });
+
+  it('defaults color to empty so no accent is claimed', async () => {
+    const el = await fixture(html`<tui-button>Click</tui-button>`);
+    expect(el.color).to.equal('');
+  });
+
   it('reflects size attribute', async () => {
     const el = await fixture(html`<tui-button size="lg">Click</tui-button>`);
     expect(el.getAttribute('size')).to.equal('lg');
