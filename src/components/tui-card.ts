@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { BORDER_CHARS } from '../utils/borders.js';
+import type { ControlSize } from '../styles/semantics.js';
 
 // Static CSS character values from shared border module
 const S = BORDER_CHARS.single;
@@ -14,7 +15,6 @@ const D = BORDER_CHARS.double;
 
 type CardRank = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'X' | 'J' | 'Q' | 'K' | 'A' | '';
 type CardSuit = '♥' | '♠' | '♦' | '♣' | '';
-type CardSize = 'sm' | 'md' | 'lg';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
@@ -60,7 +60,7 @@ export class Card extends LitElement {
   disabled = false;
 
   @property({ type: String, reflect: true })
-  size: CardSize = 'md';
+  size: ControlSize = 'md';
 
   static styles = [
     sharedStyles,
