@@ -66,7 +66,9 @@ export class Panel extends LitElement {
   @property({ type: String })
   title = '';
 
-  @property({ type: String })
+  // Reflected: every colour rule is a :host([color="…"]) selector, so a property
+  // assignment (.color = 'error') paints nothing unless it reaches the attribute.
+  @property({ type: String, reflect: true })
   color: SemanticColor = '';
 
   @property({ type: String, reflect: true })

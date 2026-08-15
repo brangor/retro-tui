@@ -25,6 +25,16 @@ describe('tui-panel', () => {
     expect(el.color).to.equal('primary');
   });
 
+  // The test above sets the attribute in the template, so it passed even while
+  // `color` was unreflected. Every colour rule is a :host([color="…"]) selector, so
+  // a property assignment that never reaches the attribute paints nothing.
+  it('reflects color set as a property, not just an attribute', async () => {
+    const el = await fixture(html`<tui-panel title="Test">Content</tui-panel>`);
+    el.color = 'error';
+    await el.updateComplete;
+    expect(el.getAttribute('color')).to.equal('error');
+  });
+
   it('handles collapsible state', async () => {
     const el = await fixture(html`<tui-panel title="Test" collapsible>Content</tui-panel>`);
     expect(el.collapsible).to.be.true;
