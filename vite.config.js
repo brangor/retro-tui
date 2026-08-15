@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [copyTokens],
   build: {
     lib: {
-      entry: 'src/index.js',
+      entry: 'src/index.ts',
       name: 'RetroTUI',
       // ESM only. Vite defaults to ['es','umd']; the UMD output referenced a
       // window.lit global that Lit has never shipped, so it failed on load for

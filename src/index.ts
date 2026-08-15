@@ -46,6 +46,11 @@ export { BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS } from './
 export { sharedStyles } from './styles/shared.js';
 export { SEMANTIC_COLORS, SEMANTIC_TOKENS } from './styles/semantics';
 
+// The shared vocabularies, as types. Consumers building their own components need
+// these to type a `color`/`size`/`selection-style` property without redeclaring the
+// union — which is the thing docs/api/semantic-colors.md tells them never to do.
+export type { SemanticColor, ControlSize, SelectionStyle } from './styles/semantics';
+
 // New components
 export { Progress } from './components/tui-progress';
 export { Status } from './components/tui-status';

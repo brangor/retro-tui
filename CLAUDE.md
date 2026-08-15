@@ -71,12 +71,15 @@ Components supporting text output (`tui-output`, `tui-console`, `tui-text`) use 
 
 ### Library Entry Point
 
-`src/index.js` exports:
+`src/index.ts` exports (it became TypeScript in 5.0.0 so the shared vocabulary types
+can be re-exported — `export type` is not valid in a `.js` entry):
 - **Layout**: App, Workspace, Sidebar
 - **Atoms**: Panel, Output, Table, Console, Text, Menu (+ MenuItem, MenuAction, MenuDivider), Statusbar (+ StatusItem), Modal, Button, Toolbar (+ Tool), Toast (+ tuiToast), Card, Palette, Link, ActionList, Stat, StatusStrip (+ StripItem), Titlebar, Tiled
 - **Form**: Input, Checkbox, Radio, CheckboxGroup, RadioGroup
 - **Atoms (cont.)**: Progress, Status
 - **Utilities**: ansiToHtml, BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS, sharedStyles, parseAreas, SEMANTIC_COLORS, SEMANTIC_TOKENS
+- **Types**: SemanticColor, ControlSize, SelectionStyle — consumers building their own
+  components import these rather than redeclaring the unions
 
 ### Build Output
 
