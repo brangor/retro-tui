@@ -21,14 +21,15 @@ what happened. Read that rule in reverse and you can derive a name instead of lo
 it up: `tui-panel` collapsing fires `tui-panel-toggle`; `tui-modal` closing fires
 `tui-modal-close`.
 
-The subject is the tag minus its `tui-` prefix, except where a family of elements
-shares one subject:
+The subject is the tag minus its `tui-` prefix. Exactly two names depart from that:
 
 | Emitting element | Subject | Why |
 |---|---|---|
 | `tui-action-list` | `list-item` | The verb acts on an item, not on the list |
-| `tui-menu-action` | `menu` | Menu items belong to the menu's vocabulary |
-| `tui-toolbar`, `tui-tool` | `tool` | See [shared protocols](#shared-protocols) |
+| `tui-toolbar` | `tool` | Matches `tui-tool` — see [shared protocols](#shared-protocols) |
+
+Every other name is mechanical: `tui-workspace` fires `tui-workspace-bounds-change`,
+`tui-menu-action` fires `tui-menu-action-select`.
 
 ## Component events
 
@@ -53,7 +54,7 @@ shares one subject:
 | `tui-modal-open` | `tui-modal` | none | `show()` is called |
 | `tui-modal-close` | `tui-modal` | none | `close()` is called |
 | `tui-console-command` | `tui-console` | `{ command }` | A command line is submitted |
-| `tui-menu-action` | `tui-menu-action` | none | The action is activated |
+| `tui-menu-action-select` | `tui-menu-action` | `{ label }` | The action is activated |
 | `tui-tool-select` | `tui-toolbar`, `tui-tool` | `{ tool }` — the tool id | A tool is chosen |
 | `tui-list-item-select` | `tui-action-list` | `{ id, label }` | An item is clicked open |
 | `tui-list-item-deselect` | `tui-action-list` | `{ id, label }` | The open item is clicked shut |
@@ -131,7 +132,7 @@ Every name below changed in 5.0.0. Renaming your listeners is the whole migratio
 | `open` | `tui-modal-open` |
 | `close` | `tui-modal-close` |
 | `command` | `tui-console-command` |
-| `action` | `tui-menu-action` |
+| `action` | `tui-menu-action-select` |
 | `copy` | `tui-link-copy` |
 | `card-click` | `tui-card-click` |
 | `tool-select` | `tui-tool-select` |
@@ -143,13 +144,17 @@ Every name below changed in 5.0.0. Renaming your listeners is the whole migratio
 
 ### Payload changes
 
-Two payloads changed as well. A consumer who renames listeners without touching
+Three payloads changed as well. A consumer who renames listeners without touching
 `e.detail` will break silently on the first of these.
 
 | Event | 4.x `detail` | 5.0.0 `detail` |
 |---|---|---|
 | `tui-console-command` | the command string itself | `{ command }` |
 | `tui-list-item-deselect` | none | `{ id, label }`, matching `tui-list-item-select` |
+| `tui-menu-action-select` | none | `{ label }` |
+
+The last two are additive — a 4.x handler reading nothing off `e.detail` keeps
+working — and both remove a reach into `e.target` to learn what happened.
 
 ```js
 // 4.x
