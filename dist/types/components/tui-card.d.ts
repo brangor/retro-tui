@@ -1,7 +1,7 @@
 import { LitElement } from 'lit';
+import type { ControlSize } from '../styles/semantics.js';
 type CardRank = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'X' | 'J' | 'Q' | 'K' | 'A' | '';
 type CardSuit = '♥' | '♠' | '♦' | '♣' | '';
-type CardSize = 'sm' | 'md' | 'lg';
 /**
  * <tui-card> - Playing card with terminal box-draw aesthetic
  *
@@ -19,7 +19,7 @@ type CardSize = 'sm' | 'md' | 'lg';
  * @attr {boolean} disabled - Card cannot be interacted with
  * @attr {string} size - 'sm' | 'md' | 'lg'
  *
- * @fires card-click - When card is clicked
+ * @fires tui-card-click - When card is clicked
  *   detail: { rank, suit }
  *
  * @slot - Custom content (overrides rank/suit display)
@@ -30,7 +30,7 @@ export declare class Card extends LitElement {
     faceDown: boolean;
     selected: boolean;
     disabled: boolean;
-    size: CardSize;
+    size: ControlSize;
     static styles: import("lit").CSSResult[];
     get isRed(): boolean;
     private _handleClick;

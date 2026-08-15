@@ -6,7 +6,7 @@ type LinkType = 'external' | 'copy';
  * @attr {string} href - URL for external links or value for copy links
  * @attr {string} type - 'external' (opens in browser, arrow icon) | 'copy' (copies to clipboard, copy icon)
  *
- * @fires copy - When a copy link is clicked (detail: { value: string })
+ * @fires tui-link-copy - When a copy link is clicked (detail: { value: string })
  *
  * @slot - Link text
  */

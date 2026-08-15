@@ -1,5 +1,11 @@
 import { LitElement } from 'lit';
 import type { TuiEvent } from '../protocol/types';
+/**
+ * Text input.
+ *
+ * @fires tui-input - On every keystroke (detail: { value })
+ * @fires tui-change - When the value is committed (detail: { value })
+ */
 export declare class Input extends LitElement {
     value: string;
     placeholder: string;

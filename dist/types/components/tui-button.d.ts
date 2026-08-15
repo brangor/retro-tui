@@ -1,14 +1,17 @@
 import { LitElement } from 'lit';
-import type { SelectionStyle } from '../styles/semantics.js';
-type ButtonVariant = 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu' | 'outline';
-type ButtonSize = 'sm' | 'md' | 'lg';
+import type { ControlSize, SelectionStyle, SemanticColor } from '../styles/semantics.js';
+type ButtonVariant = 'default' | 'filled' | 'outline' | 'ghost' | 'icon' | 'menu';
 /**
  * <tui-button> - Terminal-styled button
  *
  * A flexible button component that works standalone, in toolbars, or as menu triggers.
  * Supports two selection feedback styles: color inversion or border weight changes.
  *
- * @attr {string} variant - Visual style: 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu'
+ * @attr {string} variant - Treatment: 'default' | 'filled' | 'outline' | 'ghost' | 'icon' | 'menu'
+ * @attr {string} color - Semantic accent: 'primary' | 'secondary' | 'success' | 'warning' |
+ *                        'error' | 'info' | 'muted'. Only the 'filled' and 'outline'
+ *                        treatments read it; 'default', 'ghost', 'icon' and 'menu' carry
+ *                        their own colours and ignore it.
  * @attr {string} size - Button sizing: 'sm' | 'md' | 'lg'
  * @attr {string} selection-style - Selection feedback: 'invert' | 'border' (inherits from --selection-style CSS property)
  * @attr {boolean} selected - Toggle/selected state for toolbar use
@@ -35,7 +38,8 @@ export declare class Button extends LitElement {
         slotAssignment?: SlotAssignmentMode;
     };
     variant: ButtonVariant;
-    size: ButtonSize;
+    color: SemanticColor;
+    size: ControlSize;
     selectionStyle?: SelectionStyle;
     toolId?: string;
     selected: boolean;

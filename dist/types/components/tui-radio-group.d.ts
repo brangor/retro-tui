@@ -1,5 +1,10 @@
 import { LitElement } from 'lit';
 import type { TuiEvent } from '../protocol/types';
+/**
+ * Groups `tui-radio` children and reports the selected value.
+ *
+ * @fires tui-change - When the selection changes (detail: { value, name })
+ */
 export declare class RadioGroup extends LitElement {
     name: string;
     label: string;

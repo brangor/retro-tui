@@ -8,8 +8,8 @@ import { LitElement } from 'lit';
  * @slot main - The primary content area (canvas)
  * @slot floating - Floating panels that sit above main content
  *
- * @fires bounds-change - When workspace bounds change
- * @fires layout-change - When panel layout changes
+ * @fires tui-workspace-bounds-change - When workspace bounds change
+ * @fires tui-workspace-layout-change - When panel layout changes
  */
 export declare class Workspace extends LitElement {
     private static readonly SNAP_ZONE;

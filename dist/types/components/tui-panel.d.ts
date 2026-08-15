@@ -6,8 +6,8 @@ type PanelBorder = BorderStyle;
 /**
  * <tui-panel> - Floating panel with terminal aesthetic
  *
- * Panels are floating by default and can be dragged within a tui-workspace.
- * They snap visually to edges when dragged near them.
+ * Panels are static by default. Set `floating` to make one draggable within a
+ * tui-workspace; it then snaps visually to edges when dragged near them.
  * Dismissable panels minimize to edge tabs instead of hiding.
  *
  * Two style variants:
@@ -25,7 +25,7 @@ type PanelBorder = BorderStyle;
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
  * @attr {boolean} full - Fill container completely (disables drag/resize, keeps collapse)
- * @attr {boolean} floating - Whether panel is floating (default: true)
+ * @attr {boolean} floating - Whether panel is floating (default: false)
  * @attr {string} snap-edge - Edge the panel is snapped to: 'left' | 'right' | 'top' | ''
  * @attr {number} position-x - X position in pixels
  * @attr {number} position-y - Y position in pixels
@@ -38,14 +38,14 @@ type PanelBorder = BorderStyle;
  * @attr {boolean} active - Panel is active/focused
  * @attr {string} persist-id - LocalStorage key for state persistence
  *
- * @fires toggle - When panel is collapsed/expanded
- * @fires panel-move - When panel is dragged
- * @fires panel-drag-end - When panel drag ends
- * @fires panel-dismiss - When panel is dismissed (only if not floating+dismissable)
- * @fires panel-minimize - When panel minimizes to edge tab
- * @fires panel-restore - When panel restores from minimized state
- * @fires panel-resize - When panel is resized
- * @fires focus-request - When panel wants focus
+ * @fires tui-panel-toggle - When panel is collapsed/expanded
+ * @fires tui-panel-move - When panel is dragged
+ * @fires tui-panel-drag-end - When panel drag ends
+ * @fires tui-panel-dismiss - When panel is dismissed (only if not floating+dismissable)
+ * @fires tui-panel-minimize - When panel minimizes to edge tab
+ * @fires tui-panel-restore - When panel restores from minimized state
+ * @fires tui-panel-resize - When panel is resized
+ * @fires tui-panel-focus-request - When panel wants focus
  *
  * @slot - Panel content
  */

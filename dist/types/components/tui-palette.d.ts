@@ -10,10 +10,10 @@ type Palettes = Record<string, string[]>;
  * @attr {string} selectedChar - Currently selected character
  * @attr {number} columns - Number of columns in character grid (default: 8)
  *
- * @fires palette-change - When tab is clicked
+ * @fires tui-palette-change - When tab is clicked
  *   detail: { palette: string, firstChar: string }
  *
- * @fires char-select - When character is clicked
+ * @fires tui-palette-char-select - When character is clicked
  *   detail: { char: string }
  */
 export declare class Palette extends LitElement {
