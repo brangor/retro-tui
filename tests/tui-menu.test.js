@@ -28,9 +28,10 @@ describe('tui-menu-action', () => {
     expect(el).to.exist;
   });
 
-  // The event was named `tui-menu-action` before 5.0.0 — identical to the element
-  // that fires it — and carried no detail, so a handler had to read e.target.label
-  // to learn which action ran.
+  // The event was a bare `action` before 5.0.0, carrying no detail — a handler had
+  // to read e.target.label to learn which action ran. `tui-menu-action` was the
+  // obvious prefixed name but was rejected: it is identical to the element that
+  // fires it, so `-select` names the verb.
   it('emits tui-menu-action-select with { label }', async () => {
     const el = await fixture(html`<tui-menu-action label="Save"></tui-menu-action>`);
     let detail = null;

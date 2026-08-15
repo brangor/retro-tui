@@ -35,12 +35,12 @@ Every other name is mechanical: `tui-workspace` fires `tui-workspace-bounds-chan
 
 | Event | Fired by | `detail` | Fired when |
 |---|---|---|---|
-| `tui-change` | `tui-input` | `{ value }` | Value is committed (native `change`) |
+| `tui-change` | `tui-input` | `{ value, name }` | Value is committed (native `change`) |
 | `tui-change` | `tui-checkbox` | `{ checked, value, name }` | Checked state toggles |
 | `tui-change` | `tui-radio` | `{ checked, value, name }` | This radio becomes selected (`checked` is always `true`) |
 | `tui-change` | `tui-checkbox-group` | `{ value: string[], name }` | Any child checkbox changes |
 | `tui-change` | `tui-radio-group` | `{ value, name }` | Selection changes, by click or arrow key |
-| `tui-input` | `tui-input` | `{ value }` | Every keystroke |
+| `tui-input` | `tui-input` | `{ value, name }` | Every keystroke |
 | `tui-panel-toggle` | `tui-panel` | `{ collapsed }` | Panel collapses or expands |
 | `tui-panel-focus-request` | `tui-panel` | `{ panel }` — the element itself | Panel is clicked and wants to be raised |
 | `tui-panel-dismiss` | `tui-panel` | `{ panelId }` | Panel is dismissed. **Cancelable** — see below |
@@ -115,7 +115,8 @@ adopts it so the listener is the same either way.
 ## Migration from 4.x
 
 Every name below changed in 5.0.0. Renaming your listeners is the whole migration,
-**except** for the two payload changes flagged underneath.
+**except** for the four payload changes flagged underneath — one of which
+(`tui-console-command`) breaks silently.
 
 | 4.x | 5.0.0 |
 |---|---|
@@ -144,7 +145,7 @@ Every name below changed in 5.0.0. Renaming your listeners is the whole migratio
 
 ### Payload changes
 
-Three payloads changed as well. A consumer who renames listeners without touching
+Four payloads changed as well. A consumer who renames listeners without touching
 `e.detail` will break silently on the first of these.
 
 | Event | 4.x `detail` | 5.0.0 `detail` |
@@ -152,9 +153,12 @@ Three payloads changed as well. A consumer who renames listeners without touchin
 | `tui-console-command` | the command string itself | `{ command }` |
 | `tui-list-item-deselect` | none | `{ id, label }`, matching `tui-list-item-select` |
 | `tui-menu-action-select` | none | `{ label }` |
+| `tui-change` / `tui-input` from `tui-input` | `{ value }` | `{ value, name }` |
 
-The last two are additive — a 4.x handler reading nothing off `e.detail` keeps
-working — and both remove a reach into `e.target` to learn what happened.
+The last three are additive — a 4.x handler reading nothing off the added key keeps
+working. The first two remove a reach into `e.target` to learn what happened; the
+`tui-input` one closes a gap that made the documented form pattern misbehave, since
+it was the only one of the five form components omitting `name`.
 
 ```js
 // 4.x
