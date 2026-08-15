@@ -16,9 +16,9 @@ describe('tui-button', () => {
   });
 
   it('reflects variant attribute', async () => {
-    const el = await fixture(html`<tui-button variant="primary">Click</tui-button>`);
-    expect(el.getAttribute('variant')).to.equal('primary');
-    expect(el.variant).to.equal('primary');
+    const el = await fixture(html`<tui-button variant="filled">Click</tui-button>`);
+    expect(el.getAttribute('variant')).to.equal('filled');
+    expect(el.variant).to.equal('filled');
   });
 
   it('reflects size attribute', async () => {

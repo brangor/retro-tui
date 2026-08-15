@@ -4,6 +4,7 @@ import { Panel } from '../src/components/tui-panel.ts';
 import { Stat } from '../src/components/tui-stat.ts';
 import { StripItem } from '../src/components/tui-status-strip.ts';
 import { Statusbar } from '../src/components/tui-statusbar.ts';
+import { Button } from '../src/components/tui-button.ts';
 
 /** Flatten a Lit component's static styles into one CSS string. */
 const cssOf = (ctor: { styles?: unknown }): string => {
@@ -16,6 +17,7 @@ const COLOUR_COMPONENTS: Array<[string, { styles?: unknown }]> = [
   ['tui-stat', Stat],
   ['tui-strip-item', StripItem],
   ['tui-statusbar', Statusbar],
+  ['tui-button', Button],
 ];
 
 const RETIRED_LITERALS = ['cyan', 'green', 'magenta', 'yellow', 'red'];

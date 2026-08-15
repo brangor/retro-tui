@@ -1,13 +1,13 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import type { SelectionStyle } from '../styles/semantics.js';
+import type { SelectionStyle, SemanticColor } from '../styles/semantics.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-type ButtonVariant = 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu' | 'outline';
+type ButtonVariant = 'default' | 'filled' | 'outline' | 'ghost' | 'icon' | 'menu';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -20,7 +20,9 @@ type ButtonSize = 'sm' | 'md' | 'lg';
  * A flexible button component that works standalone, in toolbars, or as menu triggers.
  * Supports two selection feedback styles: color inversion or border weight changes.
  *
- * @attr {string} variant - Visual style: 'default' | 'primary' | 'danger' | 'ghost' | 'icon' | 'menu'
+ * @attr {string} variant - Treatment: 'default' | 'filled' | 'outline' | 'ghost' | 'icon' | 'menu'
+ * @attr {string} color - Semantic colour for the filled and outline treatments:
+ *                        'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'muted'
  * @attr {string} size - Button sizing: 'sm' | 'md' | 'lg'
  * @attr {string} selection-style - Selection feedback: 'invert' | 'border' (inherits from --selection-style CSS property)
  * @attr {boolean} selected - Toggle/selected state for toolbar use
@@ -46,6 +48,9 @@ export class Button extends LitElement {
 
   @property({ reflect: true })
   variant: ButtonVariant = 'default';
+
+  @property({ reflect: true })
+  color: SemanticColor = '';
 
   @property({ reflect: true })
   size: ButtonSize = 'md';
@@ -86,6 +91,10 @@ export class Button extends LitElement {
         --_btn-hover-bg: var(--tui-button-hover-bg, var(--border-default));
         --_btn-hover-color: var(--tui-button-hover-color, var(--_btn-color));
         --_btn-hover-border-color: var(--tui-button-hover-border-color, var(--text-muted));
+
+        /* Accent used by the filled and outline treatments. Defaults to primary so
+           variant="filled" alone reproduces the old variant="primary" exactly. */
+        --_btn-accent: var(--color-primary);
 
         /* Size tokens */
         --_btn-padding-x: var(--spacing-md);
@@ -163,36 +172,30 @@ export class Button extends LitElement {
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: PRIMARY
-         Filled with primary color
+         SEMANTIC COLOUR — sets the accent the filled/outline treatments use
          ═══════════════════════════════════════════════════════════════════ */
 
-      :host([variant="primary"]) {
-        --_btn-bg: var(--color-primary);
+      :host([color="primary"])   { --_btn-accent: var(--color-primary); }
+      :host([color="secondary"]) { --_btn-accent: var(--color-secondary); }
+      :host([color="success"])   { --_btn-accent: var(--color-success); }
+      :host([color="warning"])   { --_btn-accent: var(--color-warning); }
+      :host([color="error"])     { --_btn-accent: var(--color-error); }
+      :host([color="info"])      { --_btn-accent: var(--color-info); }
+      :host([color="muted"])     { --_btn-accent: var(--text-muted); }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         VARIANT: FILLED — solid accent, brightens on hover
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([variant="filled"]) {
+        --_btn-bg: var(--_btn-accent);
         --_btn-color: var(--surface-base);
-        --_btn-border-color: var(--color-primary);
+        --_btn-border-color: var(--_btn-accent);
 
         & button:hover:not(:disabled) {
           filter: brightness(1.15);
-          background: var(--color-primary);
-          border-color: var(--color-primary);
-        }
-      }
-
-      /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: DANGER
-         Outlined with error color, fills on hover
-         ═══════════════════════════════════════════════════════════════════ */
-
-      :host([variant="danger"]) {
-        --_btn-bg: transparent;
-        --_btn-color: var(--color-error);
-        --_btn-border-color: var(--color-error);
-
-        & button:hover:not(:disabled) {
-          background: var(--color-error);
-          color: var(--surface-base);
-          border-color: var(--color-error);
+          background: var(--_btn-accent);
+          border-color: var(--_btn-accent);
         }
       }
 
@@ -214,20 +217,18 @@ export class Button extends LitElement {
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: OUTLINE
-         Single border outline, text colored, transparent background
-         Border matches variant color. Fills on hover.
+         VARIANT: OUTLINE — accent border and text, fills on hover
          ═══════════════════════════════════════════════════════════════════ */
 
       :host([variant="outline"]) {
         --_btn-bg: transparent;
-        --_btn-color: var(--color-primary);
-        --_btn-border-color: var(--color-primary);
+        --_btn-color: var(--_btn-accent);
+        --_btn-border-color: var(--_btn-accent);
 
         & button:hover:not(:disabled) {
-          background: var(--color-primary);
+          background: var(--_btn-accent);
           color: var(--surface-base);
-          border-color: var(--color-primary);
+          border-color: var(--_btn-accent);
         }
       }
 
