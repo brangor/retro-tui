@@ -78,9 +78,9 @@ export class Statusbar extends LitElement {
  * @attr {string} label - Item label (rendered in --color-primary, independent of
  *                        the bar's own color)
  * @attr {string} value - Item value (rendered in --color-secondary)
- * @attr {boolean} highlight - Reflected to the host for consumer styling. It has
- *                             no built-in visual effect: the highlight rule sets
- *                             the same --color-secondary as the default.
+ * @attr {boolean} highlight - Repaints the value in --color-warning to draw the
+ *                             eye to it. Also reflected to the host, so consumers
+ *                             can hang their own styling off it.
  */
 @customElement('tui-status-item')
 export class StatusItem extends LitElement {
@@ -115,7 +115,7 @@ export class StatusItem extends LitElement {
       }
 
       :host([highlight]) .value {
-        color: var(--color-secondary);
+        color: var(--color-warning);
       }
     `,
   ];
