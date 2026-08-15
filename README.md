@@ -81,7 +81,7 @@ Collapsible panel with header.
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `title` | string | Panel title |
-| `color` | string | Border color: cyan, green, magenta, yellow, red |
+| `color` | string | Semantic colour — `primary`, `secondary`, `success`, `warning`, `error`, `info`, `muted` |
 | `collapsible` | boolean | Enable collapse toggle |
 | `collapsed` | boolean | Current collapsed state |
 
@@ -174,7 +174,11 @@ Static text with ANSI color support.
 - **Layout**: `tui-app`, `tui-workspace`, `tui-sidebar`, `tui-tiled`
 - **Atoms**: `tui-panel`, `tui-output`, `tui-table`, `tui-console`, `tui-text`, `tui-menu`, `tui-statusbar`, `tui-modal`, `tui-button`, `tui-toolbar`, `tui-toast`, `tui-card`, `tui-palette`, `tui-link`, `tui-action-list`, `tui-stat`, `tui-status-strip`, `tui-titlebar`, `tui-progress`, `tui-status`
 - **Form**: `tui-input`, `tui-checkbox`, `tui-radio`, `tui-checkbox-group`, `tui-radio-group`
-- **Utilities**: `ansiToHtml`, `BORDER_CHARS`, `getBorderChars`, `titleDecoration`, `STATE_BORDERS`, `sharedStyles`, `parseAreas`
+- **Utilities**: `ansiToHtml`, `BORDER_CHARS`, `getBorderChars`, `titleDecoration`, `STATE_BORDERS`, `sharedStyles`, `parseAreas`, `SEMANTIC_COLORS`, `SEMANTIC_TOKENS`
+
+> Choosing between components: [docs/guides/component-selection.md](docs/guides/component-selection.md).
+
+> Event names and payloads: [docs/api/events.md](docs/api/events.md).
 
 > Components taking a `color` attribute share one vocabulary — `primary`,
 > `secondary`, `success`, `warning`, `error`, `info`, `muted`.
@@ -219,11 +223,11 @@ the server, client, push scripts, and the JSON protocol shape.
 - [x] Projection system — **moved to [retro-tui-lab](../retro-tui-lab)**
 - [x] Tool state management (`@lit/context`) — **moved to [retro-tui-lab](../retro-tui-lab)**
 - [x] Push server + shell/node scripts — **moved to [examples/push-server/](examples/push-server/)**
+- [x] npm package distribution — published as `retro-tui`
+- [x] CDN build for script-tag usage — `dist/retro-tui.cdn.js`
 - [ ] `<tui-toolbar>` hotkey support — `getHotkeyMap()` method + `hotkey` attribute for display hints and remappable bindings
 - [ ] `<tui-tabs>` (tab container)
 - [ ] `<tui-split>` (resizable panes)
-- [ ] npm package distribution
-- [ ] CDN build for script-tag usage
 
 ## License
 

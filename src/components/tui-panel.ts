@@ -18,8 +18,8 @@ type PanelBorder = BorderStyle;
 /**
  * <tui-panel> - Floating panel with terminal aesthetic
  *
- * Panels are floating by default and can be dragged within a tui-workspace.
- * They snap visually to edges when dragged near them.
+ * Panels are static by default. Set `floating` to make one draggable within a
+ * tui-workspace; it then snaps visually to edges when dragged near them.
  * Dismissable panels minimize to edge tabs instead of hiding.
  *
  * Two style variants:
@@ -37,7 +37,7 @@ type PanelBorder = BorderStyle;
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
  * @attr {boolean} full - Fill container completely (disables drag/resize, keeps collapse)
- * @attr {boolean} floating - Whether panel is floating (default: true)
+ * @attr {boolean} floating - Whether panel is floating (default: false)
  * @attr {string} snap-edge - Edge the panel is snapped to: 'left' | 'right' | 'top' | ''
  * @attr {number} position-x - X position in pixels
  * @attr {number} position-y - Y position in pixels
@@ -100,7 +100,7 @@ export class Panel extends LitElement {
   full = false;
 
   @property({ type: Boolean, reflect: true })
-  floating = false; // Default to floating
+  floating = false; // Static by default; opt in for tui-workspace
 
   @property({ type: String, attribute: 'snap-edge', reflect: true })
   snapEdge: 'left' | 'right' | 'top' | '' = '';

@@ -13,17 +13,68 @@ Learn them once; they work everywhere.
 | `info` | `--color-info` | Neutral notice, no action implied |
 | `muted` | `--text-muted` | De-emphasised, inactive, secondary detail |
 
-Omitting `color` inherits the surrounding text colour.
+Omitting `color` leaves the component at its own default — usually inheriting the
+surrounding text colour. The table below gives each default; `tui-statusbar` is
+the only component whose `color` is not empty to begin with.
 
 ```html
 <tui-panel color="error" title="BUILD FAILED">…</tui-panel>
 <tui-stat label="passed" value="245" color="success"></tui-stat>
 <tui-statusbar color="primary">…</tui-statusbar>
+<tui-button variant="outline" color="error">DELETE</tui-button>
 ```
 
-Components accepting this vocabulary: `tui-panel`, `tui-stat`, `tui-strip-item`,
-`tui-statusbar`. A test asserts each one styles all seven values, so the set
-cannot drift apart again.
+Five components accept this vocabulary:
+
+| Component | `color` paints | Default |
+|---|---|---|
+| `tui-panel` | Border, header and title decoration | `''` |
+| `tui-stat` | The value | `''` |
+| `tui-strip-item` | The item text | `''` |
+| `tui-statusbar` | Border and item dividers | `primary` |
+| `tui-button` | The accent — **only** under `variant="filled"` and `variant="outline"` | `''` |
+
+`tests/semantic-vocabulary.test.ts` asserts that each of the five styles all seven
+values, and that no component names a retired literal — in its CSS or in its
+`@attr` documentation. The set cannot drift apart again, and neither can the docs
+drift away from it.
+
+## `tui-button`: colour is only half the answer
+
+`tui-button` has two independent axes. `variant` is the **treatment**; `color` is
+the **semantic accent**. Only two of the six treatments read `color` at all:
+
+| `variant` | Reads `color`? |
+|---|---|
+| `filled` | ✓ — accent becomes the background |
+| `outline` | ✓ — accent becomes the border and label |
+| `default` | ✖ |
+| `ghost` | ✖ |
+| `icon` | ✖ |
+| `menu` | ✖ |
+
+The four that ignore it carry their own colours. Setting `color` on them fails
+**silently** — nothing errors, nothing changes. Unset on `filled`/`outline`, the
+accent falls back to `--color-primary`.
+
+**Avoid `variant="filled" color="muted"`.** Filled paints the accent as the
+background behind `--surface-base` text; muted lands below the 4.5:1 WCAG AA
+floor in the dark themes. For a de-emphasised button use `variant="ghost"`, which
+is muted by design and passes. The rule carries this warning in
+`src/components/tui-button.ts`.
+
+## Kind is not colour
+
+Several APIs take a value that looks like `color` and is not — `ToastOptions.type`,
+`LogData.level`, `tui-status`'s `state`, `tui-menu-action`'s `danger`. Each names a
+**kind or level** that happens to be colour-keyed, and each changes something
+beyond paint: a default title, an indicator glyph, a layout, a category. Do not
+read them as, rename them to, or validate them against this vocabulary.
+
+The test: if changing the value changes anything other than the colour, it is a
+kind, not a colour. See
+[`docs/guides/component-selection.md` §7](../guides/component-selection.md) for the
+full table.
 
 ## Why not colour names
 
