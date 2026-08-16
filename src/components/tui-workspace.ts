@@ -11,8 +11,8 @@ import { sharedStyles } from '../styles/shared.js';
  * @slot main - The primary content area (canvas)
  * @slot floating - Floating panels that sit above main content
  * 
- * @fires bounds-change - When workspace bounds change
- * @fires layout-change - When panel layout changes
+ * @fires tui-workspace-bounds-change - When workspace bounds change
+ * @fires tui-workspace-layout-change - When panel layout changes
  */
 @customElement('tui-workspace')
 export class Workspace extends LitElement {
@@ -155,7 +155,7 @@ export class Workspace extends LitElement {
       this._resizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
           this._bounds = entry.contentRect;
-          this.dispatchEvent(new CustomEvent('bounds-change', {
+          this.dispatchEvent(new CustomEvent('tui-workspace-bounds-change', {
             detail: { bounds: this._bounds },
             bubbles: true,
             composed: true,
@@ -170,23 +170,23 @@ export class Workspace extends LitElement {
     }
 
     // Listen for panel events
-    this.addEventListener('panel-move', this._handlePanelMove as EventListener);
-    this.addEventListener('panel-resize', this._handlePanelResize as EventListener);
-    this.addEventListener('panel-dismiss', this._handlePanelDismiss as EventListener);
-    this.addEventListener('panel-drag-end', this._handlePanelDragEnd as EventListener);
-    this.addEventListener('panel-minimize', this._handlePanelMinimize as EventListener);
-    this.addEventListener('panel-restore', this._handlePanelRestore as EventListener);
+    this.addEventListener('tui-panel-move', this._handlePanelMove as EventListener);
+    this.addEventListener('tui-panel-resize', this._handlePanelResize as EventListener);
+    this.addEventListener('tui-panel-dismiss', this._handlePanelDismiss as EventListener);
+    this.addEventListener('tui-panel-drag-end', this._handlePanelDragEnd as EventListener);
+    this.addEventListener('tui-panel-minimize', this._handlePanelMinimize as EventListener);
+    this.addEventListener('tui-panel-restore', this._handlePanelRestore as EventListener);
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this._resizeObserver?.disconnect();
-    this.removeEventListener('panel-move', this._handlePanelMove as EventListener);
-    this.removeEventListener('panel-resize', this._handlePanelResize as EventListener);
-    this.removeEventListener('panel-dismiss', this._handlePanelDismiss as EventListener);
-    this.removeEventListener('panel-drag-end', this._handlePanelDragEnd as EventListener);
-    this.removeEventListener('panel-minimize', this._handlePanelMinimize as EventListener);
-    this.removeEventListener('panel-restore', this._handlePanelRestore as EventListener);
+    this.removeEventListener('tui-panel-move', this._handlePanelMove as EventListener);
+    this.removeEventListener('tui-panel-resize', this._handlePanelResize as EventListener);
+    this.removeEventListener('tui-panel-dismiss', this._handlePanelDismiss as EventListener);
+    this.removeEventListener('tui-panel-drag-end', this._handlePanelDragEnd as EventListener);
+    this.removeEventListener('tui-panel-minimize', this._handlePanelMinimize as EventListener);
+    this.removeEventListener('tui-panel-restore', this._handlePanelRestore as EventListener);
   }
 
   private _detectSnapEdge(x: number, y: number, panelWidth: number, panelHeight: number): 'left' | 'right' | 'top' | null {
@@ -351,7 +351,7 @@ export class Workspace extends LitElement {
       height: (p as any).panelHeight ?? p.offsetHeight,
     }));
     
-    this.dispatchEvent(new CustomEvent('layout-change', {
+    this.dispatchEvent(new CustomEvent('tui-workspace-layout-change', {
       detail: { panels: layout, bounds: this._bounds },
       bubbles: true,
       composed: true,

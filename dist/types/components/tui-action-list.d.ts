@@ -8,8 +8,8 @@ import { LitElement } from 'lit';
  *                       color maps to CSS vars: 'success' | 'error' | 'warning' | 'primary' | 'muted'
  * @attr {string} selected - ID of currently expanded item (or empty)
  *
- * @fires item-select - When an item is clicked (detail: { id, label })
- * @fires item-deselect - When expanded item is collapsed
+ * @fires tui-list-item-select - When an item is clicked (detail: { id, label })
+ * @fires tui-list-item-deselect - When expanded item is collapsed (detail: { id, label })
  *
  * @slot actions-{id} - Per-item action content shown below the item when selected.
  *                      One slot per item, named by item id. e.g. slot="actions-my-item-id"

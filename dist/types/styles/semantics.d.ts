@@ -16,3 +16,5 @@ export type SemanticColor = (typeof SEMANTIC_COLORS)[number] | '';
 export declare const SEMANTIC_TOKENS: Record<(typeof SEMANTIC_COLORS)[number], string>;
 /** How a selected element indicates selection. */
 export type SelectionStyle = 'invert' | 'border' | '';
+/** The size scale shared by interactive controls. */
+export type ControlSize = 'sm' | 'md' | 'lg';

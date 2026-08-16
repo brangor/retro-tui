@@ -4,6 +4,11 @@ import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import type { TuiEvent, RadioData } from '../protocol/types';
 
+/**
+ * Radio input.
+ *
+ * @fires tui-change - When this radio becomes selected (detail: { checked, value, name })
+ */
 @customElement('tui-radio')
 export class Radio extends LitElement {
   @property({ type: Boolean, reflect: true })

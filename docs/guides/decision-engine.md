@@ -2,7 +2,7 @@
 
 The Decision Engine is the recommended architecture for apps built with retro-tui. It's a centralized, unidirectional state management pattern where a single `emit()` function handles all state mutations and triggers re-renders.
 
-Three shipped apps use this pattern: the Paint example, GridSketch, and QuiltSketch. A fourth (Charmapder, a sprite editor) is in design.
+Three shipped apps use this pattern: GridSketch, QuiltSketch, and the Paint editor (which moved to `../retro-tui-lab` with the rest of the canvas work). A fourth (Charmapder, a sprite editor) is in design.
 
 ---
 
@@ -33,8 +33,8 @@ Three shipped apps use this pattern: the Paint example, GridSketch, and QuiltSke
 ┌──────────────────────────────────────────────────────┐
 │              Dumb UI Modules (ui/)                   │
 │                                                      │
-│   canvas.js  — renders tui-grid, emits pointer events│
-│   palette.js — renders color swatches, emits selects │
+│   layout.js  — renders tui-tiled regions from state  │
+│   palette.js — renders tui-palette, emits selects    │
 │   status.js  — renders tui-statusbar from state      │
 │                                                      │
 │   These modules NEVER mutate state directly.         │
@@ -44,6 +44,11 @@ Three shipped apps use this pattern: the Paint example, GridSketch, and QuiltSke
 ```
 
 **The rule:** State flows down (engine → UI). Events flow up (UI → engine). Nothing else.
+
+The drawing surface an editor app renders into is **not** a retro-tui component.
+Canvas, grid projections and tool-state live in `../retro-tui-lab` — see the scope
+fence in `CLAUDE.md`. The pattern is the same either way: that module is one more
+dumb UI module, wired exactly like the ones above.
 
 ---
 
@@ -92,30 +97,33 @@ Event names follow `namespace:action` convention: `tool:select`, `canvas:draw`, 
 UI modules know how to render and how to emit. They don't know about each other or about state internals:
 
 ```js
-// ui/canvas.js
-export function initCanvas(gridEl, emitFn) {
-  gridEl.addEventListener('grid-draw', (e) => {
-    emitFn('canvas:draw', { x: e.detail.x, y: e.detail.y });
+// ui/palette.js
+export function initPalette(paletteEl, emitFn) {
+  paletteEl.addEventListener('tui-palette-char-select', (e) => {
+    emitFn('palette:change', { char: e.detail.char });
   });
 }
 
-export function renderCanvas(gridEl, grid) {
-  gridEl.setGrid(grid);
+export function renderPalette(paletteEl, state) {
+  paletteEl.selectedChar = state.activeChar;
 }
 ```
 
-The engine wires them together at startup:
+Every retro-tui event is named `tui-<subject>-<verb>` and carries an object
+`detail` — see [docs/api/events.md](../api/events.md) for the full set.
+
+The engine wires the modules together at startup:
 
 ```js
 // main.js
 import { emit } from './state.js';
-import { initCanvas, renderCanvas } from './ui/canvas.js';
+import { initPalette, renderPalette } from './ui/palette.js';
 
-const gridEl = document.querySelector('tui-grid');
-initCanvas(gridEl, emit);
+const paletteEl = document.querySelector('tui-palette');
+initPalette(paletteEl, emit);
 
 // Register renderers so the engine can call them
-setRenderers({ renderCanvas: () => renderCanvas(gridEl, state.grid) });
+setRenderers({ renderPalette: () => renderPalette(paletteEl, state) });
 ```
 
 ---
@@ -157,7 +165,7 @@ For desktop apps (like down-spot), the Decision Engine runs in the **renderer pr
 │   └─────────────────────────────┘       │
 │   ┌─────────────────────────────┐       │
 │   │  retro-tui Components       │       │
-│   │  (tui-grid, tui-tiled, ...) │       │
+│   │  (tui-tiled, tui-panel, ...)│       │
 │   └─────────────────────────────┘       │
 └─────────────────────────────────────────┘
 ```
@@ -190,7 +198,7 @@ This keeps the editor functional in a browser (Vite dev server) while gaining na
 
 ## Reference Implementations
 
-- **Paint** (`retro-tui/examples/paint/`) — the canonical reference, fully documented in its README
+- **Paint** (`../retro-tui-lab`) — the canonical reference, fully documented in its README. It moved out of this repo with the canvas toolkit; the pattern it demonstrates did not
 - **GridSketch** (`gridsketch/`) — character art editor, same pattern
 - **QuiltSketch** (`quiltsketch/`) — triangle quilt pattern designer, same pattern
 - **down-spot** (`down-spot/`) — Electron app demonstrating the IPC adapter layer

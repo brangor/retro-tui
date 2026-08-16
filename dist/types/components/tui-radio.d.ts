@@ -1,5 +1,10 @@
 import { LitElement } from 'lit';
 import type { TuiEvent } from '../protocol/types';
+/**
+ * Radio input.
+ *
+ * @fires tui-change - When this radio becomes selected (detail: { checked, value, name })
+ */
 export declare class Radio extends LitElement {
     checked: boolean;
     disabled: boolean;

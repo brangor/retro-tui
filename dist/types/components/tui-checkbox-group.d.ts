@@ -1,5 +1,10 @@
 import { LitElement } from 'lit';
 import type { TuiEvent } from '../protocol/types';
+/**
+ * Groups `tui-checkbox` children and reports their combined value.
+ *
+ * @fires tui-change - When any child checkbox changes (detail: { value, name })
+ */
 export declare class CheckboxGroup extends LitElement {
     name: string;
     label: string;

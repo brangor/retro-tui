@@ -1,10 +1,18 @@
-import { describe, it } from 'vitest';
+import { describe, it, afterEach } from 'vitest';
 import { fixture, html, expect } from '@open-wc/testing';
 import '../src/components/tui-workspace.ts';
 import '../src/components/tui-panel.ts';
 import '../src/components/tui-sidebar.ts';
 
 describe('tui-workspace', () => {
+  // Panels attach pointermove/pointerup listeners to `document` while dragging.
+  // Ending every test with a pointerup structurally, rather than as the last
+  // statement of a test, means a failing expect() can't leak a live drag into
+  // the next test. Harmless when no drag is in progress.
+  afterEach(() => {
+    document.dispatchEvent(new PointerEvent('pointerup', {}));
+  });
+
   it('renders without errors', async () => {
     const el = await fixture(html`<tui-workspace></tui-workspace>`);
     expect(el).to.exist;
@@ -40,6 +48,86 @@ describe('tui-workspace', () => {
     expect(el.bounds).to.exist;
   });
 
+  // End-to-end wiring guard: a real panel drag, not a hand-rolled CustomEvent.
+  // The panel's own dispatch name must match the workspace's listener name, or
+  // the workspace never reacts. Goes red if either side of the rename drifts.
+  it('reacts to a real panel drag (dispatch and listener names agree)', async () => {
+    const el = await fixture(html`
+      <tui-workspace>
+        <tui-panel slot="floating" title="Test" floating position-x="50" position-y="50">Content</tui-panel>
+      </tui-workspace>
+    `);
+
+    const panel = el.querySelector('tui-panel');
+    const header = panel.shadowRoot.querySelector('.header');
+
+    header.dispatchEvent(new PointerEvent('pointerdown', { clientX: 60, clientY: 60, bubbles: true }));
+    document.dispatchEvent(new PointerEvent('pointermove', { clientX: 15, clientY: 110 }));
+
+    await el.updateComplete;
+
+    // Workspace observable state changed purely as a result of the panel's event.
+    const snapPreview = el.shadowRoot.querySelector('.snap-preview');
+    expect(snapPreview, 'workspace did not react to tui-panel-move').to.exist;
+    expect(snapPreview.classList.contains('left')).to.be.true;
+  });
+
+  // tui-panel-minimize / tui-panel-restore had no coverage at all before 5.0.0,
+  // so a missed listener rename on either was silent. Both handlers reflow the
+  // minimized edge tabs, which resets each tab's positionY to a stacked offset.
+  const twoFrames = () =>
+    new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+  // TAB_GAP in tui-workspace.ts (_reflowMinimizedTabs) — the offset the first
+  // minimized tab on an edge is stacked at. Keep in sync with the source.
+  const TAB_GAP = 4;
+  const OFF_OFFSET = 999;
+
+  // The slot-change handler also reflows, so the panel must be knocked off its
+  // stacked offset *after* the fixture settles — otherwise the assertion is
+  // already true and the test cannot detect a missed listener.
+  const minimizedFixture = async () => {
+    const el = await fixture(html`
+      <tui-workspace>
+        <tui-panel slot="floating" title="A" floating minimized position-y="0">A</tui-panel>
+      </tui-workspace>
+    `);
+    const panel = el.querySelector('tui-panel');
+    await twoFrames();
+    panel.positionY = OFF_OFFSET;
+    return panel;
+  };
+
+  it('reflows minimized tabs on tui-panel-minimize', async () => {
+    const panel = await minimizedFixture();
+    expect(panel.positionY, 'precondition: panel must start off its stacked offset')
+      .to.equal(OFF_OFFSET);
+
+    panel.dispatchEvent(new CustomEvent('tui-panel-minimize', {
+      detail: { panelId: 'A' },
+      bubbles: true,
+      composed: true,
+    }));
+    await twoFrames();
+
+    expect(panel.positionY, 'workspace did not react to tui-panel-minimize').to.equal(TAB_GAP);
+  });
+
+  it('reflows minimized tabs on tui-panel-restore', async () => {
+    const panel = await minimizedFixture();
+    expect(panel.positionY, 'precondition: panel must start off its stacked offset')
+      .to.equal(OFF_OFFSET);
+
+    panel.dispatchEvent(new CustomEvent('tui-panel-restore', {
+      detail: { panelId: 'A' },
+      bubbles: true,
+      composed: true,
+    }));
+    await twoFrames();
+
+    expect(panel.positionY, 'workspace did not react to tui-panel-restore').to.equal(TAB_GAP);
+  });
+
   it('shows snap preview when panel dragged near edge', async () => {
     const el = await fixture(html`
       <tui-workspace>
@@ -48,7 +136,7 @@ describe('tui-workspace', () => {
     `);
     
     const panel = el.querySelector('tui-panel');
-    panel.dispatchEvent(new CustomEvent('panel-move', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-move', {
       detail: { panelId: 'Test', x: 5, y: 100 },
       bubbles: true,
       composed: true,
@@ -62,7 +150,7 @@ describe('tui-workspace', () => {
     expect(snapPreview.classList.contains('left')).to.be.true;
   });
 
-  it('emits layout-change when panel dismissed', async () => {
+  it('emits tui-workspace-layout-change when panel dismissed', async () => {
     const el = await fixture(html`
       <tui-workspace>
         <tui-panel slot="floating" title="Test" floating dismissable>Content</tui-panel>
@@ -70,10 +158,10 @@ describe('tui-workspace', () => {
     `);
     
     let layoutEvent = null;
-    el.addEventListener('layout-change', (e) => { layoutEvent = e.detail; });
+    el.addEventListener('tui-workspace-layout-change', (e) => { layoutEvent = e.detail; });
     
     const panel = el.querySelector('tui-panel');
-    panel.dispatchEvent(new CustomEvent('panel-dismiss', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-dismiss', {
       detail: { panelId: 'Test' },
       bubbles: true,
       composed: true,
@@ -82,7 +170,7 @@ describe('tui-workspace', () => {
     expect(layoutEvent).to.exist;
   });
 
-  it('emits layout-change when panel resizes', async () => {
+  it('emits tui-workspace-layout-change when panel resizes', async () => {
     const el = await fixture(html`
       <tui-workspace>
         <tui-panel slot="floating" title="Test" floating resizable panel-width="200" panel-height="150">Content</tui-panel>
@@ -90,10 +178,10 @@ describe('tui-workspace', () => {
     `);
     
     let layoutEvent = null;
-    el.addEventListener('layout-change', (e) => { layoutEvent = e.detail; });
+    el.addEventListener('tui-workspace-layout-change', (e) => { layoutEvent = e.detail; });
     
     const panel = el.querySelector('tui-panel');
-    panel.dispatchEvent(new CustomEvent('panel-resize', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-resize', {
       detail: { panelId: 'Test', width: 250, height: 180 },
       bubbles: true,
       composed: true,
@@ -112,14 +200,14 @@ describe('tui-workspace', () => {
     const panel = el.querySelector('tui-panel');
     
     // Move panel near left edge (within snap zone of 20px)
-    panel.dispatchEvent(new CustomEvent('panel-move', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-move', {
       detail: { panelId: 'Test', x: 5, y: 100 },
       bubbles: true,
       composed: true,
     }));
     
     // End drag
-    panel.dispatchEvent(new CustomEvent('panel-drag-end', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-drag-end', {
       detail: { panelId: 'Test', x: 5, y: 100 },
       bubbles: true,
       composed: true,
@@ -172,14 +260,14 @@ describe('tui-workspace', () => {
     expect(panel.snapEdge).to.equal('');
     
     // Move near right edge (use panel width from snap calculation)
-    panel.dispatchEvent(new CustomEvent('panel-move', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-move', {
       detail: { panelId: 'Test', x: 780, y: 100 },
       bubbles: true,
       composed: true,
     }));
     
     // End drag
-    panel.dispatchEvent(new CustomEvent('panel-drag-end', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-drag-end', {
       detail: { panelId: 'Test', x: 780, y: 100 },
       bubbles: true,
       composed: true,
@@ -200,14 +288,14 @@ describe('tui-workspace', () => {
     const panel = el.querySelector('tui-panel');
     
     // Move to center
-    panel.dispatchEvent(new CustomEvent('panel-move', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-move', {
       detail: { panelId: 'Test', x: 300, y: 200 },
       bubbles: true,
       composed: true,
     }));
     
     // End drag in center
-    panel.dispatchEvent(new CustomEvent('panel-drag-end', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-drag-end', {
       detail: { panelId: 'Test', x: 300, y: 200 },
       bubbles: true,
       composed: true,
@@ -219,7 +307,7 @@ describe('tui-workspace', () => {
     expect(panel.snapEdge).to.equal('');
   });
 
-  it('emits layout-change when panel drag ends', async () => {
+  it('emits tui-workspace-layout-change when panel drag ends', async () => {
     const el = await fixture(html`
       <tui-workspace>
         <tui-panel slot="floating" title="Test" floating position-x="50" position-y="50">Content</tui-panel>
@@ -227,10 +315,10 @@ describe('tui-workspace', () => {
     `);
     
     let layoutEvent = null;
-    el.addEventListener('layout-change', (e) => { layoutEvent = e.detail; });
+    el.addEventListener('tui-workspace-layout-change', (e) => { layoutEvent = e.detail; });
     
     const panel = el.querySelector('tui-panel');
-    panel.dispatchEvent(new CustomEvent('panel-drag-end', {
+    panel.dispatchEvent(new CustomEvent('tui-panel-drag-end', {
       detail: { panelId: 'Test', x: 100, y: 100 },
       bubbles: true,
       composed: true,

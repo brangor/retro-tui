@@ -64,8 +64,8 @@ retroPush.on('status', ({ type, data }) => {
 });
 
 // Handle console commands
-consoleEl?.addEventListener('command', (e) => {
-  const cmd = e.detail;
+consoleEl?.addEventListener('tui-console-command', (e) => {
+  const cmd = e.detail.command;
   
   // Simple built-in commands
   if (cmd === 'help') {

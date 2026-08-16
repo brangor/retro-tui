@@ -56,4 +56,19 @@ describe('tui-console', () => {
     const lines = el.shadowRoot.querySelectorAll('.line');
     expect(lines.length).to.equal(0);
   });
+
+  // detail was a bare string before 5.0.0, unlike every other event in the
+  // library. It is now an object so the payload can grow without breaking.
+  it('emits tui-console-command with an object payload', async () => {
+    const el = await fixture(html`<tui-console></tui-console>`);
+    let detail = null;
+    el.addEventListener('tui-console-command', (e) => { detail = e.detail; });
+
+    const input = el.shadowRoot.querySelector('input');
+    input.value = 'help';
+    input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+    expect(detail).to.deep.equal({ command: 'help' });
+  });
 });

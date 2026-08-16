@@ -22,10 +22,10 @@ type Palettes = Record<string, string[]>;
  * @attr {string} selectedChar - Currently selected character
  * @attr {number} columns - Number of columns in character grid (default: 8)
  *
- * @fires palette-change - When tab is clicked
+ * @fires tui-palette-change - When tab is clicked
  *   detail: { palette: string, firstChar: string }
  *
- * @fires char-select - When character is clicked
+ * @fires tui-palette-char-select - When character is clicked
  *   detail: { char: string }
  */
 @customElement('tui-palette')
@@ -119,7 +119,7 @@ export class Palette extends LitElement {
 
   private _selectPalette(name: string): void {
     const firstChar = this.palettes[name]?.[0] || '';
-    this.dispatchEvent(new CustomEvent('palette-change', {
+    this.dispatchEvent(new CustomEvent('tui-palette-change', {
       bubbles: true,
       composed: true,
       detail: { palette: name, firstChar },
@@ -127,7 +127,7 @@ export class Palette extends LitElement {
   }
 
   private _selectChar(char: string): void {
-    this.dispatchEvent(new CustomEvent('char-select', {
+    this.dispatchEvent(new CustomEvent('tui-palette-char-select', {
       bubbles: true,
       composed: true,
       detail: { char },

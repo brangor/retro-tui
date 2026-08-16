@@ -1,5 +1,10 @@
 import { LitElement } from 'lit';
 import type { TuiEvent } from '../protocol/types';
+/**
+ * Checkbox input.
+ *
+ * @fires tui-change - When the checked state changes (detail: { checked, value, name })
+ */
 export declare class Checkbox extends LitElement {
     checked: boolean;
     disabled: boolean;

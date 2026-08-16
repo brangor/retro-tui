@@ -18,8 +18,8 @@ type PanelBorder = BorderStyle;
 /**
  * <tui-panel> - Floating panel with terminal aesthetic
  *
- * Panels are floating by default and can be dragged within a tui-workspace.
- * They snap visually to edges when dragged near them.
+ * Panels are static by default. Set `floating` to make one draggable within a
+ * tui-workspace; it then snaps visually to edges when dragged near them.
  * Dismissable panels minimize to edge tabs instead of hiding.
  *
  * Two style variants:
@@ -37,7 +37,7 @@ type PanelBorder = BorderStyle;
  * @attr {string} variant - 'bright' | 'classic'
  * @attr {string} selection-style - Selection feedback style: 'invert' | 'border'
  * @attr {boolean} full - Fill container completely (disables drag/resize, keeps collapse)
- * @attr {boolean} floating - Whether panel is floating (default: true)
+ * @attr {boolean} floating - Whether panel is floating (default: false)
  * @attr {string} snap-edge - Edge the panel is snapped to: 'left' | 'right' | 'top' | ''
  * @attr {number} position-x - X position in pixels
  * @attr {number} position-y - Y position in pixels
@@ -50,14 +50,14 @@ type PanelBorder = BorderStyle;
  * @attr {boolean} active - Panel is active/focused
  * @attr {string} persist-id - LocalStorage key for state persistence
  *
- * @fires toggle - When panel is collapsed/expanded
- * @fires panel-move - When panel is dragged
- * @fires panel-drag-end - When panel drag ends
- * @fires panel-dismiss - When panel is dismissed (only if not floating+dismissable)
- * @fires panel-minimize - When panel minimizes to edge tab
- * @fires panel-restore - When panel restores from minimized state
- * @fires panel-resize - When panel is resized
- * @fires focus-request - When panel wants focus
+ * @fires tui-panel-toggle - When panel is collapsed/expanded
+ * @fires tui-panel-move - When panel is dragged
+ * @fires tui-panel-drag-end - When panel drag ends
+ * @fires tui-panel-dismiss - When panel is dismissed (only if not floating+dismissable)
+ * @fires tui-panel-minimize - When panel minimizes to edge tab
+ * @fires tui-panel-restore - When panel restores from minimized state
+ * @fires tui-panel-resize - When panel is resized
+ * @fires tui-panel-focus-request - When panel wants focus
  *
  * @slot - Panel content
  */
@@ -66,7 +66,9 @@ export class Panel extends LitElement {
   @property({ type: String })
   title = '';
 
-  @property({ type: String })
+  // Reflected: every colour rule is a :host([color="…"]) selector, so a property
+  // assignment (.color = 'error') paints nothing unless it reaches the attribute.
+  @property({ type: String, reflect: true })
   color: SemanticColor = '';
 
   @property({ type: String, reflect: true })
@@ -100,7 +102,7 @@ export class Panel extends LitElement {
   full = false;
 
   @property({ type: Boolean, reflect: true })
-  floating = false; // Default to floating
+  floating = false; // Static by default; opt in for tui-workspace
 
   @property({ type: String, attribute: 'snap-edge', reflect: true })
   snapEdge: 'left' | 'right' | 'top' | '' = '';
@@ -674,7 +676,7 @@ export class Panel extends LitElement {
   ];
 
   private _handleClick = (): void => {
-    this.dispatchEvent(new CustomEvent('focus-request', {
+    this.dispatchEvent(new CustomEvent('tui-panel-focus-request', {
       bubbles: true,
       composed: true,
       detail: { panel: this }
@@ -714,7 +716,7 @@ export class Panel extends LitElement {
         localStorage.setItem(`tui-panel-${this.persistId}`, String(this.collapsed));
       }
 
-      this.dispatchEvent(new CustomEvent('toggle', {
+      this.dispatchEvent(new CustomEvent('tui-panel-toggle', {
         detail: { collapsed: this.collapsed },
         bubbles: true,
         composed: true,
@@ -742,7 +744,7 @@ export class Panel extends LitElement {
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
 
-    const event = new CustomEvent('panel-dismiss', {
+    const event = new CustomEvent('tui-panel-dismiss', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
       composed: true,
@@ -790,7 +792,7 @@ export class Panel extends LitElement {
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
 
-    this.dispatchEvent(new CustomEvent('panel-minimize', {
+    this.dispatchEvent(new CustomEvent('tui-panel-minimize', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
       composed: true,
@@ -825,7 +827,7 @@ export class Panel extends LitElement {
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(memory));
     }
 
-    this.dispatchEvent(new CustomEvent('panel-restore', {
+    this.dispatchEvent(new CustomEvent('tui-panel-restore', {
       detail: { panelId: this.id || this.title },
       bubbles: true,
       composed: true,
@@ -904,7 +906,7 @@ export class Panel extends LitElement {
     this.positionX = this._dragOffsetX + deltaX;
     this.positionY = this._dragOffsetY + deltaY;
     
-    this.dispatchEvent(new CustomEvent('panel-move', {
+    this.dispatchEvent(new CustomEvent('tui-panel-move', {
       detail: { 
         panelId: this.id || this.title,
         x: this.positionX, 
@@ -921,7 +923,7 @@ export class Panel extends LitElement {
     document.removeEventListener('pointermove', this._onDragMove);
     document.removeEventListener('pointerup', this._onDragEnd);
     
-    this.dispatchEvent(new CustomEvent('panel-drag-end', {
+    this.dispatchEvent(new CustomEvent('tui-panel-drag-end', {
       detail: { 
         panelId: this.id || this.title,
         x: this.positionX,
@@ -965,7 +967,7 @@ export class Panel extends LitElement {
     this.panelWidth = newWidth;
     this.panelHeight = newHeight;
     
-    this.dispatchEvent(new CustomEvent('panel-resize', {
+    this.dispatchEvent(new CustomEvent('tui-panel-resize', {
       detail: { 
         panelId: this.id || this.title,
         width: this.panelWidth, 

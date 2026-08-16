@@ -52,10 +52,10 @@ const _ = (t) => new Tt(typeof t == "string" ? t : t + "", void 0, nt), m = (t, 
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: Bt, defineProperty: Wt, getOwnPropertyDescriptor: Ut, getOwnPropertyNames: Yt, getOwnPropertySymbols: Xt, getPrototypeOf: Vt } = Object, R = globalThis, gt = R.trustedTypes, Ft = gt ? gt.emptyScript : "", et = R.reactiveElementPolyfillSupport, xe = (t, e) => t, Be = { toAttribute(t, e) {
+const { is: Bt, defineProperty: Wt, getOwnPropertyDescriptor: Ut, getOwnPropertyNames: Yt, getOwnPropertySymbols: Xt, getPrototypeOf: Vt } = Object, N = globalThis, gt = N.trustedTypes, qt = gt ? gt.emptyScript : "", et = N.reactiveElementPolyfillSupport, xe = (t, e) => t, Be = { toAttribute(t, e) {
   switch (e) {
     case Boolean:
-      t = t ? Ft : null;
+      t = t ? qt : null;
       break;
     case Object:
     case Array:
@@ -81,7 +81,7 @@ const { is: Bt, defineProperty: Wt, getOwnPropertyDescriptor: Ut, getOwnProperty
   }
   return r;
 } }, lt = (t, e) => !Bt(t, e), yt = { attribute: !0, type: String, converter: Be, reflect: !1, useDefault: !1, hasChanged: lt };
-Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), R.litPropertyMetadata ?? (R.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
+Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), N.litPropertyMetadata ?? (N.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
 let se = class extends HTMLElement {
   static addInitializer(e) {
     this._$Ei(), (this.l ?? (this.l = [])).push(e);
@@ -285,15 +285,15 @@ let se = class extends HTMLElement {
   firstUpdated(e) {
   }
 };
-se.elementStyles = [], se.shadowRootOptions = { mode: "open" }, se[xe("elementProperties")] = /* @__PURE__ */ new Map(), se[xe("finalized")] = /* @__PURE__ */ new Map(), et == null || et({ ReactiveElement: se }), (R.reactiveElementVersions ?? (R.reactiveElementVersions = [])).push("2.1.2");
+se.elementStyles = [], se.shadowRootOptions = { mode: "open" }, se[xe("elementProperties")] = /* @__PURE__ */ new Map(), se[xe("finalized")] = /* @__PURE__ */ new Map(), et == null || et({ ReactiveElement: se }), (N.reactiveElementVersions ?? (N.reactiveElementVersions = [])).push("2.1.2");
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const $e = globalThis, _t = (t) => t, We = $e.trustedTypes, xt = We ? We.createPolicy("lit-html", { createHTML: (t) => t }) : void 0, Ht = "$lit$", M = `lit$${Math.random().toFixed(9).slice(2)}$`, It = "?" + M, qt = `<${It}>`, V = document, we = () => V.createComment(""), Ee = (t) => t === null || typeof t != "object" && typeof t != "function", ct = Array.isArray, Kt = (t) => ct(t) || typeof (t == null ? void 0 : t[Symbol.iterator]) == "function", tt = `[ 	
-\f\r]`, _e = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, $t = /-->/g, wt = />/g, U = RegExp(`>|${tt}(?:([^\\s"'>=/]+)(${tt}*=${tt}*(?:[^ 	
-\f\r"'\`<>=]|("|')|))|$)`, "g"), Et = /'/g, zt = /"/g, Mt = /^(?:script|style|textarea|title)$/i, Gt = (t) => (e, ...r) => ({ _$litType$: t, strings: e, values: r }), c = Gt(1), ie = Symbol.for("lit-noChange"), $ = Symbol.for("lit-nothing"), Ct = /* @__PURE__ */ new WeakMap(), Y = V.createTreeWalker(V, 129);
+const we = globalThis, _t = (t) => t, We = we.trustedTypes, xt = We ? We.createPolicy("lit-html", { createHTML: (t) => t }) : void 0, Ht = "$lit$", R = `lit$${Math.random().toFixed(9).slice(2)}$`, It = "?" + R, Ft = `<${It}>`, V = document, $e = () => V.createComment(""), Ee = (t) => t === null || typeof t != "object" && typeof t != "function", ct = Array.isArray, Kt = (t) => ct(t) || typeof (t == null ? void 0 : t[Symbol.iterator]) == "function", tt = `[ 	
+\f\r]`, _e = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, wt = /-->/g, $t = />/g, U = RegExp(`>|${tt}(?:([^\\s"'>=/]+)(${tt}*=${tt}*(?:[^ 	
+\f\r"'\`<>=]|("|')|))|$)`, "g"), Et = /'/g, zt = /"/g, Mt = /^(?:script|style|textarea|title)$/i, Gt = (t) => (e, ...r) => ({ _$litType$: t, strings: e, values: r }), c = Gt(1), ie = Symbol.for("lit-noChange"), w = Symbol.for("lit-nothing"), Ct = /* @__PURE__ */ new WeakMap(), Y = V.createTreeWalker(V, 129);
 function Rt(t, e) {
   if (!ct(t) || !t.hasOwnProperty("raw")) throw Error("invalid template strings array");
   return xt !== void 0 ? xt.createHTML(e) : e;
@@ -304,9 +304,9 @@ const Zt = (t, e) => {
   for (let d = 0; d < r; d++) {
     const l = t[d];
     let h, u, p = -1, x = 0;
-    for (; x < l.length && (a.lastIndex = x, u = a.exec(l), u !== null); ) x = a.lastIndex, a === _e ? u[1] === "!--" ? a = $t : u[1] !== void 0 ? a = wt : u[2] !== void 0 ? (Mt.test(u[2]) && (o = RegExp("</" + u[2], "g")), a = U) : u[3] !== void 0 && (a = U) : a === U ? u[0] === ">" ? (a = o ?? _e, p = -1) : u[1] === void 0 ? p = -2 : (p = a.lastIndex - u[2].length, h = u[1], a = u[3] === void 0 ? U : u[3] === '"' ? zt : Et) : a === zt || a === Et ? a = U : a === $t || a === wt ? a = _e : (a = U, o = void 0);
-    const z = a === U && t[d + 1].startsWith("/>") ? " " : "";
-    i += a === _e ? l + qt : p >= 0 ? (s.push(h), l.slice(0, p) + Ht + l.slice(p) + M + z) : l + M + (p === -2 ? d : z);
+    for (; x < l.length && (a.lastIndex = x, u = a.exec(l), u !== null); ) x = a.lastIndex, a === _e ? u[1] === "!--" ? a = wt : u[1] !== void 0 ? a = $t : u[2] !== void 0 ? (Mt.test(u[2]) && (o = RegExp("</" + u[2], "g")), a = U) : u[3] !== void 0 && (a = U) : a === U ? u[0] === ">" ? (a = o ?? _e, p = -1) : u[1] === void 0 ? p = -2 : (p = a.lastIndex - u[2].length, h = u[1], a = u[3] === void 0 ? U : u[3] === '"' ? zt : Et) : a === zt || a === Et ? a = U : a === wt || a === $t ? a = _e : (a = U, o = void 0);
+    const C = a === U && t[d + 1].startsWith("/>") ? " " : "";
+    i += a === _e ? l + Ft : p >= 0 ? (s.push(h), l.slice(0, p) + Ht + l.slice(p) + R + C) : l + R + (p === -2 ? d : C);
   }
   return [Rt(t, i + (t[r] || "<?>") + (e === 2 ? "</svg>" : e === 3 ? "</math>" : "")), s];
 };
@@ -323,21 +323,21 @@ let st = class Nt {
     for (; (o = Y.nextNode()) !== null && l.length < d; ) {
       if (o.nodeType === 1) {
         if (o.hasAttributes()) for (const p of o.getAttributeNames()) if (p.endsWith(Ht)) {
-          const x = u[a++], z = o.getAttribute(p).split(M), Ne = /([.?@])?(.*)/.exec(x);
-          l.push({ type: 1, index: i, name: Ne[2], strings: z, ctor: Ne[1] === "." ? Qt : Ne[1] === "?" ? er : Ne[1] === "@" ? tr : Fe }), o.removeAttribute(p);
-        } else p.startsWith(M) && (l.push({ type: 6, index: i }), o.removeAttribute(p));
+          const x = u[a++], C = o.getAttribute(p).split(R), Ne = /([.?@])?(.*)/.exec(x);
+          l.push({ type: 1, index: i, name: Ne[2], strings: C, ctor: Ne[1] === "." ? Qt : Ne[1] === "?" ? er : Ne[1] === "@" ? tr : qe }), o.removeAttribute(p);
+        } else p.startsWith(R) && (l.push({ type: 6, index: i }), o.removeAttribute(p));
         if (Mt.test(o.tagName)) {
-          const p = o.textContent.split(M), x = p.length - 1;
+          const p = o.textContent.split(R), x = p.length - 1;
           if (x > 0) {
             o.textContent = We ? We.emptyScript : "";
-            for (let z = 0; z < x; z++) o.append(p[z], we()), Y.nextNode(), l.push({ type: 2, index: ++i });
-            o.append(p[x], we());
+            for (let C = 0; C < x; C++) o.append(p[C], $e()), Y.nextNode(), l.push({ type: 2, index: ++i });
+            o.append(p[x], $e());
           }
         }
       } else if (o.nodeType === 8) if (o.data === It) l.push({ type: 2, index: i });
       else {
         let p = -1;
-        for (; (p = o.data.indexOf(M, p + 1)) !== -1; ) l.push({ type: 7, index: i }), p += M.length - 1;
+        for (; (p = o.data.indexOf(R, p + 1)) !== -1; ) l.push({ type: 7, index: i }), p += R.length - 1;
       }
       i++;
     }
@@ -388,7 +388,7 @@ class Oe {
     return ((e = this._$AM) == null ? void 0 : e._$AU) ?? this._$Cv;
   }
   constructor(e, r, s, o) {
-    this.type = 2, this._$AH = $, this._$AN = void 0, this._$AA = e, this._$AB = r, this._$AM = s, this.options = o, this._$Cv = (o == null ? void 0 : o.isConnected) ?? !0;
+    this.type = 2, this._$AH = w, this._$AN = void 0, this._$AA = e, this._$AB = r, this._$AM = s, this.options = o, this._$Cv = (o == null ? void 0 : o.isConnected) ?? !0;
   }
   get parentNode() {
     let e = this._$AA.parentNode;
@@ -402,7 +402,7 @@ class Oe {
     return this._$AB;
   }
   _$AI(e, r = this) {
-    e = ae(this, e, r), Ee(e) ? e === $ || e == null || e === "" ? (this._$AH !== $ && this._$AR(), this._$AH = $) : e !== this._$AH && e !== ie && this._(e) : e._$litType$ !== void 0 ? this.$(e) : e.nodeType !== void 0 ? this.T(e) : Kt(e) ? this.k(e) : this._(e);
+    e = ae(this, e, r), Ee(e) ? e === w || e == null || e === "" ? (this._$AH !== w && this._$AR(), this._$AH = w) : e !== this._$AH && e !== ie && this._(e) : e._$litType$ !== void 0 ? this.$(e) : e.nodeType !== void 0 ? this.T(e) : Kt(e) ? this.k(e) : this._(e);
   }
   O(e) {
     return this._$AA.parentNode.insertBefore(e, this._$AB);
@@ -411,7 +411,7 @@ class Oe {
     this._$AH !== e && (this._$AR(), this._$AH = this.O(e));
   }
   _(e) {
-    this._$AH !== $ && Ee(this._$AH) ? this._$AA.nextSibling.data = e : this.T(V.createTextNode(e)), this._$AH = e;
+    this._$AH !== w && Ee(this._$AH) ? this._$AA.nextSibling.data = e : this.T(V.createTextNode(e)), this._$AH = e;
   }
   $(e) {
     var i;
@@ -430,7 +430,7 @@ class Oe {
     ct(this._$AH) || (this._$AH = [], this._$AR());
     const r = this._$AH;
     let s, o = 0;
-    for (const i of e) o === r.length ? r.push(s = new Oe(this.O(we()), this.O(we()), this, this.options)) : s = r[o], s._$AI(i), o++;
+    for (const i of e) o === r.length ? r.push(s = new Oe(this.O($e()), this.O($e()), this, this.options)) : s = r[o], s._$AI(i), o++;
     o < r.length && (this._$AR(s && s._$AB.nextSibling, o), r.length = o);
   }
   _$AR(e = this._$AA.nextSibling, r) {
@@ -445,7 +445,7 @@ class Oe {
     this._$AM === void 0 && (this._$Cv = e, (r = this._$AP) == null || r.call(this, e));
   }
 }
-let Fe = class {
+let qe = class {
   get tagName() {
     return this.element.tagName;
   }
@@ -453,7 +453,7 @@ let Fe = class {
     return this._$AM._$AU;
   }
   constructor(e, r, s, o, i) {
-    this.type = 1, this._$AH = $, this._$AN = void 0, this.element = e, this.name = r, this._$AM = o, this.options = i, s.length > 2 || s[0] !== "" || s[1] !== "" ? (this._$AH = Array(s.length - 1).fill(new String()), this.strings = s) : this._$AH = $;
+    this.type = 1, this._$AH = w, this._$AN = void 0, this.element = e, this.name = r, this._$AM = o, this.options = i, s.length > 2 || s[0] !== "" || s[1] !== "" ? (this._$AH = Array(s.length - 1).fill(new String()), this.strings = s) : this._$AH = w;
   }
   _$AI(e, r = this, s, o) {
     const i = this.strings;
@@ -462,37 +462,37 @@ let Fe = class {
     else {
       const d = e;
       let l, h;
-      for (e = i[0], l = 0; l < i.length - 1; l++) h = ae(this, d[s + l], r, l), h === ie && (h = this._$AH[l]), a || (a = !Ee(h) || h !== this._$AH[l]), h === $ ? e = $ : e !== $ && (e += (h ?? "") + i[l + 1]), this._$AH[l] = h;
+      for (e = i[0], l = 0; l < i.length - 1; l++) h = ae(this, d[s + l], r, l), h === ie && (h = this._$AH[l]), a || (a = !Ee(h) || h !== this._$AH[l]), h === w ? e = w : e !== w && (e += (h ?? "") + i[l + 1]), this._$AH[l] = h;
     }
     a && !o && this.j(e);
   }
   j(e) {
-    e === $ ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
+    e === w ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
   }
 };
-class Qt extends Fe {
+class Qt extends qe {
   constructor() {
     super(...arguments), this.type = 3;
   }
   j(e) {
-    this.element[this.name] = e === $ ? void 0 : e;
+    this.element[this.name] = e === w ? void 0 : e;
   }
 }
-class er extends Fe {
+class er extends qe {
   constructor() {
     super(...arguments), this.type = 4;
   }
   j(e) {
-    this.element.toggleAttribute(this.name, !!e && e !== $);
+    this.element.toggleAttribute(this.name, !!e && e !== w);
   }
 }
-class tr extends Fe {
+class tr extends qe {
   constructor(e, r, s, o, i) {
     super(e, r, s, o, i), this.type = 5;
   }
   _$AI(e, r = this) {
-    if ((e = ae(this, e, r, 0) ?? $) === ie) return;
-    const s = this._$AH, o = e === $ && s !== $ || e.capture !== s.capture || e.once !== s.once || e.passive !== s.passive, i = e !== $ && (s === $ || o);
+    if ((e = ae(this, e, r, 0) ?? w) === ie) return;
+    const s = this._$AH, o = e === w && s !== w || e.capture !== s.capture || e.once !== s.once || e.passive !== s.passive, i = e !== w && (s === w || o);
     o && this.element.removeEventListener(this.name, this, s), i && this.element.addEventListener(this.name, this, e), this._$AH = e;
   }
   handleEvent(e) {
@@ -511,14 +511,14 @@ class rr {
     ae(this, e);
   }
 }
-const rt = $e.litHtmlPolyfillSupport;
-rt == null || rt(st, Oe), ($e.litHtmlVersions ?? ($e.litHtmlVersions = [])).push("3.3.2");
+const rt = we.litHtmlPolyfillSupport;
+rt == null || rt(st, Oe), (we.litHtmlVersions ?? (we.litHtmlVersions = [])).push("3.3.2");
 const or = (t, e, r) => {
   const s = (r == null ? void 0 : r.renderBefore) ?? e;
   let o = s._$litPart$;
   if (o === void 0) {
     const i = (r == null ? void 0 : r.renderBefore) ?? null;
-    s._$litPart$ = o = new Oe(e.insertBefore(we(), i), i, void 0, r ?? {});
+    s._$litPart$ = o = new Oe(e.insertBefore($e(), i), i, void 0, r ?? {});
   }
   return o._$AI(t), o;
 };
@@ -605,7 +605,7 @@ function n(t) {
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-function w(t) {
+function $(t) {
   return n({ ...t, state: !0, attribute: !1 });
 }
 const v = m`
@@ -927,10 +927,10 @@ te([
   n({ type: String, reflect: !0 })
 ], O.prototype, "decorations", 2);
 te([
-  w()
+  $()
 ], O.prototype, "_focusContext", 2);
 te([
-  w()
+  $()
 ], O.prototype, "_menuOpen", 2);
 O = te([
   b("tui-app")
@@ -1016,16 +1016,16 @@ let k = class extends f {
   connectedCallback() {
     super.connectedCallback(), typeof ResizeObserver < "u" ? (this._resizeObserver = new ResizeObserver((t) => {
       for (const e of t)
-        this._bounds = e.contentRect, this.dispatchEvent(new CustomEvent("bounds-change", {
+        this._bounds = e.contentRect, this.dispatchEvent(new CustomEvent("tui-workspace-bounds-change", {
           detail: { bounds: this._bounds },
           bubbles: !0,
           composed: !0
         }));
-    }), this._resizeObserver.observe(this)) : this._bounds = new DOMRect(0, 0, this.offsetWidth || 800, this.offsetHeight || 600), this.addEventListener("panel-move", this._handlePanelMove), this.addEventListener("panel-resize", this._handlePanelResize), this.addEventListener("panel-dismiss", this._handlePanelDismiss), this.addEventListener("panel-drag-end", this._handlePanelDragEnd), this.addEventListener("panel-minimize", this._handlePanelMinimize), this.addEventListener("panel-restore", this._handlePanelRestore);
+    }), this._resizeObserver.observe(this)) : this._bounds = new DOMRect(0, 0, this.offsetWidth || 800, this.offsetHeight || 600), this.addEventListener("tui-panel-move", this._handlePanelMove), this.addEventListener("tui-panel-resize", this._handlePanelResize), this.addEventListener("tui-panel-dismiss", this._handlePanelDismiss), this.addEventListener("tui-panel-drag-end", this._handlePanelDragEnd), this.addEventListener("tui-panel-minimize", this._handlePanelMinimize), this.addEventListener("tui-panel-restore", this._handlePanelRestore);
   }
   disconnectedCallback() {
     var t;
-    super.disconnectedCallback(), (t = this._resizeObserver) == null || t.disconnect(), this.removeEventListener("panel-move", this._handlePanelMove), this.removeEventListener("panel-resize", this._handlePanelResize), this.removeEventListener("panel-dismiss", this._handlePanelDismiss), this.removeEventListener("panel-drag-end", this._handlePanelDragEnd), this.removeEventListener("panel-minimize", this._handlePanelMinimize), this.removeEventListener("panel-restore", this._handlePanelRestore);
+    super.disconnectedCallback(), (t = this._resizeObserver) == null || t.disconnect(), this.removeEventListener("tui-panel-move", this._handlePanelMove), this.removeEventListener("tui-panel-resize", this._handlePanelResize), this.removeEventListener("tui-panel-dismiss", this._handlePanelDismiss), this.removeEventListener("tui-panel-drag-end", this._handlePanelDragEnd), this.removeEventListener("tui-panel-minimize", this._handlePanelMinimize), this.removeEventListener("tui-panel-restore", this._handlePanelRestore);
   }
   _detectSnapEdge(t, e, r, s) {
     const o = this._bounds;
@@ -1061,7 +1061,7 @@ let k = class extends f {
       width: r.panelWidth ?? r.offsetWidth,
       height: r.panelHeight ?? r.offsetHeight
     }));
-    this.dispatchEvent(new CustomEvent("layout-change", {
+    this.dispatchEvent(new CustomEvent("tui-workspace-layout-change", {
       detail: { panels: e, bounds: this._bounds },
       bubbles: !0,
       composed: !0
@@ -1177,15 +1177,15 @@ k.styles = [
     `
 ];
 dt([
-  w()
+  $()
 ], k.prototype, "_bounds", 2);
 dt([
-  w()
+  $()
 ], k.prototype, "_snapPreview", 2);
 k = dt([
   b("tui-workspace")
 ], k);
-var dr = Object.defineProperty, hr = Object.getOwnPropertyDescriptor, qe = (t, e, r, s) => {
+var dr = Object.defineProperty, hr = Object.getOwnPropertyDescriptor, Fe = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? hr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && dr(e, r, o), o;
@@ -1320,16 +1320,16 @@ ne.styles = [
       }
     `
 ];
-qe([
+Fe([
   n({ type: String, reflect: !0 })
 ], ne.prototype, "side", 2);
-qe([
+Fe([
   n({ type: Number })
 ], ne.prototype, "size", 2);
-qe([
-  w()
+Fe([
+  $()
 ], ne.prototype, "_dropIndex", 2);
-ne = qe([
+ne = Fe([
   b("tui-sidebar")
 ], ne);
 const Ke = {
@@ -1361,7 +1361,7 @@ var ur = Object.defineProperty, fr = Object.getOwnPropertyDescriptor, y = (t, e,
 let g = class extends f {
   constructor() {
     super(...arguments), this.title = "", this.color = "", this.border = "single", this.variant = "bright", this.selectionStyle = "", this.collapsible = !1, this.collapsed = !1, this.selected = !1, this.active = !1, this.persistId = "", this.dismissable = !1, this.full = !1, this.floating = !1, this.snapEdge = "", this.positionX = 0, this.positionY = 0, this.resizable = !1, this.minimized = !1, this.panelWidth = null, this.panelHeight = null, this.maxWidth = null, this.maxHeight = null, this.minWidth = 150, this.minHeight = 100, this.docked = "", this._isDragging = !1, this._dragStartX = 0, this._dragStartY = 0, this._dragOffsetX = 0, this._dragOffsetY = 0, this._isResizing = !1, this._resizeStartX = 0, this._resizeStartY = 0, this._resizeStartWidth = 0, this._resizeStartHeight = 0, this._preMinimizeX = 0, this._preMinimizeY = 0, this._preMinimizeWidth = null, this._preMinimizeHeight = null, this._handleClick = () => {
-      this.dispatchEvent(new CustomEvent("focus-request", {
+      this.dispatchEvent(new CustomEvent("tui-panel-focus-request", {
         bubbles: !0,
         composed: !0,
         detail: { panel: this }
@@ -1375,7 +1375,7 @@ let g = class extends f {
     }, this._onDragMove = (t) => {
       if (!this._isDragging) return;
       const e = t.clientX - this._dragStartX, r = t.clientY - this._dragStartY;
-      this.positionX = this._dragOffsetX + e, this.positionY = this._dragOffsetY + r, this.dispatchEvent(new CustomEvent("panel-move", {
+      this.positionX = this._dragOffsetX + e, this.positionY = this._dragOffsetY + r, this.dispatchEvent(new CustomEvent("tui-panel-move", {
         detail: {
           panelId: this.id || this.title,
           x: this.positionX,
@@ -1387,7 +1387,7 @@ let g = class extends f {
         composed: !0
       }));
     }, this._onDragEnd = () => {
-      this._isDragging = !1, document.removeEventListener("pointermove", this._onDragMove), document.removeEventListener("pointerup", this._onDragEnd), this.dispatchEvent(new CustomEvent("panel-drag-end", {
+      this._isDragging = !1, document.removeEventListener("pointermove", this._onDragMove), document.removeEventListener("pointerup", this._onDragEnd), this.dispatchEvent(new CustomEvent("tui-panel-drag-end", {
         detail: {
           panelId: this.id || this.title,
           x: this.positionX,
@@ -1402,7 +1402,7 @@ let g = class extends f {
       if (!this._isResizing) return;
       const e = t.clientX - this._resizeStartX, r = t.clientY - this._resizeStartY;
       let s = this._resizeStartWidth + e, o = this._resizeStartHeight + r;
-      s = Math.max(this.minWidth, s), o = Math.max(this.minHeight, o), this.maxWidth !== null && (s = Math.min(this.maxWidth, s)), this.maxHeight !== null && (o = Math.min(this.maxHeight, o)), this.panelWidth = s, this.panelHeight = o, this.dispatchEvent(new CustomEvent("panel-resize", {
+      s = Math.max(this.minWidth, s), o = Math.max(this.minHeight, o), this.maxWidth !== null && (s = Math.min(this.maxWidth, s)), this.maxHeight !== null && (o = Math.min(this.maxHeight, o)), this.panelWidth = s, this.panelHeight = o, this.dispatchEvent(new CustomEvent("tui-panel-resize", {
         detail: {
           panelId: this.id || this.title,
           width: this.panelWidth,
@@ -1430,7 +1430,7 @@ let g = class extends f {
     super.disconnectedCallback(), this.removeEventListener("click", this._handleClick), document.removeEventListener("pointermove", this._onDragMove), document.removeEventListener("pointerup", this._onDragEnd), document.removeEventListener("pointermove", this._onResizeMove), document.removeEventListener("pointerup", this._onResizeEnd);
   }
   toggle() {
-    this.collapsible && (this.collapsed = !this.collapsed, this.persistId && localStorage.setItem(`tui-panel-${this.persistId}`, String(this.collapsed)), this.dispatchEvent(new CustomEvent("toggle", {
+    this.collapsible && (this.collapsed = !this.collapsed, this.persistId && localStorage.setItem(`tui-panel-${this.persistId}`, String(this.collapsed)), this.dispatchEvent(new CustomEvent("tui-panel-toggle", {
       detail: { collapsed: this.collapsed },
       bubbles: !0,
       composed: !0
@@ -1452,7 +1452,7 @@ let g = class extends f {
       };
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(r));
     }
-    const t = new CustomEvent("panel-dismiss", {
+    const t = new CustomEvent("tui-panel-dismiss", {
       detail: { panelId: this.id || this.title },
       bubbles: !0,
       composed: !0,
@@ -1478,7 +1478,7 @@ let g = class extends f {
         };
         localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(t));
       }
-      this.dispatchEvent(new CustomEvent("panel-minimize", {
+      this.dispatchEvent(new CustomEvent("tui-panel-minimize", {
         detail: { panelId: this.id || this.title },
         bubbles: !0,
         composed: !0
@@ -1502,7 +1502,7 @@ let g = class extends f {
         };
         localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(t));
       }
-      this.dispatchEvent(new CustomEvent("panel-restore", {
+      this.dispatchEvent(new CustomEvent("tui-panel-restore", {
         detail: { panelId: this.id || this.title },
         bubbles: !0,
         composed: !0
@@ -2082,7 +2082,7 @@ y([
   n({ type: String })
 ], g.prototype, "title", 2);
 y([
-  n({ type: String })
+  n({ type: String, reflect: !0 })
 ], g.prototype, "color", 2);
 y([
   n({ type: String, reflect: !0 })
@@ -2260,7 +2260,7 @@ var mr = Object.defineProperty, br = Object.getOwnPropertyDescriptor, me = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && mr(e, r, o), o;
 };
-let N = class extends f {
+let j = class extends f {
   constructor() {
     super(...arguments), this.maxLines = 500, this.autoscroll = !0, this.timestamps = !1, this.attr = "", this._lines = [];
   }
@@ -2320,7 +2320,7 @@ let N = class extends f {
     `;
   }
 };
-N.styles = [
+j.styles = [
   v,
   m`
       :host {
@@ -2377,22 +2377,22 @@ N.styles = [
 ];
 me([
   n({ type: Number, attribute: "max-lines" })
-], N.prototype, "maxLines", 2);
+], j.prototype, "maxLines", 2);
 me([
   n({ type: Boolean })
-], N.prototype, "autoscroll", 2);
+], j.prototype, "autoscroll", 2);
 me([
   n({ type: Boolean })
-], N.prototype, "timestamps", 2);
+], j.prototype, "timestamps", 2);
 me([
   n({ type: String })
-], N.prototype, "attr", 2);
+], j.prototype, "attr", 2);
 me([
-  w()
-], N.prototype, "_lines", 2);
-N = me([
+  $()
+], j.prototype, "_lines", 2);
+j = me([
   b("tui-output")
-], N);
+], j);
 var vr = Object.defineProperty, gr = Object.getOwnPropertyDescriptor, Ge = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? gr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
@@ -2517,10 +2517,10 @@ Ge([
   n({ type: String })
 ], le.prototype, "border", 2);
 Ge([
-  w()
+  $()
 ], le.prototype, "_columns", 2);
 Ge([
-  w()
+  $()
 ], le.prototype, "_rows", 2);
 le = Ge([
   b("tui-table")
@@ -2600,8 +2600,8 @@ let P = class extends f {
       html: t,
       type: "command",
       prompt: this.prompt
-    }], this._history = [...this._history.slice(-this.historySize + 1), t], this._historyIndex = -1, this._inputValue = "", this.dispatchEvent(new CustomEvent("command", {
-      detail: t,
+    }], this._history = [...this._history.slice(-this.historySize + 1), t], this._historyIndex = -1, this._inputValue = "", this.dispatchEvent(new CustomEvent("tui-console-command", {
+      detail: { command: t },
       bubbles: !0,
       composed: !0
     })), this.updateComplete.then(() => this.scrollToBottom()));
@@ -2726,19 +2726,19 @@ re([
   n({ type: Number, attribute: "history-size" })
 ], P.prototype, "historySize", 2);
 re([
-  w()
+  $()
 ], P.prototype, "_lines", 2);
 re([
-  w()
+  $()
 ], P.prototype, "_inputValue", 2);
 re([
-  w()
+  $()
 ], P.prototype, "_historyIndex", 2);
 P = re([
   b("tui-console")
 ], P);
-var xr = Object.defineProperty, $r = Object.getOwnPropertyDescriptor, Ze = (t, e, r, s) => {
-  for (var o = s > 1 ? void 0 : s ? $r(e, r) : e, i = t.length - 1, a; i >= 0; i--)
+var xr = Object.defineProperty, wr = Object.getOwnPropertyDescriptor, Ze = (t, e, r, s) => {
+  for (var o = s > 1 ? void 0 : s ? wr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && xr(e, r, o), o;
 };
@@ -2802,14 +2802,14 @@ Ze([
 ce = Ze([
   b("tui-text")
 ], ce);
-var wr = Object.defineProperty, Er = Object.getOwnPropertyDescriptor, W = (t, e, r, s) => {
+var $r = Object.defineProperty, Er = Object.getOwnPropertyDescriptor, T = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Er(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
-  return s && o && wr(e, r, o), o;
+  return s && o && $r(e, r, o), o;
 };
-let C = class extends f {
+let E = class extends f {
   constructor() {
-    super(...arguments), this.variant = "default", this.size = "md", this.selected = !1, this.disabled = !1, this.block = !1;
+    super(...arguments), this.variant = "default", this.color = "", this.size = "md", this.selected = !1, this.disabled = !1, this.block = !1;
   }
   render() {
     return c`
@@ -2819,11 +2819,11 @@ let C = class extends f {
     `;
   }
 };
-C.shadowRootOptions = {
+E.shadowRootOptions = {
   ...f.shadowRootOptions,
   delegatesFocus: !0
 };
-C.styles = [
+E.styles = [
   v,
   m`
       /* ═══════════════════════════════════════════════════════════════════
@@ -2844,6 +2844,10 @@ C.styles = [
         --_btn-hover-bg: var(--tui-button-hover-bg, var(--border-default));
         --_btn-hover-color: var(--tui-button-hover-color, var(--_btn-color));
         --_btn-hover-border-color: var(--tui-button-hover-border-color, var(--text-muted));
+
+        /* The accent the filled and outline treatments paint with. The color
+           attribute overrides it; unset, both treatments read as primary. */
+        --_btn-accent: var(--color-primary);
 
         /* Size tokens */
         --_btn-padding-x: var(--spacing-md);
@@ -2921,36 +2925,34 @@ C.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: PRIMARY
-         Filled with primary color
+         SEMANTIC COLOUR — sets the accent the filled/outline treatments use
          ═══════════════════════════════════════════════════════════════════ */
 
-      :host([variant="primary"]) {
-        --_btn-bg: var(--color-primary);
+      :host([color="primary"])   { --_btn-accent: var(--color-primary); }
+      :host([color="secondary"]) { --_btn-accent: var(--color-secondary); }
+      :host([color="success"])   { --_btn-accent: var(--color-success); }
+      :host([color="warning"])   { --_btn-accent: var(--color-warning); }
+      :host([color="error"])     { --_btn-accent: var(--color-error); }
+      :host([color="info"])      { --_btn-accent: var(--color-info); }
+
+      /* muted is a de-emphasis accent, meant for the outline treatment. Under
+         filled it becomes the background behind --surface-base text, which does
+         not clear AA contrast in the dark themes — reach for ghost instead. */
+      :host([color="muted"])     { --_btn-accent: var(--text-muted); }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         VARIANT: FILLED — solid accent, brightens on hover
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([variant="filled"]) {
+        --_btn-bg: var(--_btn-accent);
         --_btn-color: var(--surface-base);
-        --_btn-border-color: var(--color-primary);
+        --_btn-border-color: var(--_btn-accent);
 
         & button:hover:not(:disabled) {
           filter: brightness(1.15);
-          background: var(--color-primary);
-          border-color: var(--color-primary);
-        }
-      }
-
-      /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: DANGER
-         Outlined with error color, fills on hover
-         ═══════════════════════════════════════════════════════════════════ */
-
-      :host([variant="danger"]) {
-        --_btn-bg: transparent;
-        --_btn-color: var(--color-error);
-        --_btn-border-color: var(--color-error);
-
-        & button:hover:not(:disabled) {
-          background: var(--color-error);
-          color: var(--surface-base);
-          border-color: var(--color-error);
+          background: var(--_btn-accent);
+          border-color: var(--_btn-accent);
         }
       }
 
@@ -2972,20 +2974,18 @@ C.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: OUTLINE
-         Single border outline, text colored, transparent background
-         Border matches variant color. Fills on hover.
+         VARIANT: OUTLINE — accent border and text, fills on hover
          ═══════════════════════════════════════════════════════════════════ */
 
       :host([variant="outline"]) {
         --_btn-bg: transparent;
-        --_btn-color: var(--color-primary);
-        --_btn-border-color: var(--color-primary);
+        --_btn-color: var(--_btn-accent);
+        --_btn-border-color: var(--_btn-accent);
 
         & button:hover:not(:disabled) {
-          background: var(--color-primary);
+          background: var(--_btn-accent);
           color: var(--surface-base);
-          border-color: var(--color-primary);
+          border-color: var(--_btn-accent);
         }
       }
 
@@ -3095,30 +3095,33 @@ C.styles = [
       }
     `
 ];
-W([
+T([
   n({ reflect: !0 })
-], C.prototype, "variant", 2);
-W([
+], E.prototype, "variant", 2);
+T([
   n({ reflect: !0 })
-], C.prototype, "size", 2);
-W([
+], E.prototype, "color", 2);
+T([
+  n({ reflect: !0 })
+], E.prototype, "size", 2);
+T([
   n({ attribute: "selection-style" })
-], C.prototype, "selectionStyle", 2);
-W([
+], E.prototype, "selectionStyle", 2);
+T([
   n({ attribute: "tool-id" })
-], C.prototype, "toolId", 2);
-W([
+], E.prototype, "toolId", 2);
+T([
   n({ type: Boolean, reflect: !0 })
-], C.prototype, "selected", 2);
-W([
+], E.prototype, "selected", 2);
+T([
   n({ type: Boolean, reflect: !0 })
-], C.prototype, "disabled", 2);
-W([
+], E.prototype, "disabled", 2);
+T([
   n({ type: Boolean, reflect: !0 })
-], C.prototype, "block", 2);
-C = W([
+], E.prototype, "block", 2);
+E = T([
   b("tui-button")
-], C);
+], E);
 var zr = Object.defineProperty, Cr = Object.getOwnPropertyDescriptor, S = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Cr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
@@ -3142,7 +3145,7 @@ Ye.styles = [
     `
 ];
 S([
-  w()
+  $()
 ], Ye.prototype, "_openMenu", 2);
 Ye = S([
   b("tui-menu")
@@ -3231,7 +3234,7 @@ S([
   n({ type: String })
 ], de.prototype, "hotkey", 2);
 S([
-  w()
+  $()
 ], de.prototype, "_open", 2);
 de = S([
   b("tui-menu-item")
@@ -3242,7 +3245,8 @@ let he = class extends f {
   }
   _handleClick() {
     this.dispatchEvent(
-      new CustomEvent("action", {
+      new CustomEvent("tui-menu-action-select", {
+        detail: { label: this.label },
         bubbles: !0,
         composed: !0
       })
@@ -3419,7 +3423,7 @@ pe.styles = [
       }
 
       :host([highlight]) .value {
-        color: var(--color-secondary);
+        color: var(--color-warning);
       }
     `
 ];
@@ -3440,7 +3444,7 @@ var Or = Object.defineProperty, Pr = Object.getOwnPropertyDescriptor, Pe = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Or(e, r, o), o;
 };
-let F = class extends f {
+let q = class extends f {
   constructor() {
     super(...arguments), this.title = "", this.border = "double", this.open = !1, this.closable = !0, this._boundKeyHandler = this._handleKeydown.bind(this);
   }
@@ -3460,13 +3464,13 @@ let F = class extends f {
    * Open the modal
    */
   show() {
-    this.open = !0, this.dispatchEvent(new CustomEvent("open", { bubbles: !0, composed: !0 }));
+    this.open = !0, this.dispatchEvent(new CustomEvent("tui-modal-open", { bubbles: !0, composed: !0 }));
   }
   /**
    * Close the modal
    */
   close() {
-    this.open = !1, this.dispatchEvent(new CustomEvent("close", { bubbles: !0, composed: !0 }));
+    this.open = !1, this.dispatchEvent(new CustomEvent("tui-modal-close", { bubbles: !0, composed: !0 }));
   }
   render() {
     return c`
@@ -3489,7 +3493,7 @@ let F = class extends f {
     `;
   }
 };
-F.styles = [
+q.styles = [
   v,
   m`
       :host {
@@ -3621,20 +3625,20 @@ F.styles = [
 ];
 Pe([
   n({ type: String, reflect: !0 })
-], F.prototype, "title", 2);
+], q.prototype, "title", 2);
 Pe([
   n({ type: String, reflect: !0 })
-], F.prototype, "border", 2);
+], q.prototype, "border", 2);
 Pe([
   n({ type: Boolean, reflect: !0 })
-], F.prototype, "open", 2);
+], q.prototype, "open", 2);
 Pe([
   n({ type: Boolean })
-], F.prototype, "closable", 2);
-F = Pe([
+], q.prototype, "closable", 2);
+q = Pe([
   b("tui-modal")
-], F);
-var Ar = Object.defineProperty, Dr = Object.getOwnPropertyDescriptor, E = (t, e, r, s) => {
+], q);
+var Ar = Object.defineProperty, Dr = Object.getOwnPropertyDescriptor, z = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Dr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Ar(e, r, o), o;
@@ -3648,7 +3652,7 @@ let A = class extends f {
   }
   _handleClick(t) {
     this.selected = t, this.dispatchEvent(
-      new CustomEvent("tool-select", {
+      new CustomEvent("tui-tool-select", {
         bubbles: !0,
         composed: !0,
         detail: { tool: t }
@@ -3763,34 +3767,34 @@ A.styles = [
       }
     `
 ];
-E([
+z([
   n({ reflect: !0 })
 ], A.prototype, "orientation", 2);
-E([
+z([
   n()
 ], A.prototype, "selected", 2);
-E([
+z([
   n({ reflect: !0 })
 ], A.prototype, "size", 2);
-E([
+z([
   n({ attribute: "selection-style" })
 ], A.prototype, "selectionStyle", 2);
-E([
+z([
   n({ type: Array })
 ], A.prototype, "tools", 2);
-E([
+z([
   n({ type: Boolean, attribute: "show-hotkeys" })
 ], A.prototype, "showHotkeys", 2);
-A = E([
+A = z([
   b("tui-toolbar")
 ], A);
-let q = class extends f {
+let F = class extends f {
   constructor() {
     super(...arguments), this.toolId = "", this.icon = "", this.active = !1, this.size = "md";
   }
   _handleClick() {
     this.dispatchEvent(
-      new CustomEvent("tool-select", {
+      new CustomEvent("tui-tool-select", {
         bubbles: !0,
         composed: !0,
         detail: { tool: this.toolId }
@@ -3810,26 +3814,26 @@ let q = class extends f {
     `;
   }
 };
-q.styles = m`
+F.styles = m`
     :host {
       display: contents;
     }
   `;
-E([
+z([
   n({ attribute: "tool-id" })
-], q.prototype, "toolId", 2);
-E([
+], F.prototype, "toolId", 2);
+z([
   n()
-], q.prototype, "icon", 2);
-E([
+], F.prototype, "icon", 2);
+z([
   n({ type: Boolean, reflect: !0 })
-], q.prototype, "active", 2);
-E([
+], F.prototype, "active", 2);
+z([
   n()
-], q.prototype, "size", 2);
-q = E([
+], F.prototype, "size", 2);
+F = z([
   b("tui-tool")
-], q);
+], F);
 var Tr = Object.defineProperty, Hr = Object.getOwnPropertyDescriptor, Ae = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Hr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
@@ -4032,13 +4036,13 @@ Ae([
   n({ type: String, reflect: !0 })
 ], K.prototype, "position", 2);
 Ae([
-  w()
+  $()
 ], K.prototype, "_queue", 2);
 Ae([
-  w()
+  $()
 ], K.prototype, "_current", 2);
 Ae([
-  w()
+  $()
 ], K.prototype, "_visible", 2);
 K = Ae([
   b("tui-toast")
@@ -4052,7 +4056,7 @@ var Ir = Object.defineProperty, Mr = Object.getOwnPropertyDescriptor, oe = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Ir(e, r, o), o;
 };
-const T = Ke.single, H = Ke.heavy, I = Ke.double;
+const H = Ke.single, I = Ke.heavy, M = Ke.double;
 let D = class extends f {
   constructor() {
     super(...arguments), this.rank = "", this.suit = "", this.faceDown = !1, this.selected = !1, this.disabled = !1, this.size = "md";
@@ -4061,7 +4065,7 @@ let D = class extends f {
     return this.suit === "♥" || this.suit === "♦";
   }
   _handleClick() {
-    this.disabled || this.dispatchEvent(new CustomEvent("card-click", {
+    this.disabled || this.dispatchEvent(new CustomEvent("tui-card-click", {
       bubbles: !0,
       composed: !0,
       detail: { rank: this.rank, suit: this.suit }
@@ -4143,7 +4147,7 @@ D.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         NEUTRAL STATE - Single line border ${_(T.tl)}${_(T.h)}${_(T.h)}${_(T.tr)}
+         NEUTRAL STATE - Single line border ${_(H.tl)}${_(H.h)}${_(H.h)}${_(H.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       .card {
@@ -4151,7 +4155,7 @@ D.styles = [
       }
 
       .card::before {
-        content: '${_(T.tl)}';
+        content: '${_(H.tl)}';
         position: absolute;
         top: -1px;
         left: -1px;
@@ -4161,7 +4165,7 @@ D.styles = [
       }
 
       .card::after {
-        content: '${_(T.tr)}';
+        content: '${_(H.tr)}';
         position: absolute;
         top: -1px;
         right: -1px;
@@ -4171,7 +4175,7 @@ D.styles = [
       }
 
       .card-bottom::before {
-        content: '${_(T.bl)}';
+        content: '${_(H.bl)}';
         position: absolute;
         bottom: -1px;
         left: -1px;
@@ -4181,7 +4185,7 @@ D.styles = [
       }
 
       .card-bottom::after {
-        content: '${_(T.br)}';
+        content: '${_(H.br)}';
         position: absolute;
         bottom: -1px;
         right: -1px;
@@ -4191,7 +4195,7 @@ D.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         HOVER STATE - Heavy line border ${_(H.tl)}${_(H.h)}${_(H.h)}${_(H.tr)}
+         HOVER STATE - Heavy line border ${_(I.tl)}${_(I.h)}${_(I.h)}${_(I.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       .card:hover:not(.disabled) {
@@ -4200,13 +4204,13 @@ D.styles = [
         transform: translateY(-2px);
       }
 
-      .card:hover:not(.disabled)::before { content: '${_(H.tl)}'; color: var(--text-primary); }
-      .card:hover:not(.disabled)::after { content: '${_(H.tr)}'; color: var(--text-primary); }
-      .card:hover:not(.disabled) .card-bottom::before { content: '${_(H.bl)}'; color: var(--text-primary); }
-      .card:hover:not(.disabled) .card-bottom::after { content: '${_(H.br)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled)::before { content: '${_(I.tl)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled)::after { content: '${_(I.tr)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled) .card-bottom::before { content: '${_(I.bl)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled) .card-bottom::after { content: '${_(I.br)}'; color: var(--text-primary); }
 
       /* ═══════════════════════════════════════════════════════════════════
-         SELECTED STATE - Double line border ${_(I.tl)}${_(I.h)}${_(I.h)}${_(I.tr)}
+         SELECTED STATE - Double line border ${_(M.tl)}${_(M.h)}${_(M.h)}${_(M.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       :host([selected]) .card {
@@ -4214,10 +4218,10 @@ D.styles = [
         box-shadow: 3px 3px 0 rgba(88, 166, 255, 0.2);
       }
 
-      :host([selected]) .card::before { content: '${_(I.tl)}'; color: var(--color-primary); }
-      :host([selected]) .card::after { content: '${_(I.tr)}'; color: var(--color-primary); }
-      :host([selected]) .card-bottom::before { content: '${_(I.bl)}'; color: var(--color-primary); }
-      :host([selected]) .card-bottom::after { content: '${_(I.br)}'; color: var(--color-primary); }
+      :host([selected]) .card::before { content: '${_(M.tl)}'; color: var(--color-primary); }
+      :host([selected]) .card::after { content: '${_(M.tr)}'; color: var(--color-primary); }
+      :host([selected]) .card-bottom::before { content: '${_(M.bl)}'; color: var(--color-primary); }
+      :host([selected]) .card-bottom::after { content: '${_(M.br)}'; color: var(--color-primary); }
 
       /* Selected + hover */
       :host([selected]) .card:hover:not(.disabled) {
@@ -4347,14 +4351,14 @@ let G = class extends f {
   _selectPalette(t) {
     var r;
     const e = ((r = this.palettes[t]) == null ? void 0 : r[0]) || "";
-    this.dispatchEvent(new CustomEvent("palette-change", {
+    this.dispatchEvent(new CustomEvent("tui-palette-change", {
       bubbles: !0,
       composed: !0,
       detail: { palette: t, firstChar: e }
     }));
   }
   _selectChar(t) {
-    this.dispatchEvent(new CustomEvent("char-select", {
+    this.dispatchEvent(new CustomEvent("tui-palette-char-select", {
       bubbles: !0,
       composed: !0,
       detail: { char: t }
@@ -4478,7 +4482,7 @@ let ue = class extends f {
   }
   _handleClick() {
     this.type === "external" && this.href ? window.open(this.href, "_blank", "noopener") : this.type === "copy" && this.href && navigator.clipboard.writeText(this.href).then(() => {
-      this._copied = !0, this.dispatchEvent(new CustomEvent("copy", {
+      this._copied = !0, this.dispatchEvent(new CustomEvent("tui-link-copy", {
         detail: { value: this.href },
         bubbles: !0,
         composed: !0
@@ -4551,7 +4555,7 @@ Je([
   n({ type: String, reflect: !0 })
 ], ue.prototype, "type", 2);
 Je([
-  w()
+  $()
 ], ue.prototype, "_copied", 2);
 ue = Je([
   b("tui-link")
@@ -4566,10 +4570,11 @@ let ze = class extends f {
     super(...arguments), this.items = [], this.selected = "";
   }
   _handleClick(t, e) {
-    this.selected === t ? (this.selected = "", this.dispatchEvent(new CustomEvent("item-deselect", {
+    this.selected === t ? (this.selected = "", this.dispatchEvent(new CustomEvent("tui-list-item-deselect", {
+      detail: { id: t, label: e },
       bubbles: !0,
       composed: !0
-    }))) : (this.selected = t, this.dispatchEvent(new CustomEvent("item-select", {
+    }))) : (this.selected = t, this.dispatchEvent(new CustomEvent("tui-list-item-select", {
       detail: { id: t, label: e },
       bubbles: !0,
       composed: !0
@@ -4604,7 +4609,7 @@ let ze = class extends f {
           <div class="action-panel" style=${this._hasActions(t.id) ? "" : "display:none"}>
             <slot name="actions-${t.id}" @slotchange=${() => this.requestUpdate()}></slot>
           </div>
-        ` : $}
+        ` : w}
       `;
     })}`;
   }
@@ -4844,10 +4849,10 @@ Te([
 Ce = Te([
   b("tui-strip-item")
 ], Ce);
-var Fr = Object.defineProperty, qr = Object.getOwnPropertyDescriptor, ut = (t, e, r, s) => {
-  for (var o = s > 1 ? void 0 : s ? qr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
+var qr = Object.defineProperty, Fr = Object.getOwnPropertyDescriptor, ut = (t, e, r, s) => {
+  for (var o = s > 1 ? void 0 : s ? Fr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
-  return s && o && Fr(e, r, o), o;
+  return s && o && qr(e, r, o), o;
 };
 let Se = class extends f {
   constructor() {
@@ -4926,8 +4931,8 @@ function Qr(t) {
     for (const x of p)
       a.has(x) || (a.add(x), d.push(x));
   const l = r.length - 1, h = r.map((p, x) => {
-    const z = new Set(p).size === 1;
-    return r.length > 1 && z && x === 0 ? "auto" : r.length > 1 && z && x === l ? At : "1fr";
+    const C = new Set(p).size === 1;
+    return r.length > 1 && C && x === 0 ? "auto" : r.length > 1 && C && x === l ? At : "1fr";
   });
   if (!h.includes("1fr")) {
     const p = h.findIndex((x) => x !== At);
@@ -4955,7 +4960,7 @@ let Z = class extends f {
   }
   render() {
     const t = this._getGrid();
-    if (!t) return $;
+    if (!t) return w;
     const e = `
       grid-template-areas: ${t.areas};
       grid-template-rows: ${t.rows};
@@ -4968,8 +4973,8 @@ let Z = class extends f {
       const o = r[s] ?? s;
       return c`
             <div class="zone ${this.labels === "titlebar" ? "has-titlebar" : ""}" style="grid-area: ${s};">
-              ${this.labels === "titlebar" ? c`<div class="zone-titlebar">${o}</div>` : $}
-              ${this.labels === "caption" ? c`<span class="zone-label">${o}</span>` : $}
+              ${this.labels === "titlebar" ? c`<div class="zone-titlebar">${o}</div>` : w}
+              ${this.labels === "caption" ? c`<span class="zone-label">${o}</span>` : w}
               <slot name=${s}></slot>
             </div>
           `;
@@ -5064,7 +5069,7 @@ var eo = Object.defineProperty, to = Object.getOwnPropertyDescriptor, ve = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && eo(e, r, o), o;
 };
-let j = class extends f {
+let L = class extends f {
   constructor() {
     super(...arguments), this.value = "", this.placeholder = "", this.disabled = !1, this.name = "", this.label = "";
   }
@@ -5081,7 +5086,7 @@ let j = class extends f {
     this.value = e.value, this.dispatchEvent(new CustomEvent("tui-input", {
       bubbles: !0,
       composed: !0,
-      detail: { value: this.value }
+      detail: { value: this.value, name: this.name }
     }));
   }
   _onChange(t) {
@@ -5089,7 +5094,7 @@ let j = class extends f {
     this.value = e.value, this.dispatchEvent(new CustomEvent("tui-change", {
       bubbles: !0,
       composed: !0,
-      detail: { value: this.value }
+      detail: { value: this.value, name: this.name }
     }));
   }
   render() {
@@ -5105,7 +5110,7 @@ let j = class extends f {
     `;
   }
 };
-j.styles = [
+L.styles = [
   v,
   m`
       :host { display: block; }
@@ -5143,28 +5148,28 @@ j.styles = [
 ];
 ve([
   n({ reflect: !0 })
-], j.prototype, "value", 2);
+], L.prototype, "value", 2);
 ve([
   n()
-], j.prototype, "placeholder", 2);
+], L.prototype, "placeholder", 2);
 ve([
   n({ type: Boolean, reflect: !0 })
-], j.prototype, "disabled", 2);
+], L.prototype, "disabled", 2);
 ve([
   n()
-], j.prototype, "name", 2);
+], L.prototype, "name", 2);
 ve([
   n()
-], j.prototype, "label", 2);
-j = ve([
+], L.prototype, "label", 2);
+L = ve([
   b("tui-input")
-], j);
+], L);
 var ro = Object.defineProperty, oo = Object.getOwnPropertyDescriptor, ge = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? oo(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && ro(e, r, o), o;
 };
-let L = class extends f {
+let B = class extends f {
   constructor() {
     super(...arguments), this.checked = !1, this.disabled = !1, this.name = "", this.value = "", this.label = "";
   }
@@ -5200,7 +5205,7 @@ let L = class extends f {
     `;
   }
 };
-L.styles = [
+B.styles = [
   v,
   m`
       :host { display: inline-block; }
@@ -5242,28 +5247,28 @@ L.styles = [
 ];
 ge([
   n({ type: Boolean, reflect: !0 })
-], L.prototype, "checked", 2);
+], B.prototype, "checked", 2);
 ge([
   n({ type: Boolean, reflect: !0 })
-], L.prototype, "disabled", 2);
+], B.prototype, "disabled", 2);
 ge([
   n()
-], L.prototype, "name", 2);
+], B.prototype, "name", 2);
 ge([
   n()
-], L.prototype, "value", 2);
+], B.prototype, "value", 2);
 ge([
   n()
-], L.prototype, "label", 2);
-L = ge([
+], B.prototype, "label", 2);
+B = ge([
   b("tui-checkbox")
-], L);
+], B);
 var so = Object.defineProperty, io = Object.getOwnPropertyDescriptor, ye = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? io(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && so(e, r, o), o;
 };
-let B = class extends f {
+let W = class extends f {
   constructor() {
     super(...arguments), this.checked = !1, this.disabled = !1, this.name = "", this.value = "", this.label = "";
   }
@@ -5299,7 +5304,7 @@ let B = class extends f {
     `;
   }
 };
-B.styles = [
+W.styles = [
   v,
   m`
       :host { display: inline-block; }
@@ -5341,22 +5346,22 @@ B.styles = [
 ];
 ye([
   n({ type: Boolean, reflect: !0 })
-], B.prototype, "checked", 2);
+], W.prototype, "checked", 2);
 ye([
   n({ type: Boolean, reflect: !0 })
-], B.prototype, "disabled", 2);
+], W.prototype, "disabled", 2);
 ye([
   n()
-], B.prototype, "name", 2);
+], W.prototype, "name", 2);
 ye([
   n()
-], B.prototype, "value", 2);
+], W.prototype, "value", 2);
 ye([
   n()
-], B.prototype, "label", 2);
-B = ye([
+], W.prototype, "label", 2);
+W = ye([
   b("tui-radio")
-], B);
+], W);
 var ao = Object.defineProperty, no = Object.getOwnPropertyDescriptor, Ie = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? no(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
@@ -5560,7 +5565,7 @@ const xo = [
   "error",
   "info",
   "muted"
-], $o = {
+], wo = {
   primary: "--color-primary",
   secondary: "--color-secondary",
   success: "--color-success",
@@ -5703,26 +5708,26 @@ export {
   ze as ActionList,
   O as App,
   Ke as BORDER_CHARS,
-  C as Button,
+  E as Button,
   D as Card,
-  L as Checkbox,
+  B as Checkbox,
   J as CheckboxGroup,
   P as Console,
-  j as Input,
+  L as Input,
   ue as Link,
   Ye as Menu,
   he as MenuAction,
   it as MenuDivider,
   de as MenuItem,
-  F as Modal,
-  N as Output,
+  q as Modal,
+  j as Output,
   G as Palette,
   g as Panel,
   ee as Progress,
-  B as Radio,
+  W as Radio,
   Q as RadioGroup,
   xo as SEMANTIC_COLORS,
-  $o as SEMANTIC_TOKENS,
+  wo as SEMANTIC_TOKENS,
   yo as STATE_BORDERS,
   ne as Sidebar,
   fe as Stat,
@@ -5736,7 +5741,7 @@ export {
   Z as Tiled,
   Se as Titlebar,
   K as Toast,
-  q as Tool,
+  F as Tool,
   A as Toolbar,
   k as Workspace,
   ht as ansiToHtml,

@@ -45,7 +45,7 @@ export declare class MenuItem extends LitElement {
  * @attr {string} label - Action label
  * @attr {string} shortcut - Keyboard shortcut hint
  * @attr {boolean} danger - Style as destructive action
- * @fires action - When activated
+ * @fires tui-menu-action-select - When activated (detail: { label })
  */
 export declare class MenuAction extends LitElement {
     label: string;

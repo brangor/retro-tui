@@ -1,4 +1,4 @@
-import { css as p, LitElement as h, html as l, unsafeCSS as y, nothing as Ee } from "lit";
+import { css as h, LitElement as p, html as l, unsafeCSS as y, nothing as Ee } from "lit";
 const it = '.theme-terminal-classic,:root{--color-primary: #00ffff;--color-primary-bg: #002b36;--color-primary-fg: #00ffff;--color-secondary: #00ff00;--color-secondary-bg: #003300;--color-secondary-fg: #00ff00;--color-error: #ff5555;--color-error-bg: #330000;--color-error-fg: #ff5555;--color-warning: #e8691e;--color-warning-bg: #331500;--color-warning-fg: #e8691e;--color-success: #50fa7b;--color-success-bg: #003300;--color-success-fg: #50fa7b;--color-info: #8be9fd;--color-info-bg: #002233;--color-info-fg: #8be9fd;--surface-base: #0a0a0a;--surface-elevated: #1a1a1a;--surface-overlay: #2a2a2a;--text-primary: #e0e0e0;--text-muted: #666666;--border-default: #333333;--border-width: 1px;--border-radius: 0px;--spacing-xs: .25rem;--spacing-sm: .5rem;--spacing-md: 1rem;--spacing-lg: 1.5rem;--font-mono: "IBM Plex Mono", "Fira Code", "Consolas", monospace;--font-size-xs: .6rem;--font-size-sm: .75rem;--font-size-md: .85rem;--font-size-lg: 1rem;--font-size-xl: 1.25rem;--font-size-label: var(--font-size-sm);--font-size-body: var(--font-size-md);--font-size-caption: var(--font-size-xs)}.theme-vibrant-scifi{--color-primary: #ff00ff;--color-primary-bg: #ff00ff;--color-primary-fg: #000000;--color-secondary: #00ffcc;--color-secondary-bg: #00ffcc;--color-secondary-fg: #000000;--color-error: #ff3366;--color-error-bg: #ff3366;--color-error-fg: #ffffff;--color-warning: #ff6622;--color-warning-bg: #ff6622;--color-warning-fg: #000000;--color-success: #00ff66;--color-success-bg: #00ff66;--color-success-fg: #000000;--color-info: #6666ff;--color-info-bg: #6666ff;--color-info-fg: #ffffff;--surface-base: #0d0d1a;--surface-elevated: #1a1a2e;--surface-overlay: #2a2a4a;--text-primary: #ffffff;--text-muted: #8888aa;--border-default: #4a4a6a;--border-width: 2px;--border-radius: 2px;--spacing-xs: .25rem;--spacing-sm: .5rem;--spacing-md: 1rem;--spacing-lg: 1.5rem;--font-mono: "IBM Plex Mono", "Fira Code", "Consolas", monospace;--font-size-xs: .6rem;--font-size-sm: .75rem;--font-size-md: .85rem;--font-size-lg: 1rem;--font-size-xl: 1.25rem;--font-size-label: var(--font-size-sm);--font-size-body: var(--font-size-md);--font-size-caption: var(--font-size-xs)}html,body{background:var(--surface-base);color:var(--text-primary);font-family:var(--font-mono);color-scheme:dark}.theme-home-security-interface{--color-primary: #3fb950;--color-primary-bg: #002b36;--color-primary-fg: #3fb950;--color-secondary: #00ff00;--color-secondary-bg: #003300;--color-secondary-fg: #00ff00;--color-error: #ff5555;--color-error-bg: #330000;--color-error-fg: #ff5555;--color-warning: #e8691e;--color-warning-bg: #331500;--color-warning-fg: #e8691e;--color-success: #3fb950;--color-success-bg: #003300;--color-success-fg: #3fb950;--color-info: #8be9fd;--color-info-bg: #002233;--color-info-fg: #8be9fd;--surface-base: #111;--surface-elevated: #1a1a1a;--surface-overlay: #2a2a2a;--text-primary: #e0e0e0;--text-muted: #666666;--border-default: #3fb950;--border-width: 3px;--border-radius: 0px;--spacing-xs: .25rem;--spacing-sm: .5rem;--spacing-md: 1rem;--spacing-lg: 1.5rem;--font-mono: "IBM Plex Mono", "Fira Code", "Consolas", monospace;--font-size-xs: .6rem;--font-size-sm: .75rem;--font-size-md: .85rem;--font-size-lg: 1rem;--font-size-xl: 1.25rem;--font-size-label: var(--font-size-sm);--font-size-body: var(--font-size-md);--font-size-caption: var(--font-size-xs)}', Ve = "__retro_tui_tokens__";
 if (typeof document < "u" && !document[Ve]) {
   const t = document.createElement("style");
@@ -56,7 +56,7 @@ const nt = (t) => new at(typeof t == "string" ? t : t + "", void 0, st), lt = (t
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: ct, defineProperty: dt, getOwnPropertyDescriptor: pt, getOwnPropertyNames: ht, getOwnPropertySymbols: ut, getPrototypeOf: ft } = Object, A = globalThis, Ze = A.trustedTypes, bt = Ze ? Ze.emptyScript : "", je = A.reactiveElementPolyfillSupport, pe = (t, e) => t, Ce = { toAttribute(t, e) {
+const { is: ct, defineProperty: dt, getOwnPropertyDescriptor: ht, getOwnPropertyNames: pt, getOwnPropertySymbols: ut, getPrototypeOf: ft } = Object, M = globalThis, Ze = M.trustedTypes, bt = Ze ? Ze.emptyScript : "", je = M.reactiveElementPolyfillSupport, he = (t, e) => t, Ce = { toAttribute(t, e) {
   switch (e) {
     case Boolean:
       t = t ? bt : null;
@@ -85,7 +85,7 @@ const { is: ct, defineProperty: dt, getOwnPropertyDescriptor: pt, getOwnProperty
   }
   return r;
 } }, Be = (t, e) => !ct(t, e), Je = { attribute: !0, type: String, converter: Ce, reflect: !1, useDefault: !1, hasChanged: Be };
-Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), A.litPropertyMetadata ?? (A.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
+Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), M.litPropertyMetadata ?? (M.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
 class de extends HTMLElement {
   static addInitializer(e) {
     this._$Ei(), (this.l ?? (this.l = [])).push(e);
@@ -100,7 +100,7 @@ class de extends HTMLElement {
     }
   }
   static getPropertyDescriptor(e, r, s) {
-    const { get: o, set: i } = pt(this.prototype, e) ?? { get() {
+    const { get: o, set: i } = ht(this.prototype, e) ?? { get() {
       return this[r];
     }, set(a) {
       this[r] = a;
@@ -114,14 +114,14 @@ class de extends HTMLElement {
     return this.elementProperties.get(e) ?? Je;
   }
   static _$Ei() {
-    if (this.hasOwnProperty(pe("elementProperties"))) return;
+    if (this.hasOwnProperty(he("elementProperties"))) return;
     const e = ft(this);
     e.finalize(), e.l !== void 0 && (this.l = [...e.l]), this.elementProperties = new Map(e.elementProperties);
   }
   static finalize() {
-    if (this.hasOwnProperty(pe("finalized"))) return;
-    if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(pe("properties"))) {
-      const r = this.properties, s = [...ht(r), ...ut(r)];
+    if (this.hasOwnProperty(he("finalized"))) return;
+    if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(he("properties"))) {
+      const r = this.properties, s = [...pt(r), ...ut(r)];
       for (const o of s) this.createProperty(o, r[o]);
     }
     const e = this[Symbol.metadata];
@@ -289,7 +289,7 @@ class de extends HTMLElement {
   firstUpdated(e) {
   }
 }
-de.elementStyles = [], de.shadowRootOptions = { mode: "open" }, de[pe("elementProperties")] = /* @__PURE__ */ new Map(), de[pe("finalized")] = /* @__PURE__ */ new Map(), je == null || je({ ReactiveElement: de }), (A.reactiveElementVersions ?? (A.reactiveElementVersions = [])).push("2.1.2");
+de.elementStyles = [], de.shadowRootOptions = { mode: "open" }, de[he("elementProperties")] = /* @__PURE__ */ new Map(), de[he("finalized")] = /* @__PURE__ */ new Map(), je == null || je({ ReactiveElement: de }), (M.reactiveElementVersions ?? (M.reactiveElementVersions = [])).push("2.1.2");
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -330,7 +330,7 @@ function n(t) {
 function x(t) {
   return n({ ...t, state: !0, attribute: !1 });
 }
-const b = p`
+const b = h`
   :host {
     display: block;
     font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace);
@@ -393,7 +393,7 @@ var gt = Object.defineProperty, yt = Object.getOwnPropertyDescriptor, V = (t, e,
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && gt(e, r, o), o;
 };
-let C = class extends h {
+let C = class extends p {
   constructor() {
     super(...arguments), this.title = "TUI", this.subtitle = "", this.compact = !1, this.decorations = "full", this._focusContext = "workspace", this._menuOpen = !1;
   }
@@ -440,7 +440,7 @@ let C = class extends h {
 };
 C.styles = [
   b,
-  p`
+  h`
       :host {
         display: flex;
         flex-direction: column;
@@ -662,7 +662,7 @@ var _t = Object.defineProperty, xt = Object.getOwnPropertyDescriptor, We = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && _t(e, r, o), o;
 };
-let S = class extends h {
+let S = class extends p {
   constructor() {
     super(...arguments), this._bounds = new DOMRect(), this._snapPreview = null, this._resizeObserver = null, this._handlePanelMove = (t) => {
       const e = t.target;
@@ -738,16 +738,16 @@ let S = class extends h {
   connectedCallback() {
     super.connectedCallback(), typeof ResizeObserver < "u" ? (this._resizeObserver = new ResizeObserver((t) => {
       for (const e of t)
-        this._bounds = e.contentRect, this.dispatchEvent(new CustomEvent("bounds-change", {
+        this._bounds = e.contentRect, this.dispatchEvent(new CustomEvent("tui-workspace-bounds-change", {
           detail: { bounds: this._bounds },
           bubbles: !0,
           composed: !0
         }));
-    }), this._resizeObserver.observe(this)) : this._bounds = new DOMRect(0, 0, this.offsetWidth || 800, this.offsetHeight || 600), this.addEventListener("panel-move", this._handlePanelMove), this.addEventListener("panel-resize", this._handlePanelResize), this.addEventListener("panel-dismiss", this._handlePanelDismiss), this.addEventListener("panel-drag-end", this._handlePanelDragEnd), this.addEventListener("panel-minimize", this._handlePanelMinimize), this.addEventListener("panel-restore", this._handlePanelRestore);
+    }), this._resizeObserver.observe(this)) : this._bounds = new DOMRect(0, 0, this.offsetWidth || 800, this.offsetHeight || 600), this.addEventListener("tui-panel-move", this._handlePanelMove), this.addEventListener("tui-panel-resize", this._handlePanelResize), this.addEventListener("tui-panel-dismiss", this._handlePanelDismiss), this.addEventListener("tui-panel-drag-end", this._handlePanelDragEnd), this.addEventListener("tui-panel-minimize", this._handlePanelMinimize), this.addEventListener("tui-panel-restore", this._handlePanelRestore);
   }
   disconnectedCallback() {
     var t;
-    super.disconnectedCallback(), (t = this._resizeObserver) == null || t.disconnect(), this.removeEventListener("panel-move", this._handlePanelMove), this.removeEventListener("panel-resize", this._handlePanelResize), this.removeEventListener("panel-dismiss", this._handlePanelDismiss), this.removeEventListener("panel-drag-end", this._handlePanelDragEnd), this.removeEventListener("panel-minimize", this._handlePanelMinimize), this.removeEventListener("panel-restore", this._handlePanelRestore);
+    super.disconnectedCallback(), (t = this._resizeObserver) == null || t.disconnect(), this.removeEventListener("tui-panel-move", this._handlePanelMove), this.removeEventListener("tui-panel-resize", this._handlePanelResize), this.removeEventListener("tui-panel-dismiss", this._handlePanelDismiss), this.removeEventListener("tui-panel-drag-end", this._handlePanelDragEnd), this.removeEventListener("tui-panel-minimize", this._handlePanelMinimize), this.removeEventListener("tui-panel-restore", this._handlePanelRestore);
   }
   _detectSnapEdge(t, e, r, s) {
     const o = this._bounds;
@@ -783,7 +783,7 @@ let S = class extends h {
       width: r.panelWidth ?? r.offsetWidth,
       height: r.panelHeight ?? r.offsetHeight
     }));
-    this.dispatchEvent(new CustomEvent("layout-change", {
+    this.dispatchEvent(new CustomEvent("tui-workspace-layout-change", {
       detail: { panels: e, bounds: this._bounds },
       bubbles: !0,
       composed: !0
@@ -829,7 +829,7 @@ let S = class extends h {
 S.SNAP_ZONE = 20;
 S.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
         position: relative;
@@ -912,7 +912,7 @@ var wt = Object.defineProperty, $t = Object.getOwnPropertyDescriptor, Te = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && wt(e, r, o), o;
 };
-let Z = class extends h {
+let Z = class extends p {
   constructor() {
     super(...arguments), this.side = "left", this.size = 200, this._dropIndex = null;
   }
@@ -997,7 +997,7 @@ let Z = class extends h {
 };
 Z.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
         position: relative;
@@ -1080,10 +1080,10 @@ var Et = Object.defineProperty, St = Object.getOwnPropertyDescriptor, v = (t, e,
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Et(e, r, o), o;
 };
-let m = class extends h {
+let m = class extends p {
   constructor() {
     super(...arguments), this.title = "", this.color = "", this.border = "single", this.variant = "bright", this.selectionStyle = "", this.collapsible = !1, this.collapsed = !1, this.selected = !1, this.active = !1, this.persistId = "", this.dismissable = !1, this.full = !1, this.floating = !1, this.snapEdge = "", this.positionX = 0, this.positionY = 0, this.resizable = !1, this.minimized = !1, this.panelWidth = null, this.panelHeight = null, this.maxWidth = null, this.maxHeight = null, this.minWidth = 150, this.minHeight = 100, this.docked = "", this._isDragging = !1, this._dragStartX = 0, this._dragStartY = 0, this._dragOffsetX = 0, this._dragOffsetY = 0, this._isResizing = !1, this._resizeStartX = 0, this._resizeStartY = 0, this._resizeStartWidth = 0, this._resizeStartHeight = 0, this._preMinimizeX = 0, this._preMinimizeY = 0, this._preMinimizeWidth = null, this._preMinimizeHeight = null, this._handleClick = () => {
-      this.dispatchEvent(new CustomEvent("focus-request", {
+      this.dispatchEvent(new CustomEvent("tui-panel-focus-request", {
         bubbles: !0,
         composed: !0,
         detail: { panel: this }
@@ -1097,7 +1097,7 @@ let m = class extends h {
     }, this._onDragMove = (t) => {
       if (!this._isDragging) return;
       const e = t.clientX - this._dragStartX, r = t.clientY - this._dragStartY;
-      this.positionX = this._dragOffsetX + e, this.positionY = this._dragOffsetY + r, this.dispatchEvent(new CustomEvent("panel-move", {
+      this.positionX = this._dragOffsetX + e, this.positionY = this._dragOffsetY + r, this.dispatchEvent(new CustomEvent("tui-panel-move", {
         detail: {
           panelId: this.id || this.title,
           x: this.positionX,
@@ -1109,7 +1109,7 @@ let m = class extends h {
         composed: !0
       }));
     }, this._onDragEnd = () => {
-      this._isDragging = !1, document.removeEventListener("pointermove", this._onDragMove), document.removeEventListener("pointerup", this._onDragEnd), this.dispatchEvent(new CustomEvent("panel-drag-end", {
+      this._isDragging = !1, document.removeEventListener("pointermove", this._onDragMove), document.removeEventListener("pointerup", this._onDragEnd), this.dispatchEvent(new CustomEvent("tui-panel-drag-end", {
         detail: {
           panelId: this.id || this.title,
           x: this.positionX,
@@ -1124,7 +1124,7 @@ let m = class extends h {
       if (!this._isResizing) return;
       const e = t.clientX - this._resizeStartX, r = t.clientY - this._resizeStartY;
       let s = this._resizeStartWidth + e, o = this._resizeStartHeight + r;
-      s = Math.max(this.minWidth, s), o = Math.max(this.minHeight, o), this.maxWidth !== null && (s = Math.min(this.maxWidth, s)), this.maxHeight !== null && (o = Math.min(this.maxHeight, o)), this.panelWidth = s, this.panelHeight = o, this.dispatchEvent(new CustomEvent("panel-resize", {
+      s = Math.max(this.minWidth, s), o = Math.max(this.minHeight, o), this.maxWidth !== null && (s = Math.min(this.maxWidth, s)), this.maxHeight !== null && (o = Math.min(this.maxHeight, o)), this.panelWidth = s, this.panelHeight = o, this.dispatchEvent(new CustomEvent("tui-panel-resize", {
         detail: {
           panelId: this.id || this.title,
           width: this.panelWidth,
@@ -1152,7 +1152,7 @@ let m = class extends h {
     super.disconnectedCallback(), this.removeEventListener("click", this._handleClick), document.removeEventListener("pointermove", this._onDragMove), document.removeEventListener("pointerup", this._onDragEnd), document.removeEventListener("pointermove", this._onResizeMove), document.removeEventListener("pointerup", this._onResizeEnd);
   }
   toggle() {
-    this.collapsible && (this.collapsed = !this.collapsed, this.persistId && localStorage.setItem(`tui-panel-${this.persistId}`, String(this.collapsed)), this.dispatchEvent(new CustomEvent("toggle", {
+    this.collapsible && (this.collapsed = !this.collapsed, this.persistId && localStorage.setItem(`tui-panel-${this.persistId}`, String(this.collapsed)), this.dispatchEvent(new CustomEvent("tui-panel-toggle", {
       detail: { collapsed: this.collapsed },
       bubbles: !0,
       composed: !0
@@ -1174,7 +1174,7 @@ let m = class extends h {
       };
       localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(r));
     }
-    const t = new CustomEvent("panel-dismiss", {
+    const t = new CustomEvent("tui-panel-dismiss", {
       detail: { panelId: this.id || this.title },
       bubbles: !0,
       composed: !0,
@@ -1200,7 +1200,7 @@ let m = class extends h {
         };
         localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(t));
       }
-      this.dispatchEvent(new CustomEvent("panel-minimize", {
+      this.dispatchEvent(new CustomEvent("tui-panel-minimize", {
         detail: { panelId: this.id || this.title },
         bubbles: !0,
         composed: !0
@@ -1224,7 +1224,7 @@ let m = class extends h {
         };
         localStorage.setItem(`tui-panel-memory-${this.persistId}`, JSON.stringify(t));
       }
-      this.dispatchEvent(new CustomEvent("panel-restore", {
+      this.dispatchEvent(new CustomEvent("tui-panel-restore", {
         detail: { panelId: this.id || this.title },
         bubbles: !0,
         composed: !0
@@ -1295,7 +1295,7 @@ let m = class extends h {
 };
 m.styles = [
   b,
-  p`
+  h`
       :host {
         /* Default: neutral border color */
         --panel-color: var(--color-info);
@@ -1804,7 +1804,7 @@ v([
   n({ type: String })
 ], m.prototype, "title", 2);
 v([
-  n({ type: String })
+  n({ type: String, reflect: !0 })
 ], m.prototype, "color", 2);
 v([
   n({ type: String, reflect: !0 })
@@ -1939,7 +1939,7 @@ function rt(t) {
   const o = (8 + (t - 232) * 10).toString(16).padStart(2, "0");
   return `#${o}${o}${o}`;
 }
-function Ye(t) {
+function Ue(t) {
   if (!t) return "";
   let e = t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const r = /\x1b\[([0-9;]+)m/g;
@@ -1982,7 +1982,7 @@ var Ct = Object.defineProperty, kt = Object.getOwnPropertyDescriptor, ie = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Ct(e, r, o), o;
 };
-let M = class extends h {
+let R = class extends p {
   constructor() {
     super(...arguments), this.maxLines = 500, this.autoscroll = !0, this.timestamps = !1, this.attr = "", this._lines = [];
   }
@@ -1995,7 +1995,7 @@ let M = class extends h {
 `).map((s) => ({
       id: Date.now() + Math.random(),
       text: s,
-      html: Ye(s),
+      html: Ue(s),
       timestamp: e
     }));
     this._lines = [...this._lines, ...r].slice(-this.maxLines), this.autoscroll && this._isNearBottom() && this.updateComplete.then(() => this.scrollToBottom());
@@ -2042,9 +2042,9 @@ let M = class extends h {
     `;
   }
 };
-M.styles = [
+R.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
         height: 100%;
@@ -2099,28 +2099,28 @@ M.styles = [
 ];
 ie([
   n({ type: Number, attribute: "max-lines" })
-], M.prototype, "maxLines", 2);
+], R.prototype, "maxLines", 2);
 ie([
   n({ type: Boolean })
-], M.prototype, "autoscroll", 2);
+], R.prototype, "autoscroll", 2);
 ie([
   n({ type: Boolean })
-], M.prototype, "timestamps", 2);
+], R.prototype, "timestamps", 2);
 ie([
   n({ type: String })
-], M.prototype, "attr", 2);
+], R.prototype, "attr", 2);
 ie([
   x()
-], M.prototype, "_lines", 2);
-M = ie([
+], R.prototype, "_lines", 2);
+R = ie([
   u("tui-output")
-], M);
+], R);
 var Ot = Object.defineProperty, Pt = Object.getOwnPropertyDescriptor, Ae = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Pt(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Ot(e, r, o), o;
 };
-let J = class extends h {
+let J = class extends p {
   constructor() {
     super(...arguments), this.border = "single", this._columns = [], this._rows = [];
   }
@@ -2182,7 +2182,7 @@ let J = class extends h {
 };
 J.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
       }
@@ -2252,7 +2252,7 @@ var Dt = Object.defineProperty, Tt = Object.getOwnPropertyDescriptor, K = (t, e,
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Dt(e, r, o), o;
 };
-let k = class extends h {
+let k = class extends p {
   constructor() {
     super(...arguments), this.prompt = "❯ ", this.promptAttr = "", this.historySize = 100, this._lines = [], this._inputValue = "", this._historyIndex = -1, this._history = [];
   }
@@ -2265,7 +2265,7 @@ let k = class extends h {
 `).map((r) => ({
       id: Date.now() + Math.random(),
       text: r,
-      html: Ye(r),
+      html: Ue(r),
       type: "output"
     }));
     this._lines = [...this._lines, ...e], this.updateComplete.then(() => this.scrollToBottom());
@@ -2322,8 +2322,8 @@ let k = class extends h {
       html: t,
       type: "command",
       prompt: this.prompt
-    }], this._history = [...this._history.slice(-this.historySize + 1), t], this._historyIndex = -1, this._inputValue = "", this.dispatchEvent(new CustomEvent("command", {
-      detail: t,
+    }], this._history = [...this._history.slice(-this.historySize + 1), t], this._historyIndex = -1, this._inputValue = "", this.dispatchEvent(new CustomEvent("tui-console-command", {
+      detail: { command: t },
       bubbles: !0,
       composed: !0
     })), this.updateComplete.then(() => this.scrollToBottom()));
@@ -2365,7 +2365,7 @@ let k = class extends h {
 };
 k.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
         height: 200px;
@@ -2464,18 +2464,18 @@ var It = Object.defineProperty, At = Object.getOwnPropertyDescriptor, Me = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && It(e, r, o), o;
 };
-let Q = class extends h {
+let Q = class extends p {
   constructor() {
     super(...arguments), this.content = "", this.attr = "", this.variant = "";
   }
   render() {
-    const t = this.attr.split(/\s+/).filter(Boolean).map((r) => `tui-${r}`).join(" "), e = Ye(this.content || this.textContent || "");
+    const t = this.attr.split(/\s+/).filter(Boolean).map((r) => `tui-${r}`).join(" "), e = Ue(this.content || this.textContent || "");
     return l`<pre class="${t}" .innerHTML=${e}></pre>`;
   }
 };
 Q.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
       }
@@ -2524,14 +2524,14 @@ Me([
 Q = Me([
   u("tui-text")
 ], Q);
-var Mt = Object.defineProperty, Rt = Object.getOwnPropertyDescriptor, N = (t, e, r, s) => {
+var Mt = Object.defineProperty, Rt = Object.getOwnPropertyDescriptor, D = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Rt(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Mt(e, r, o), o;
 };
-let z = class extends h {
+let $ = class extends p {
   constructor() {
-    super(...arguments), this.variant = "default", this.size = "md", this.selected = !1, this.disabled = !1, this.block = !1;
+    super(...arguments), this.variant = "default", this.color = "", this.size = "md", this.selected = !1, this.disabled = !1, this.block = !1;
   }
   render() {
     return l`
@@ -2541,13 +2541,13 @@ let z = class extends h {
     `;
   }
 };
-z.shadowRootOptions = {
-  ...h.shadowRootOptions,
+$.shadowRootOptions = {
+  ...p.shadowRootOptions,
   delegatesFocus: !0
 };
-z.styles = [
+$.styles = [
   b,
-  p`
+  h`
       /* ═══════════════════════════════════════════════════════════════════
          HOST & THEMING HOOKS
          ═══════════════════════════════════════════════════════════════════ */
@@ -2566,6 +2566,10 @@ z.styles = [
         --_btn-hover-bg: var(--tui-button-hover-bg, var(--border-default));
         --_btn-hover-color: var(--tui-button-hover-color, var(--_btn-color));
         --_btn-hover-border-color: var(--tui-button-hover-border-color, var(--text-muted));
+
+        /* The accent the filled and outline treatments paint with. The color
+           attribute overrides it; unset, both treatments read as primary. */
+        --_btn-accent: var(--color-primary);
 
         /* Size tokens */
         --_btn-padding-x: var(--spacing-md);
@@ -2643,36 +2647,34 @@ z.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: PRIMARY
-         Filled with primary color
+         SEMANTIC COLOUR — sets the accent the filled/outline treatments use
          ═══════════════════════════════════════════════════════════════════ */
 
-      :host([variant="primary"]) {
-        --_btn-bg: var(--color-primary);
+      :host([color="primary"])   { --_btn-accent: var(--color-primary); }
+      :host([color="secondary"]) { --_btn-accent: var(--color-secondary); }
+      :host([color="success"])   { --_btn-accent: var(--color-success); }
+      :host([color="warning"])   { --_btn-accent: var(--color-warning); }
+      :host([color="error"])     { --_btn-accent: var(--color-error); }
+      :host([color="info"])      { --_btn-accent: var(--color-info); }
+
+      /* muted is a de-emphasis accent, meant for the outline treatment. Under
+         filled it becomes the background behind --surface-base text, which does
+         not clear AA contrast in the dark themes — reach for ghost instead. */
+      :host([color="muted"])     { --_btn-accent: var(--text-muted); }
+
+      /* ═══════════════════════════════════════════════════════════════════
+         VARIANT: FILLED — solid accent, brightens on hover
+         ═══════════════════════════════════════════════════════════════════ */
+
+      :host([variant="filled"]) {
+        --_btn-bg: var(--_btn-accent);
         --_btn-color: var(--surface-base);
-        --_btn-border-color: var(--color-primary);
+        --_btn-border-color: var(--_btn-accent);
 
         & button:hover:not(:disabled) {
           filter: brightness(1.15);
-          background: var(--color-primary);
-          border-color: var(--color-primary);
-        }
-      }
-
-      /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: DANGER
-         Outlined with error color, fills on hover
-         ═══════════════════════════════════════════════════════════════════ */
-
-      :host([variant="danger"]) {
-        --_btn-bg: transparent;
-        --_btn-color: var(--color-error);
-        --_btn-border-color: var(--color-error);
-
-        & button:hover:not(:disabled) {
-          background: var(--color-error);
-          color: var(--surface-base);
-          border-color: var(--color-error);
+          background: var(--_btn-accent);
+          border-color: var(--_btn-accent);
         }
       }
 
@@ -2694,20 +2696,18 @@ z.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         VARIANT: OUTLINE
-         Single border outline, text colored, transparent background
-         Border matches variant color. Fills on hover.
+         VARIANT: OUTLINE — accent border and text, fills on hover
          ═══════════════════════════════════════════════════════════════════ */
 
       :host([variant="outline"]) {
         --_btn-bg: transparent;
-        --_btn-color: var(--color-primary);
-        --_btn-border-color: var(--color-primary);
+        --_btn-color: var(--_btn-accent);
+        --_btn-border-color: var(--_btn-accent);
 
         & button:hover:not(:disabled) {
-          background: var(--color-primary);
+          background: var(--_btn-accent);
           color: var(--surface-base);
-          border-color: var(--color-primary);
+          border-color: var(--_btn-accent);
         }
       }
 
@@ -2817,36 +2817,39 @@ z.styles = [
       }
     `
 ];
-N([
+D([
   n({ reflect: !0 })
-], z.prototype, "variant", 2);
-N([
+], $.prototype, "variant", 2);
+D([
   n({ reflect: !0 })
-], z.prototype, "size", 2);
-N([
+], $.prototype, "color", 2);
+D([
+  n({ reflect: !0 })
+], $.prototype, "size", 2);
+D([
   n({ attribute: "selection-style" })
-], z.prototype, "selectionStyle", 2);
-N([
+], $.prototype, "selectionStyle", 2);
+D([
   n({ attribute: "tool-id" })
-], z.prototype, "toolId", 2);
-N([
+], $.prototype, "toolId", 2);
+D([
   n({ type: Boolean, reflect: !0 })
-], z.prototype, "selected", 2);
-N([
+], $.prototype, "selected", 2);
+D([
   n({ type: Boolean, reflect: !0 })
-], z.prototype, "disabled", 2);
-N([
+], $.prototype, "disabled", 2);
+D([
   n({ type: Boolean, reflect: !0 })
-], z.prototype, "block", 2);
-z = N([
+], $.prototype, "block", 2);
+$ = D([
   u("tui-button")
-], z);
+], $);
 var Ht = Object.defineProperty, jt = Object.getOwnPropertyDescriptor, E = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? jt(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Ht(e, r, o), o;
 };
-let Oe = class extends h {
+let Oe = class extends p {
   constructor() {
     super(...arguments), this._openMenu = null;
   }
@@ -2856,7 +2859,7 @@ let Oe = class extends h {
 };
 Oe.styles = [
   b,
-  p`
+  h`
       :host {
         display: flex;
         gap: var(--spacing-xs);
@@ -2869,7 +2872,7 @@ E([
 Oe = E([
   u("tui-menu")
 ], Oe);
-let ee = class extends h {
+let ee = class extends p {
   constructor() {
     super(...arguments), this.label = "", this.hotkey = "", this._open = !1, this._outsideClickHandler = null;
   }
@@ -2912,7 +2915,7 @@ let ee = class extends h {
 };
 ee.styles = [
   b,
-  p`
+  h`
       :host {
         position: relative;
       }
@@ -2958,13 +2961,14 @@ E([
 ee = E([
   u("tui-menu-item")
 ], ee);
-let te = class extends h {
+let te = class extends p {
   constructor() {
     super(...arguments), this.label = "", this.shortcut = "", this.danger = !1;
   }
   _handleClick() {
     this.dispatchEvent(
-      new CustomEvent("action", {
+      new CustomEvent("tui-menu-action-select", {
+        detail: { label: this.label },
         bubbles: !0,
         composed: !0
       })
@@ -2981,7 +2985,7 @@ let te = class extends h {
 };
 te.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
       }
@@ -3038,12 +3042,12 @@ E([
 te = E([
   u("tui-menu-action")
 ], te);
-let Ne = class extends h {
+let Ne = class extends p {
   render() {
     return l``;
   }
 };
-Ne.styles = p`
+Ne.styles = h`
     :host {
       display: block;
       height: 1px;
@@ -3059,7 +3063,7 @@ var Nt = Object.defineProperty, Lt = Object.getOwnPropertyDescriptor, ae = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Nt(e, r, o), o;
 };
-let Pe = class extends h {
+let Pe = class extends p {
   constructor() {
     super(...arguments), this.color = "primary";
   }
@@ -3069,7 +3073,7 @@ let Pe = class extends h {
 };
 Pe.styles = [
   b,
-  p`
+  h`
       :host {
         --bar-color: var(--color-primary);
         display: flex;
@@ -3108,7 +3112,7 @@ ae([
 Pe = ae([
   u("tui-statusbar")
 ], Pe);
-let re = class extends h {
+let re = class extends p {
   constructor() {
     super(...arguments), this.label = "", this.value = "", this.highlight = !1;
   }
@@ -3121,7 +3125,7 @@ let re = class extends h {
 };
 re.styles = [
   b,
-  p`
+  h`
       :host {
         display: flex;
         align-items: center;
@@ -3141,7 +3145,7 @@ re.styles = [
       }
 
       :host([highlight]) .value {
-        color: var(--color-secondary);
+        color: var(--color-warning);
       }
     `
 ];
@@ -3162,7 +3166,7 @@ var Bt = Object.defineProperty, Wt = Object.getOwnPropertyDescriptor, me = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Bt(e, r, o), o;
 };
-let L = class extends h {
+let L = class extends p {
   constructor() {
     super(...arguments), this.title = "", this.border = "double", this.open = !1, this.closable = !0, this._boundKeyHandler = this._handleKeydown.bind(this);
   }
@@ -3182,13 +3186,13 @@ let L = class extends h {
    * Open the modal
    */
   show() {
-    this.open = !0, this.dispatchEvent(new CustomEvent("open", { bubbles: !0, composed: !0 }));
+    this.open = !0, this.dispatchEvent(new CustomEvent("tui-modal-open", { bubbles: !0, composed: !0 }));
   }
   /**
    * Close the modal
    */
   close() {
-    this.open = !1, this.dispatchEvent(new CustomEvent("close", { bubbles: !0, composed: !0 }));
+    this.open = !1, this.dispatchEvent(new CustomEvent("tui-modal-close", { bubbles: !0, composed: !0 }));
   }
   render() {
     return l`
@@ -3213,7 +3217,7 @@ let L = class extends h {
 };
 L.styles = [
   b,
-  p`
+  h`
       :host {
         display: none;
       }
@@ -3356,12 +3360,12 @@ me([
 L = me([
   u("tui-modal")
 ], L);
-var Yt = Object.defineProperty, Ut = Object.getOwnPropertyDescriptor, $ = (t, e, r, s) => {
-  for (var o = s > 1 ? void 0 : s ? Ut(e, r) : e, i = t.length - 1, a; i >= 0; i--)
+var Ut = Object.defineProperty, Yt = Object.getOwnPropertyDescriptor, z = (t, e, r, s) => {
+  for (var o = s > 1 ? void 0 : s ? Yt(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
-  return s && o && Yt(e, r, o), o;
+  return s && o && Ut(e, r, o), o;
 };
-let O = class extends h {
+let O = class extends p {
   constructor() {
     super(...arguments), this.orientation = "vertical", this.selected = "", this.size = "md", this.selectionStyle = "", this.tools = [], this.showHotkeys = !0;
   }
@@ -3370,7 +3374,7 @@ let O = class extends h {
   }
   _handleClick(t) {
     this.selected = t, this.dispatchEvent(
-      new CustomEvent("tool-select", {
+      new CustomEvent("tui-tool-select", {
         bubbles: !0,
         composed: !0,
         detail: { tool: t }
@@ -3406,7 +3410,7 @@ let O = class extends h {
 };
 O.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
         /* Pass selection-style to children */
@@ -3485,34 +3489,34 @@ O.styles = [
       }
     `
 ];
-$([
+z([
   n({ reflect: !0 })
 ], O.prototype, "orientation", 2);
-$([
+z([
   n()
 ], O.prototype, "selected", 2);
-$([
+z([
   n({ reflect: !0 })
 ], O.prototype, "size", 2);
-$([
+z([
   n({ attribute: "selection-style" })
 ], O.prototype, "selectionStyle", 2);
-$([
+z([
   n({ type: Array })
 ], O.prototype, "tools", 2);
-$([
+z([
   n({ type: Boolean, attribute: "show-hotkeys" })
 ], O.prototype, "showHotkeys", 2);
-O = $([
+O = z([
   u("tui-toolbar")
 ], O);
-let B = class extends h {
+let B = class extends p {
   constructor() {
     super(...arguments), this.toolId = "", this.icon = "", this.active = !1, this.size = "md";
   }
   _handleClick() {
     this.dispatchEvent(
-      new CustomEvent("tool-select", {
+      new CustomEvent("tui-tool-select", {
         bubbles: !0,
         composed: !0,
         detail: { tool: this.toolId }
@@ -3532,24 +3536,24 @@ let B = class extends h {
     `;
   }
 };
-B.styles = p`
+B.styles = h`
     :host {
       display: contents;
     }
   `;
-$([
+z([
   n({ attribute: "tool-id" })
 ], B.prototype, "toolId", 2);
-$([
+z([
   n()
 ], B.prototype, "icon", 2);
-$([
+z([
   n({ type: Boolean, reflect: !0 })
 ], B.prototype, "active", 2);
-$([
+z([
   n()
 ], B.prototype, "size", 2);
-B = $([
+B = z([
   u("tui-tool")
 ], B);
 var Xt = Object.defineProperty, qt = Object.getOwnPropertyDescriptor, ve = (t, e, r, s) => {
@@ -3557,7 +3561,7 @@ var Xt = Object.defineProperty, qt = Object.getOwnPropertyDescriptor, ve = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Xt(e, r, o), o;
 };
-let W = class extends h {
+let W = class extends p {
   constructor() {
     super(...arguments), this.position = "bottom", this._queue = [], this._current = null, this._visible = !1;
   }
@@ -3619,7 +3623,7 @@ let W = class extends h {
 };
 W.styles = [
   b,
-  p`
+  h`
       :host {
         position: fixed;
         z-index: 3000;
@@ -3774,8 +3778,8 @@ var Ft = Object.defineProperty, Vt = Object.getOwnPropertyDescriptor, G = (t, e,
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Ft(e, r, o), o;
 };
-const D = Ie.single, T = Ie.heavy, I = Ie.double;
-let P = class extends h {
+const T = Ie.single, I = Ie.heavy, A = Ie.double;
+let P = class extends p {
   constructor() {
     super(...arguments), this.rank = "", this.suit = "", this.faceDown = !1, this.selected = !1, this.disabled = !1, this.size = "md";
   }
@@ -3783,7 +3787,7 @@ let P = class extends h {
     return this.suit === "♥" || this.suit === "♦";
   }
   _handleClick() {
-    this.disabled || this.dispatchEvent(new CustomEvent("card-click", {
+    this.disabled || this.dispatchEvent(new CustomEvent("tui-card-click", {
       bubbles: !0,
       composed: !0,
       detail: { rank: this.rank, suit: this.suit }
@@ -3821,7 +3825,7 @@ let P = class extends h {
 };
 P.styles = [
   b,
-  p`
+  h`
       :host {
         display: inline-block;
         font-family: inherit;
@@ -3865,7 +3869,7 @@ P.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         NEUTRAL STATE - Single line border ${y(D.tl)}${y(D.h)}${y(D.h)}${y(D.tr)}
+         NEUTRAL STATE - Single line border ${y(T.tl)}${y(T.h)}${y(T.h)}${y(T.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       .card {
@@ -3873,7 +3877,7 @@ P.styles = [
       }
 
       .card::before {
-        content: '${y(D.tl)}';
+        content: '${y(T.tl)}';
         position: absolute;
         top: -1px;
         left: -1px;
@@ -3883,7 +3887,7 @@ P.styles = [
       }
 
       .card::after {
-        content: '${y(D.tr)}';
+        content: '${y(T.tr)}';
         position: absolute;
         top: -1px;
         right: -1px;
@@ -3893,7 +3897,7 @@ P.styles = [
       }
 
       .card-bottom::before {
-        content: '${y(D.bl)}';
+        content: '${y(T.bl)}';
         position: absolute;
         bottom: -1px;
         left: -1px;
@@ -3903,7 +3907,7 @@ P.styles = [
       }
 
       .card-bottom::after {
-        content: '${y(D.br)}';
+        content: '${y(T.br)}';
         position: absolute;
         bottom: -1px;
         right: -1px;
@@ -3913,7 +3917,7 @@ P.styles = [
       }
 
       /* ═══════════════════════════════════════════════════════════════════
-         HOVER STATE - Heavy line border ${y(T.tl)}${y(T.h)}${y(T.h)}${y(T.tr)}
+         HOVER STATE - Heavy line border ${y(I.tl)}${y(I.h)}${y(I.h)}${y(I.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       .card:hover:not(.disabled) {
@@ -3922,13 +3926,13 @@ P.styles = [
         transform: translateY(-2px);
       }
 
-      .card:hover:not(.disabled)::before { content: '${y(T.tl)}'; color: var(--text-primary); }
-      .card:hover:not(.disabled)::after { content: '${y(T.tr)}'; color: var(--text-primary); }
-      .card:hover:not(.disabled) .card-bottom::before { content: '${y(T.bl)}'; color: var(--text-primary); }
-      .card:hover:not(.disabled) .card-bottom::after { content: '${y(T.br)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled)::before { content: '${y(I.tl)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled)::after { content: '${y(I.tr)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled) .card-bottom::before { content: '${y(I.bl)}'; color: var(--text-primary); }
+      .card:hover:not(.disabled) .card-bottom::after { content: '${y(I.br)}'; color: var(--text-primary); }
 
       /* ═══════════════════════════════════════════════════════════════════
-         SELECTED STATE - Double line border ${y(I.tl)}${y(I.h)}${y(I.h)}${y(I.tr)}
+         SELECTED STATE - Double line border ${y(A.tl)}${y(A.h)}${y(A.h)}${y(A.tr)}
          ═══════════════════════════════════════════════════════════════════ */
 
       :host([selected]) .card {
@@ -3936,10 +3940,10 @@ P.styles = [
         box-shadow: 3px 3px 0 rgba(88, 166, 255, 0.2);
       }
 
-      :host([selected]) .card::before { content: '${y(I.tl)}'; color: var(--color-primary); }
-      :host([selected]) .card::after { content: '${y(I.tr)}'; color: var(--color-primary); }
-      :host([selected]) .card-bottom::before { content: '${y(I.bl)}'; color: var(--color-primary); }
-      :host([selected]) .card-bottom::after { content: '${y(I.br)}'; color: var(--color-primary); }
+      :host([selected]) .card::before { content: '${y(A.tl)}'; color: var(--color-primary); }
+      :host([selected]) .card::after { content: '${y(A.tr)}'; color: var(--color-primary); }
+      :host([selected]) .card-bottom::before { content: '${y(A.bl)}'; color: var(--color-primary); }
+      :host([selected]) .card-bottom::after { content: '${y(A.br)}'; color: var(--color-primary); }
 
       /* Selected + hover */
       :host([selected]) .card:hover:not(.disabled) {
@@ -4059,7 +4063,7 @@ var Kt = Object.defineProperty, Gt = Object.getOwnPropertyDescriptor, ge = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Kt(e, r, o), o;
 };
-let Y = class extends h {
+let U = class extends p {
   constructor() {
     super(...arguments), this.palettes = {}, this.currentPalette = "", this.selectedChar = "", this.columns = 8;
   }
@@ -4069,14 +4073,14 @@ let Y = class extends h {
   _selectPalette(t) {
     var r;
     const e = ((r = this.palettes[t]) == null ? void 0 : r[0]) || "";
-    this.dispatchEvent(new CustomEvent("palette-change", {
+    this.dispatchEvent(new CustomEvent("tui-palette-change", {
       bubbles: !0,
       composed: !0,
       detail: { palette: t, firstChar: e }
     }));
   }
   _selectChar(t) {
-    this.dispatchEvent(new CustomEvent("char-select", {
+    this.dispatchEvent(new CustomEvent("tui-palette-char-select", {
       bubbles: !0,
       composed: !0,
       detail: { char: t }
@@ -4104,9 +4108,9 @@ let Y = class extends h {
     `;
   }
 };
-Y.styles = [
+U.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
       }
@@ -4176,31 +4180,31 @@ Y.styles = [
 ];
 ge([
   n({ type: Object })
-], Y.prototype, "palettes", 2);
+], U.prototype, "palettes", 2);
 ge([
   n({ type: String, attribute: "current-palette" })
-], Y.prototype, "currentPalette", 2);
+], U.prototype, "currentPalette", 2);
 ge([
   n({ type: String, attribute: "selected-char" })
-], Y.prototype, "selectedChar", 2);
+], U.prototype, "selectedChar", 2);
 ge([
   n({ type: Number })
-], Y.prototype, "columns", 2);
-Y = ge([
+], U.prototype, "columns", 2);
+U = ge([
   u("tui-palette")
-], Y);
+], U);
 var Zt = Object.defineProperty, Jt = Object.getOwnPropertyDescriptor, Re = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? Jt(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Zt(e, r, o), o;
 };
-let oe = class extends h {
+let oe = class extends p {
   constructor() {
     super(...arguments), this.href = "", this.type = "external", this._copied = !1;
   }
   _handleClick() {
     this.type === "external" && this.href ? window.open(this.href, "_blank", "noopener") : this.type === "copy" && this.href && navigator.clipboard.writeText(this.href).then(() => {
-      this._copied = !0, this.dispatchEvent(new CustomEvent("copy", {
+      this._copied = !0, this.dispatchEvent(new CustomEvent("tui-link-copy", {
         detail: { value: this.href },
         bubbles: !0,
         composed: !0
@@ -4220,7 +4224,7 @@ let oe = class extends h {
 };
 oe.styles = [
   b,
-  p`
+  h`
       :host {
         display: inline;
       }
@@ -4278,20 +4282,21 @@ Re([
 oe = Re([
   u("tui-link")
 ], oe);
-var Qt = Object.defineProperty, er = Object.getOwnPropertyDescriptor, Ue = (t, e, r, s) => {
+var Qt = Object.defineProperty, er = Object.getOwnPropertyDescriptor, Ye = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? er(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && Qt(e, r, o), o;
 };
-let he = class extends h {
+let pe = class extends p {
   constructor() {
     super(...arguments), this.items = [], this.selected = "";
   }
   _handleClick(t, e) {
-    this.selected === t ? (this.selected = "", this.dispatchEvent(new CustomEvent("item-deselect", {
+    this.selected === t ? (this.selected = "", this.dispatchEvent(new CustomEvent("tui-list-item-deselect", {
+      detail: { id: t, label: e },
       bubbles: !0,
       composed: !0
-    }))) : (this.selected = t, this.dispatchEvent(new CustomEvent("item-select", {
+    }))) : (this.selected = t, this.dispatchEvent(new CustomEvent("tui-list-item-select", {
       detail: { id: t, label: e },
       bubbles: !0,
       composed: !0
@@ -4331,9 +4336,9 @@ let he = class extends h {
     })}`;
   }
 };
-he.styles = [
+pe.styles = [
   b,
-  p`
+  h`
       :host {
         display: flex;
         flex-direction: column;
@@ -4390,21 +4395,21 @@ he.styles = [
       }
     `
 ];
-Ue([
+Ye([
   n({ type: Array })
-], he.prototype, "items", 2);
-Ue([
+], pe.prototype, "items", 2);
+Ye([
   n({ type: String, reflect: !0 })
-], he.prototype, "selected", 2);
-he = Ue([
+], pe.prototype, "selected", 2);
+pe = Ye([
   u("tui-action-list")
-], he);
+], pe);
 var tr = Object.defineProperty, rr = Object.getOwnPropertyDescriptor, He = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? rr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && tr(e, r, o), o;
 };
-let se = class extends h {
+let se = class extends p {
   constructor() {
     super(...arguments), this.label = "", this.value = "", this.color = "";
   }
@@ -4417,7 +4422,7 @@ let se = class extends h {
 };
 se.styles = [
   b,
-  p`
+  h`
       :host {
         display: block;
         text-align: right;
@@ -4467,7 +4472,7 @@ var or = Object.defineProperty, sr = Object.getOwnPropertyDescriptor, ye = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && or(e, r, o), o;
 };
-let De = class extends h {
+let De = class extends p {
   constructor() {
     super(...arguments), this.label = "";
   }
@@ -4480,7 +4485,7 @@ let De = class extends h {
 };
 De.styles = [
   b,
-  p`
+  h`
       :host {
         display: flex;
         align-items: center;
@@ -4518,7 +4523,7 @@ ye([
 De = ye([
   u("tui-status-strip")
 ], De);
-let ue = class extends h {
+let ue = class extends p {
   constructor() {
     super(...arguments), this.color = "", this.indicator = "";
   }
@@ -4531,7 +4536,7 @@ let ue = class extends h {
 };
 ue.styles = [
   b,
-  p`
+  h`
       :host {
         display: inline-flex;
         align-items: center;
@@ -4571,7 +4576,7 @@ var ir = Object.defineProperty, ar = Object.getOwnPropertyDescriptor, Xe = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && ir(e, r, o), o;
 };
-let fe = class extends h {
+let fe = class extends p {
   constructor() {
     super(...arguments), this.app = "", this.section = "";
   }
@@ -4588,7 +4593,7 @@ let fe = class extends h {
 };
 fe.styles = [
   b,
-  p`
+  h`
       :host {
         display: flex;
         align-items: center;
@@ -4642,7 +4647,7 @@ const cr = "120px", ot = `var(--tui-tiled-footer-height, ${cr})`, dr = {
   "console-split": "main aside | footer footer",
   triad: "left center right"
 };
-function pr(t) {
+function hr(t) {
   const r = t.split("|").map((_) => _.trim()).filter(Boolean).map((_) => _.split(/\s+/)), s = r.map((_) => `"${_.join(" ")}"`).join(" "), o = Math.max(...r.map((_) => _.length)), i = Array(o).fill("1fr").join(" "), a = /* @__PURE__ */ new Set(), c = [];
   for (const _ of r)
     for (const w of _)
@@ -4658,13 +4663,13 @@ function pr(t) {
   const g = f.join(" ");
   return { areas: s, rows: g, cols: i, slotNames: c };
 }
-let U = class extends h {
+let Y = class extends p {
   constructor() {
     super(...arguments), this.preset = "", this.areas = "", this.gap = "1px", this.labels = "";
   }
   _getGrid() {
     const t = this.preset ? dr[this.preset] : this.areas;
-    return t ? pr(t) : null;
+    return t ? hr(t) : null;
   }
   // When preset + areas are both set, treat areas as ordered display labels
   // mapped 1:1 onto the preset's slot names.
@@ -4700,9 +4705,9 @@ let U = class extends h {
     `;
   }
 };
-U.styles = [
+Y.styles = [
   b,
-  p`
+  h`
       :host {
         display: flex;
         flex-direction: column;
@@ -4768,25 +4773,25 @@ U.styles = [
 ];
 _e([
   n({ type: String, reflect: !0 })
-], U.prototype, "preset", 2);
+], Y.prototype, "preset", 2);
 _e([
   n({ type: String })
-], U.prototype, "areas", 2);
+], Y.prototype, "areas", 2);
 _e([
   n({ type: String })
-], U.prototype, "gap", 2);
+], Y.prototype, "gap", 2);
 _e([
   n({ type: String })
-], U.prototype, "labels", 2);
-U = _e([
+], Y.prototype, "labels", 2);
+Y = _e([
   u("tui-tiled")
-], U);
-var hr = Object.defineProperty, ur = Object.getOwnPropertyDescriptor, ne = (t, e, r, s) => {
+], Y);
+var pr = Object.defineProperty, ur = Object.getOwnPropertyDescriptor, ne = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? ur(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
-  return s && o && hr(e, r, o), o;
+  return s && o && pr(e, r, o), o;
 };
-let R = class extends h {
+let H = class extends p {
   constructor() {
     super(...arguments), this.value = "", this.placeholder = "", this.disabled = !1, this.name = "", this.label = "";
   }
@@ -4803,7 +4808,7 @@ let R = class extends h {
     this.value = e.value, this.dispatchEvent(new CustomEvent("tui-input", {
       bubbles: !0,
       composed: !0,
-      detail: { value: this.value }
+      detail: { value: this.value, name: this.name }
     }));
   }
   _onChange(t) {
@@ -4811,7 +4816,7 @@ let R = class extends h {
     this.value = e.value, this.dispatchEvent(new CustomEvent("tui-change", {
       bubbles: !0,
       composed: !0,
-      detail: { value: this.value }
+      detail: { value: this.value, name: this.name }
     }));
   }
   render() {
@@ -4827,9 +4832,9 @@ let R = class extends h {
     `;
   }
 };
-R.styles = [
+H.styles = [
   b,
-  p`
+  h`
       :host { display: block; }
       label {
         display: block;
@@ -4865,28 +4870,28 @@ R.styles = [
 ];
 ne([
   n({ reflect: !0 })
-], R.prototype, "value", 2);
+], H.prototype, "value", 2);
 ne([
   n()
-], R.prototype, "placeholder", 2);
+], H.prototype, "placeholder", 2);
 ne([
   n({ type: Boolean, reflect: !0 })
-], R.prototype, "disabled", 2);
+], H.prototype, "disabled", 2);
 ne([
   n()
-], R.prototype, "name", 2);
+], H.prototype, "name", 2);
 ne([
   n()
-], R.prototype, "label", 2);
-R = ne([
+], H.prototype, "label", 2);
+H = ne([
   u("tui-input")
-], R);
+], H);
 var fr = Object.defineProperty, br = Object.getOwnPropertyDescriptor, le = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? br(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && fr(e, r, o), o;
 };
-let H = class extends h {
+let j = class extends p {
   constructor() {
     super(...arguments), this.checked = !1, this.disabled = !1, this.name = "", this.value = "", this.label = "";
   }
@@ -4922,9 +4927,9 @@ let H = class extends h {
     `;
   }
 };
-H.styles = [
+j.styles = [
   b,
-  p`
+  h`
       :host { display: inline-block; }
       :host([disabled]) { pointer-events: none; }
       .checkbox {
@@ -4964,28 +4969,28 @@ H.styles = [
 ];
 le([
   n({ type: Boolean, reflect: !0 })
-], H.prototype, "checked", 2);
+], j.prototype, "checked", 2);
 le([
   n({ type: Boolean, reflect: !0 })
-], H.prototype, "disabled", 2);
+], j.prototype, "disabled", 2);
 le([
   n()
-], H.prototype, "name", 2);
+], j.prototype, "name", 2);
 le([
   n()
-], H.prototype, "value", 2);
+], j.prototype, "value", 2);
 le([
   n()
-], H.prototype, "label", 2);
-H = le([
+], j.prototype, "label", 2);
+j = le([
   u("tui-checkbox")
-], H);
+], j);
 var mr = Object.defineProperty, vr = Object.getOwnPropertyDescriptor, ce = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? vr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && mr(e, r, o), o;
 };
-let j = class extends h {
+let N = class extends p {
   constructor() {
     super(...arguments), this.checked = !1, this.disabled = !1, this.name = "", this.value = "", this.label = "";
   }
@@ -5021,9 +5026,9 @@ let j = class extends h {
     `;
   }
 };
-j.styles = [
+N.styles = [
   b,
-  p`
+  h`
       :host { display: inline-block; }
       :host([disabled]) { pointer-events: none; }
       .radio {
@@ -5063,28 +5068,28 @@ j.styles = [
 ];
 ce([
   n({ type: Boolean, reflect: !0 })
-], j.prototype, "checked", 2);
+], N.prototype, "checked", 2);
 ce([
   n({ type: Boolean, reflect: !0 })
-], j.prototype, "disabled", 2);
+], N.prototype, "disabled", 2);
 ce([
   n()
-], j.prototype, "name", 2);
+], N.prototype, "name", 2);
 ce([
   n()
-], j.prototype, "value", 2);
+], N.prototype, "value", 2);
 ce([
   n()
-], j.prototype, "label", 2);
-j = ce([
+], N.prototype, "label", 2);
+N = ce([
   u("tui-radio")
-], j);
+], N);
 var gr = Object.defineProperty, yr = Object.getOwnPropertyDescriptor, xe = (t, e, r, s) => {
   for (var o = s > 1 ? void 0 : s ? yr(e, r) : e, i = t.length - 1, a; i >= 0; i--)
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && gr(e, r, o), o;
 };
-let X = class extends h {
+let X = class extends p {
   constructor() {
     super(...arguments), this.name = "", this.label = "", this.disabled = !1, this.value = [];
   }
@@ -5139,7 +5144,7 @@ let X = class extends h {
 };
 X.styles = [
   b,
-  p`
+  h`
       :host { display: block; }
       .group {
         display: flex;
@@ -5173,7 +5178,7 @@ var _r = Object.defineProperty, xr = Object.getOwnPropertyDescriptor, we = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && _r(e, r, o), o;
 };
-let q = class extends h {
+let q = class extends p {
   constructor() {
     super(...arguments), this.name = "", this.label = "", this.disabled = !1, this.value = "";
   }
@@ -5245,7 +5250,7 @@ let q = class extends h {
 };
 q.styles = [
   b,
-  p`
+  h`
       :host { display: block; }
       .group {
         display: flex;
@@ -5296,7 +5301,7 @@ var wr = Object.defineProperty, $r = Object.getOwnPropertyDescriptor, $e = (t, e
     (a = t[i]) && (o = (s ? a(e, r, o) : a(o)) || o);
   return s && o && wr(e, r, o), o;
 };
-let F = class extends h {
+let F = class extends p {
   constructor() {
     super(...arguments), this.value = 0, this.label = "", this.total = 0, this.current = 0;
   }
@@ -5331,7 +5336,7 @@ let F = class extends h {
 };
 F.styles = [
   b,
-  p`
+  h`
       :host { display: block; }
       .progress { padding: var(--spacing-sm); font-size: 0.8rem; }
       .header { display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs); color: var(--text-primary); }
@@ -5368,7 +5373,7 @@ const Sr = {
   info: "ℹ",
   pending: "…"
 };
-let be = class extends h {
+let be = class extends p {
   constructor() {
     super(...arguments), this.state = "", this.message = "";
   }
@@ -5391,7 +5396,7 @@ let be = class extends h {
 };
 be.styles = [
   b,
-  p`
+  h`
       :host { display: block; }
       .badge {
         display: flex; align-items: center; gap: var(--spacing-sm);
@@ -5422,26 +5427,26 @@ be = qe([
   u("tui-status")
 ], be);
 export {
-  he as ActionList,
+  pe as ActionList,
   C as App,
   Ie as BORDER_CHARS,
-  z as Button,
+  $ as Button,
   P as Card,
-  H as Checkbox,
+  j as Checkbox,
   X as CheckboxGroup,
   k as Console,
-  R as Input,
+  H as Input,
   oe as Link,
   Oe as Menu,
   te as MenuAction,
   Ne as MenuDivider,
   ee as MenuItem,
   L as Modal,
-  M as Output,
-  Y as Palette,
+  R as Output,
+  U as Palette,
   m as Panel,
   F as Progress,
-  j as Radio,
+  N as Radio,
   q as RadioGroup,
   Dr as SEMANTIC_COLORS,
   Tr as SEMANTIC_TOKENS,
@@ -5455,15 +5460,15 @@ export {
   ue as StripItem,
   J as Table,
   Q as Text,
-  U as Tiled,
+  Y as Tiled,
   fe as Titlebar,
   W as Toast,
   B as Tool,
   O as Toolbar,
   S as Workspace,
-  Ye as ansiToHtml,
+  Ue as ansiToHtml,
   zt as getBorderChars,
-  pr as parseAreas,
+  hr as parseAreas,
   b as sharedStyles,
   ke as titleDecoration,
   Pr as tuiToast

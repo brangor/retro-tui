@@ -42,12 +42,11 @@ small apps. If a proposed addition doesn't pass that test, update this section f
 
 ## Quick Start
 
-```bash
-npm install
-npm run dev        # Vite dev server at http://localhost:3000
-```
+### Using retro-tui in your app
 
-Import components and tokens from the library entry point:
+```bash
+npm install retro-tui
+```
 
 ```javascript
 import 'retro-tui';                       // registers all <tui-*> elements + tokens
@@ -58,11 +57,23 @@ import { Panel, Output, Console } from 'retro-tui';
 No build step? A self-contained build works from a plain script tag:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/retro-tui/dist/retro-tui.cdn.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/retro-tui@5/dist/retro-tui.cdn.js"></script>
 ```
 
+**Pin the major.** An unversioned CDN URL resolves to the `latest` dist-tag, which
+is not always the newest release — and the CDN build only exists from 3.0.0 onward,
+so an unpinned URL can 404 outright.
+
 Two builds ship: `retro-tui` for bundlers, `retro-tui/cdn` for a plain script
-tag. See [docs/api/distribution.md](docs/api/distribution.md).
+tag. They are not interchangeable — see [docs/api/distribution.md](docs/api/distribution.md).
+Upgrading an existing app? Start at [docs/guides/upgrading.md](docs/guides/upgrading.md).
+
+### Working on retro-tui itself
+
+```bash
+npm install
+npm run dev        # Vite dev server at http://localhost:3000
+```
 
 ## Components
 
@@ -81,7 +92,7 @@ Collapsible panel with header.
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `title` | string | Panel title |
-| `color` | string | Border color: cyan, green, magenta, yellow, red |
+| `color` | string | Semantic colour — `primary`, `secondary`, `success`, `warning`, `error`, `info`, `muted` |
 | `collapsible` | boolean | Enable collapse toggle |
 | `collapsed` | boolean | Current collapsed state |
 
@@ -142,8 +153,8 @@ Interactive command console with history.
 
 <script>
   const el = document.getElementById('console');
-  el.addEventListener('command', (e) => {
-    el.print(`You typed: ${e.detail}`);
+  el.addEventListener('tui-console-command', (e) => {
+    el.print(`You typed: ${e.detail.command}`);
   });
 </script>
 ```
@@ -174,7 +185,16 @@ Static text with ANSI color support.
 - **Layout**: `tui-app`, `tui-workspace`, `tui-sidebar`, `tui-tiled`
 - **Atoms**: `tui-panel`, `tui-output`, `tui-table`, `tui-console`, `tui-text`, `tui-menu`, `tui-statusbar`, `tui-modal`, `tui-button`, `tui-toolbar`, `tui-toast`, `tui-card`, `tui-palette`, `tui-link`, `tui-action-list`, `tui-stat`, `tui-status-strip`, `tui-titlebar`, `tui-progress`, `tui-status`
 - **Form**: `tui-input`, `tui-checkbox`, `tui-radio`, `tui-checkbox-group`, `tui-radio-group`
-- **Utilities**: `ansiToHtml`, `BORDER_CHARS`, `getBorderChars`, `titleDecoration`, `STATE_BORDERS`, `sharedStyles`, `parseAreas`
+- **Utilities**: `ansiToHtml`, `BORDER_CHARS`, `getBorderChars`, `titleDecoration`, `STATE_BORDERS`, `sharedStyles`, `parseAreas`, `SEMANTIC_COLORS`, `SEMANTIC_TOKENS`
+- **Types**: `SemanticColor`, `ControlSize`, `SelectionStyle`
+
+> **Upgrading from 2.x or 3.x?** `latest` sat at 2.2.5 for a long time, so most
+> existing installs are several majors behind. Start at
+> [docs/guides/upgrading.md](docs/guides/upgrading.md).
+
+> Choosing between components: [docs/guides/component-selection.md](docs/guides/component-selection.md).
+
+> Event names and payloads: [docs/api/events.md](docs/api/events.md).
 
 > Components taking a `color` attribute share one vocabulary — `primary`,
 > `secondary`, `success`, `warning`, `error`, `info`, `muted`.
@@ -219,11 +239,11 @@ the server, client, push scripts, and the JSON protocol shape.
 - [x] Projection system — **moved to [retro-tui-lab](../retro-tui-lab)**
 - [x] Tool state management (`@lit/context`) — **moved to [retro-tui-lab](../retro-tui-lab)**
 - [x] Push server + shell/node scripts — **moved to [examples/push-server/](examples/push-server/)**
+- [x] npm package distribution — published as `retro-tui`
+- [x] CDN build for script-tag usage — `dist/retro-tui.cdn.js`
 - [ ] `<tui-toolbar>` hotkey support — `getHotkeyMap()` method + `hotkey` attribute for display hints and remappable bindings
 - [ ] `<tui-tabs>` (tab container)
 - [ ] `<tui-split>` (resizable panes)
-- [ ] npm package distribution
-- [ ] CDN build for script-tag usage
 
 ## License
 

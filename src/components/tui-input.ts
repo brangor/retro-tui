@@ -4,6 +4,12 @@ import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import type { TuiEvent, InputData } from '../protocol/types';
 
+/**
+ * Text input.
+ *
+ * @fires tui-input - On every keystroke (detail: { value, name })
+ * @fires tui-change - When the value is committed (detail: { value, name })
+ */
 @customElement('tui-input')
 export class Input extends LitElement {
   @property({ reflect: true })
@@ -76,7 +82,7 @@ export class Input extends LitElement {
     this.dispatchEvent(new CustomEvent('tui-input', {
       bubbles: true,
       composed: true,
-      detail: { value: this.value },
+      detail: { value: this.value, name: this.name },
     }));
   }
 
@@ -86,7 +92,7 @@ export class Input extends LitElement {
     this.dispatchEvent(new CustomEvent('tui-change', {
       bubbles: true,
       composed: true,
-      detail: { value: this.value },
+      detail: { value: this.value, name: this.name },
     }));
   }
 

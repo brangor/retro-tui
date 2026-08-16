@@ -63,6 +63,23 @@ describe('tui-input', () => {
     expect(handler.mock.calls[0][0].detail.value).to.equal('test');
   });
 
+  // tui-input was the only one of the five form components omitting `name` from its
+  // detail, which broke the one-listener-per-form pattern the docs teach:
+  // `state[e.detail.name] = e.detail.value` wrote to state[undefined] for every input.
+  it('carries name in both event payloads', async () => {
+    const el = await fixture(html`<tui-input name="username"></tui-input>`) as any;
+    const onInput = vi.fn();
+    const onChange = vi.fn();
+    el.addEventListener('tui-input', onInput);
+    el.addEventListener('tui-change', onChange);
+    const input = el.shadowRoot!.querySelector('input')!;
+    input.value = 'ada';
+    input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new Event('change'));
+    expect(onInput.mock.calls[0][0].detail.name).to.equal('username');
+    expect(onChange.mock.calls[0][0].detail.name).to.equal('username');
+  });
+
   it('handles handleEvent to set value', async () => {
     const el = await fixture(html`<tui-input></tui-input>`) as any;
     el.handleEvent({ channel: 'test', type: 'input', id: 'x', data: { value: 'pushed' } });

@@ -18,7 +18,9 @@ import type { SemanticColor } from '../styles/semantics.js';
  * Matches GridSketch's hacker-style status bar.
  * 
  * @slot - Status items (use tui-status-item)
- * @attr {string} color - Border color: cyan | green | magenta | yellow
+ * @attr {string} color - Semantic color, painting the border and the dividers
+ *                        between slotted items (default: primary).
+ *                        See docs/api/semantic-colors.md
  */
 @customElement('tui-statusbar')
 export class Statusbar extends LitElement {
@@ -73,9 +75,12 @@ export class Statusbar extends LitElement {
 /**
  * <tui-status-item> - Single status bar item
  * 
- * @attr {string} label - Item label (displayed in bar color)
- * @attr {string} value - Item value (displayed in green)
- * @attr {boolean} highlight - Use yellow for value instead of green
+ * @attr {string} label - Item label (rendered in --color-primary, independent of
+ *                        the bar's own color)
+ * @attr {string} value - Item value (rendered in --color-secondary)
+ * @attr {boolean} highlight - Repaints the value in --color-warning to draw the
+ *                             eye to it. Also reflected to the host, so consumers
+ *                             can hang their own styling off it.
  */
 @customElement('tui-status-item')
 export class StatusItem extends LitElement {
@@ -110,7 +115,7 @@ export class StatusItem extends LitElement {
       }
 
       :host([highlight]) .value {
-        color: var(--color-secondary);
+        color: var(--color-warning);
       }
     `,
   ];

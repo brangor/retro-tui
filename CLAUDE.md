@@ -51,10 +51,11 @@ examples/push-server/ — optional recipe for live dashboard use cases
 - `src/utils/` — ANSI converter (`ansi.js`), border drawing chars (`borders.ts`)
 - `src/styles/shared.js` — Shared CSS variables and ANSI color classes (exported as `sharedStyles`)
 - `src/styles/tokens.css` — Design token system (semantic colors, surfaces, spacing, typography, themes)
-- `src/styles/semantics.ts` — The semantic colour vocabulary (`SemanticColor`, `SEMANTIC_COLORS`) shared by every component with a `color` attribute
+- `src/styles/semantics.ts` — The shared vocabularies: `SemanticColor`/`SEMANTIC_COLORS` for every component with a `color` attribute, plus `ControlSize` and `SelectionStyle`
 - `src/styles/inject-tokens.ts` — Auto-imports tokens.css on library load
 - `src/protocol/types.ts` — Type definitions used by component props (no runtime)
-- `docs/api/` — Public API contracts: `semantic-colors.md`, `tui-tiled.md`, `distribution.md`
+- `docs/api/` — Public API contracts: `semantic-colors.md`, `events.md`, `event-protocol.md`, `tui-tiled.md`, `distribution.md`
+- `docs/guides/` — Task-oriented guides: `component-selection.md`, `decision-engine.md`, `porting.md`
 - `examples/` — Demo pages; `push-server/` is a standalone recipe
 
 ### Component Patterns
@@ -70,12 +71,15 @@ Components supporting text output (`tui-output`, `tui-console`, `tui-text`) use 
 
 ### Library Entry Point
 
-`src/index.js` exports:
+`src/index.ts` exports (it became TypeScript in 5.0.0 so the shared vocabulary types
+can be re-exported — `export type` is not valid in a `.js` entry):
 - **Layout**: App, Workspace, Sidebar
-- **Atoms**: Panel, Output, Table, Console, Text, Menu, Statusbar, Modal, Button, Toolbar, Toast, Card, Palette, Link, ActionList, Stat, StatusStrip, Titlebar, Tiled
+- **Atoms**: Panel, Output, Table, Console, Text, Menu (+ MenuItem, MenuAction, MenuDivider), Statusbar (+ StatusItem), Modal, Button, Toolbar (+ Tool), Toast (+ tuiToast), Card, Palette, Link, ActionList, Stat, StatusStrip (+ StripItem), Titlebar, Tiled
 - **Form**: Input, Checkbox, Radio, CheckboxGroup, RadioGroup
 - **Atoms (cont.)**: Progress, Status
 - **Utilities**: ansiToHtml, BORDER_CHARS, getBorderChars, titleDecoration, STATE_BORDERS, sharedStyles, parseAreas, SEMANTIC_COLORS, SEMANTIC_TOKENS
+- **Types**: SemanticColor, ControlSize, SelectionStyle — consumers building their own
+  components import these rather than redeclaring the unions
 
 ### Build Output
 
@@ -90,8 +94,14 @@ Two builds ship, and they are not interchangeable — see `docs/api/distribution
 - `dist/types/` — TypeScript declarations. `types` must stay **first** in the
   `exports` condition or TS silently falls back to `any`.
 
-`dist/` is committed to git (quiltsketch pins a git tag). Rebuild after source
-changes or `tests/dist-contract.test.ts` will fail.
+`dist/` is committed to git (quiltsketch pins a git tag), so it has to be rebuilt
+in the same branch as the source change that invalidates it. `tests/dist-contract.test.ts`
+checks bundle *shape* (lit external in the ESM build, lit bundled and no bare
+imports in the CDN build, no UMD artifact, components register on load) and one
+piece of bundle *content*: the set of dispatched event names in each bundle must
+equal the set in `src/components/`. That catches a stale `dist/` only when the
+event vocabulary moved — it is not a general "did you rebuild" check, and a change
+to markup, styling or props will pass against an old bundle. Rebuild anyway.
 
 ### Publishing
 
@@ -116,10 +126,43 @@ Semantic tokens: `--color-primary`, `--color-secondary`, `--color-error`, `--col
 accepts exactly: `primary | secondary | success | warning | error | info | muted | ''`,
 defined once in `src/styles/semantics.ts`. Literal colour names (`cyan`, `green`,
 `magenta`, `yellow`, `red`) were removed in 4.0.0 — they were inconsistent aliases
-that misdescribed themselves under theming. `tests/semantic-vocabulary.test.ts`
-fails if any component misses a value or reintroduces a literal. Never add a
-component-local colour union; import `SemanticColor`. Full reference:
-`docs/api/semantic-colors.md`.
+that misdescribed themselves under theming. Five components carry the attribute:
+`tui-panel`, `tui-stat`, `tui-strip-item`, `tui-statusbar`, `tui-button`. As of
+5.0.0 `tui-button` splits the two axes it used to conflate — `variant` is the
+treatment (`default | filled | outline | ghost | icon | menu`), `color` is the
+semantic accent, and only `filled` and `outline` read `color`; the other four
+treatments carry their own colours and ignore it.
+
+`tests/semantic-vocabulary.test.ts` fails if any of the five misses a value or
+reintroduces a literal, and as of 5.0.0 also scans `@attr`/`@fires` JSDoc for
+retired literal names — documentation drifted out of sync with the CSS in 4.0.0
+and nothing caught it. Never add a component-local colour union; import
+`SemanticColor`. Full reference: `docs/api/semantic-colors.md`.
+
+**Event naming (enforced).** Every dispatched event is `tui-` prefixed and follows
+`tui-<subject>-<verb>`, where the subject names the emitting component
+(`tui-panel-toggle`, `tui-console-command`, `tui-workspace-layout-change`). Bare
+names collide — `toggle`, `close` and `copy` are real DOM events, and every
+retro-tui event is `bubbles: true, composed: true`, so it reaches `document`.
+
+Two shared-protocol exceptions are deliberate, because the whole point is that one
+listener serves several components:
+- the form protocol — `tui-change` / `tui-input`, dispatched by all five form
+  components (`tui-input`, `tui-checkbox`, `tui-radio`, `tui-checkbox-group`,
+  `tui-radio-group`)
+- `tui-tool-select`, dispatched by both `tui-toolbar` and `tui-tool`
+
+`tests/event-naming.test.ts` fails on an unprefixed name in either a dispatch or an
+`@fires` tag, and asserts the dispatched set and the documented set are identical —
+so an undocumented event and a typo'd `@fires` both fail. Full reference:
+`docs/api/events.md`.
+
+**Control sizing.** `ControlSize` (`sm | md | lg`) is declared once in
+`src/styles/semantics.ts` and shared by `tui-button`, `tui-toolbar`, `tui-tool` and
+`tui-card`. Never redeclare it locally.
+
+**Picking a component.** `docs/guides/component-selection.md` is the agent-first
+guide to choosing between the primitives.
 
 ### Out of scope
 

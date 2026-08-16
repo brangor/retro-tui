@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
-import type { SelectionStyle } from '../styles/semantics.js';
+import type { ControlSize, SelectionStyle } from '../styles/semantics.js';
 import './tui-button.ts'; // Import tui-button for use
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -9,7 +9,6 @@ import './tui-button.ts'; // Import tui-button for use
 // ═══════════════════════════════════════════════════════════════════════════════
 
 type ToolbarOrientation = 'vertical' | 'horizontal';
-type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ToolDefinition {
   id: string;
@@ -28,7 +27,7 @@ interface ToolDefinition {
  *
  * Uses <tui-button variant="icon"> internally for consistent styling.
  * Supports vertical (default) or horizontal orientation.
- * Emits tool-select event when a tool is clicked.
+ * Emits tui-tool-select event when a tool is clicked.
  *
  * @attr {string} orientation - 'vertical' | 'horizontal'
  * @attr {string} selected - Currently selected tool id
@@ -36,7 +35,7 @@ interface ToolDefinition {
  * @attr {string} selection-style - Selection feedback: 'invert' | 'border'
  * @attr {boolean} show-hotkeys - Show keyboard shortcuts next to tools (default: true)
  *
- * @fires tool-select - When a tool button is clicked
+ * @fires tui-tool-select - When a tool button is clicked
  *   detail: { tool: string }
  *
  * @slot - Tool buttons (or use .tools property)
@@ -50,7 +49,7 @@ export class Toolbar extends LitElement {
   selected = '';
 
   @property({ reflect: true })
-  size: ButtonSize = 'md';
+  size: ControlSize = 'md';
 
   @property({ attribute: 'selection-style' })
   selectionStyle: SelectionStyle = '';
@@ -153,7 +152,7 @@ export class Toolbar extends LitElement {
   private _handleClick(toolId: string) {
     this.selected = toolId;
     this.dispatchEvent(
-      new CustomEvent('tool-select', {
+      new CustomEvent('tui-tool-select', {
         bubbles: true,
         composed: true,
         detail: { tool: toolId },
@@ -214,7 +213,9 @@ export class Toolbar extends LitElement {
  * @attr {string} tool-id - Tool identifier
  * @attr {string} icon - Icon character to display
  * @attr {boolean} active - Whether this tool is active
- * @attr {string} size - Button size: 'sm' | 'md' | 'lg'
+ * @attr {string} size - Tool size: 'sm' | 'md' | 'lg'
+ *
+ * @fires tui-tool-select - When this tool is clicked (detail: { tool })
  */
 @customElement('tui-tool')
 export class Tool extends LitElement {
@@ -228,7 +229,7 @@ export class Tool extends LitElement {
   active = false;
 
   @property()
-  size: ButtonSize = 'md';
+  size: ControlSize = 'md';
 
   static styles = css`
     :host {
@@ -238,7 +239,7 @@ export class Tool extends LitElement {
 
   private _handleClick() {
     this.dispatchEvent(
-      new CustomEvent('tool-select', {
+      new CustomEvent('tui-tool-select', {
         bubbles: true,
         composed: true,
         detail: { tool: this.toolId },

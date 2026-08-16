@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { sharedStyles } from '../styles/shared.js';
 import { BORDER_CHARS } from '../utils/borders.js';
+import type { ControlSize } from '../styles/semantics.js';
 
 // Static CSS character values from shared border module
 const S = BORDER_CHARS.single;
@@ -14,7 +15,6 @@ const D = BORDER_CHARS.double;
 
 type CardRank = '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'X' | 'J' | 'Q' | 'K' | 'A' | '';
 type CardSuit = '♥' | '♠' | '♦' | '♣' | '';
-type CardSize = 'sm' | 'md' | 'lg';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
@@ -37,7 +37,7 @@ type CardSize = 'sm' | 'md' | 'lg';
  * @attr {boolean} disabled - Card cannot be interacted with
  * @attr {string} size - 'sm' | 'md' | 'lg'
  * 
- * @fires card-click - When card is clicked
+ * @fires tui-card-click - When card is clicked
  *   detail: { rank, suit }
  * 
  * @slot - Custom content (overrides rank/suit display)
@@ -60,7 +60,7 @@ export class Card extends LitElement {
   disabled = false;
 
   @property({ type: String, reflect: true })
-  size: CardSize = 'md';
+  size: ControlSize = 'md';
 
   static styles = [
     sharedStyles,
@@ -284,7 +284,7 @@ export class Card extends LitElement {
   private _handleClick(): void {
     if (this.disabled) return;
     
-    this.dispatchEvent(new CustomEvent('card-click', {
+    this.dispatchEvent(new CustomEvent('tui-card-click', {
       bubbles: true,
       composed: true,
       detail: { rank: this.rank, suit: this.suit }

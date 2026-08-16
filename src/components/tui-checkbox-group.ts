@@ -5,6 +5,11 @@ import { sharedStyles } from '../styles/shared.js';
 import type { TuiEvent } from '../protocol/types';
 import type { Checkbox } from './tui-checkbox';
 
+/**
+ * Groups `tui-checkbox` children and reports their combined value.
+ *
+ * @fires tui-change - When any child checkbox changes (detail: { value, name })
+ */
 @customElement('tui-checkbox-group')
 export class CheckboxGroup extends LitElement {
   @property()
