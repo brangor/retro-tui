@@ -55,7 +55,11 @@ examples/push-server/ — optional recipe for live dashboard use cases
 - `src/styles/inject-tokens.ts` — Auto-imports tokens.css on library load
 - `src/protocol/types.ts` — Type definitions used by component props (no runtime)
 - `docs/api/` — Public API contracts: `semantic-colors.md`, `events.md`, `event-protocol.md`, `tui-tiled.md`, `distribution.md`
-- `docs/guides/` — Task-oriented guides: `component-selection.md`, `decision-engine.md`, `porting.md`
+- `docs/guides/` — Task-oriented guides: `component-selection.md`, `upgrading.md`, `decision-engine.md`, `porting.md`
+
+Pre-vault implementation plans (`docs/plans/`, `docs/superpowers/`) were archived out of
+the repo on 2026-08-16 to `~/Code/agents/vault/plans/brando/retro-tui/archive-prevault/`.
+Nothing live linked them. New plans go to the vault, never into this repo.
 - `examples/` — Demo pages; `push-server/` is a standalone recipe
 
 ### Component Patterns
