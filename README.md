@@ -42,12 +42,11 @@ small apps. If a proposed addition doesn't pass that test, update this section f
 
 ## Quick Start
 
-```bash
-npm install
-npm run dev        # Vite dev server at http://localhost:3000
-```
+### Using retro-tui in your app
 
-Import components and tokens from the library entry point:
+```bash
+npm install retro-tui
+```
 
 ```javascript
 import 'retro-tui';                       // registers all <tui-*> elements + tokens
@@ -58,11 +57,23 @@ import { Panel, Output, Console } from 'retro-tui';
 No build step? A self-contained build works from a plain script tag:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/retro-tui/dist/retro-tui.cdn.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/retro-tui@5/dist/retro-tui.cdn.js"></script>
 ```
 
+**Pin the major.** An unversioned CDN URL resolves to the `latest` dist-tag, which
+is not always the newest release — and the CDN build only exists from 3.0.0 onward,
+so an unpinned URL can 404 outright.
+
 Two builds ship: `retro-tui` for bundlers, `retro-tui/cdn` for a plain script
-tag. See [docs/api/distribution.md](docs/api/distribution.md).
+tag. They are not interchangeable — see [docs/api/distribution.md](docs/api/distribution.md).
+Upgrading an existing app? Start at [docs/guides/upgrading.md](docs/guides/upgrading.md).
+
+### Working on retro-tui itself
+
+```bash
+npm install
+npm run dev        # Vite dev server at http://localhost:3000
+```
 
 ## Components
 
