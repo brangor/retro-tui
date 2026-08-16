@@ -1,8 +1,20 @@
 # The Decision Engine Pattern
 
-The Decision Engine is the recommended architecture for apps built with retro-tui. It's a centralized, unidirectional state management pattern where a single `emit()` function handles all state mutations and triggers re-renders.
+The Decision Engine is **one** architecture for apps built with retro-tui — a centralized, unidirectional state pattern where a single `emit()` function handles all state mutations and triggers re-renders. It suits single-page tool apps with a canvas-like main surface. It is not a requirement of the library, and it is not the only shape that works.
 
-Three shipped apps use this pattern: GridSketch, QuiltSketch, and the Paint editor (which moved to `../retro-tui-lab` with the rest of the canvas work). A fourth (Charmapder, a sprite editor) is in design.
+> **Evidence base, stated honestly (audited 2026-08-16).** This pattern came out of
+> GridSketch, QuiltSketch and the Paint editor. Paint moved to `../retro-tui-lab` with
+> the canvas work; QuiltSketch is frozen on retro-tui 2.2.0; GridSketch's retro-tui
+> integration is abandoned and never ran against a tagged release. Charmapder is still
+> only in design. So every app that validated this pattern is on a 2.x retro-tui or
+> gone.
+>
+> The newest actively-maintained consumer, **down-spot, does not use this pattern** —
+> it is an Electron app composing retro-tui components directly inside per-view
+> modules, with no global `emit()`. That is a perfectly good way to use the library.
+>
+> Read this guide as a worked example, not a mandate. If your app is form- and
+> list-shaped rather than canvas-shaped, per-view state is likely the better fit.
 
 ---
 

@@ -11,8 +11,11 @@ difference is whether Lit travels inside the file.
 ## With a bundler
 
 ```bash
-npm install retro-tui
+npm install retro-tui@next
 ```
+
+The `latest` dist-tag is still 2.2.5; `@next` is 5.0.0. A bare `npm install retro-tui`
+gets you the three-majors-old release without warning.
 
 ```js
 import 'retro-tui';
@@ -27,7 +30,7 @@ another.
 ## Without a bundler
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/retro-tui/dist/retro-tui.cdn.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/retro-tui@5/dist/retro-tui.cdn.js"></script>
 
 <tui-tiled preset="console">
   <div slot="main">…</div>
@@ -38,6 +41,10 @@ another.
 One request, ~35 kB gzipped, no import map. Design tokens are injected by the
 library on load, so there is no stylesheet to link. Themes are still a class on
 `<body>`, e.g. `class="theme-vibrant-scifi"`.
+
+**Keep the `@5`.** An unversioned CDN URL resolves to the `latest` dist-tag, which is
+2.2.5 — and the CDN build only exists from 3.0.0 onward, so an unpinned URL does not
+serve an old bundle, it 404s.
 
 Don't use this build alongside your own Lit — you'd load Lit twice.
 

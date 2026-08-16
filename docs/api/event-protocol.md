@@ -134,34 +134,33 @@ Removes a panel from the workspace.
 
 Any `type` not listed above is routed normally. If a component is registered for the `id`, it receives the event. Otherwise, it renders as a `<tui-output>` with a type badge.
 
-## Emitter Kit
+## Pushing events
 
-```bash
-npm install retro-tui
-```
+There is no emitter to install. The `RetroEmitter` class and its typed helpers were
+deleted in 3.0.0 as dead protocol runtime, and `examples/` is not published to npm — the
+package ships `dist` and `src` only. Copy `examples/push-server/push.js` into your
+project and call it directly:
 
 ```javascript
-import { RetroEmitter } from 'retro-tui/emitter';
+import { push } from './push.js';
 
-const retro = new RetroEmitter({
-  channel: 'my-app',
-  url: 'http://localhost:3001/push',  // default
-});
-
-// Typed helpers
-retro.log('main', 'Build started...');
-retro.log('main', 'Warning: slow', 'warn');
-retro.progress('dl', 0.73, { label: 'Track 4', total: 6, current: 4 });
-retro.table('stats', { columns: ['K', 'V'], rows: [{ K: 'a', V: 1 }] });
-retro.status('auth', 'success', 'Logged in');
-retro.clear('main');
-retro.dismiss('stats');
-
-// Custom events
-retro.emit('my-type', 'my-id', { custom: 'data' });
+await push({ channel: 'my-app', type: 'log', id: 'main',
+             data: { message: 'Build started...', level: 'info' } });
+await push({ channel: 'my-app', type: 'progress', id: 'dl',
+             data: { value: 0.73, label: 'Track 4', total: 6, current: 4 } });
+await push({ channel: 'my-app', type: 'table', id: 'stats',
+             data: { columns: ['K', 'V'], rows: [{ K: 'a', V: 1 }] } });
+await push({ channel: 'my-app', type: 'clear', id: 'main', data: {} });
 ```
 
-The emitter is a thin HTTP POST wrapper. You can replace it with `fetch`, `curl`, or any HTTP client.
+`push.js` also exports `log(data, channel)` and `status(data, channel)` shorthands, but
+they pass `data` straight through and set no `id` — so build the `data` object yourself
+and add an `id` when you need routing to a specific component.
+
+It is a thin HTTP POST wrapper, so `fetch`, `curl`, or any HTTP client does the same
+job — see the `curl` example in `examples/push-server/README.md`. The wire format is the
+`{ channel, type, id, data }` envelope documented above; a typed wrapper around it is a
+few lines you own rather than something the library provides.
 
 ## Push Server
 

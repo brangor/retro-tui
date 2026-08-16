@@ -39,17 +39,18 @@ Group related output into logical components. Each group gets a stable `id`:
 - Per-track download progress → `id: "track-1"`, `id: "track-2"`, etc.
 - Summary table → `id: "summary"`
 
-### 4. Add the Emitter
+### 4. Add the Push Helper
 
-```bash
-npm install retro-tui
-```
+There is nothing to install — this is a copy-in recipe. `examples/` is not published to
+npm (the package ships `dist` and `src` only), and the old `RetroEmitter` class was
+deleted in 3.0.0. Copy `examples/push-server/push.js` out of the retro-tui repo:
 
 ```javascript
-import { RetroEmitter } from 'retro-tui/emitter';
-
-const retro = new RetroEmitter({ channel: 'my-app' });
+import { push, log, status } from './push.js';
 ```
+
+Each helper is one HTTP POST of a `{ channel, type, id, data }` envelope, documented in
+[event-protocol.md](../api/event-protocol.md).
 
 ### 5. Replace Output Calls
 
@@ -61,10 +62,11 @@ console.log('Authenticating with Spotify...');
 **After:**
 ```javascript
 console.log('Authenticating with Spotify...');  // keep CLI output
-retro.log('auth', 'Authenticating with Spotify...');
+await push({ channel: 'my-app', type: 'log', id: 'auth',
+             data: { message: 'Authenticating with Spotify...', level: 'info' } });
 ```
 
-The emitter is fire-and-forget. If the push server isn't running, the POST silently fails and your CLI works normally.
+The push helper is fire-and-forget. If the push server isn't running, the POST silently fails and your CLI works normally.
 
 ### 6. Run Both
 
@@ -76,19 +78,21 @@ Events appear as panels in the retro-tui workspace.
 
 ## Example: Spotify Downloader
 
+All calls below omit `channel: 'my-app'` for brevity — every envelope carries it.
+
 | Current CLI output | Event call |
 |---|---|
-| `Authenticating with Spotify...` | `retro.log('auth', 'Authenticating with Spotify...')` |
-| `Authenticated successfully.` | `retro.status('auth', 'success', 'Authenticated')` |
-| `Fetched "These Dreams": 6 tracks` | `retro.status('fetch', 'success', 'Fetched "These Dreams": 6 tracks')` |
-| `[1/6] Downloading: Heart - These Dreams` | `retro.progress('download', 1/6, { label: 'Heart - These Dreams', total: 6, current: 1 })` |
-| `OK: .../Heart - These Dreams.mp3` | `retro.log('results', 'OK: Heart - These Dreams.mp3')` |
-| `TAGGED: Heart - These Dreams.mp3` | `retro.log('tagging', 'TAGGED: Heart - These Dreams.mp3')` |
-| Summary table | `retro.table('summary', { columns: ['Metric', 'Count'], rows: [...] })` |
+| `Authenticating with Spotify...` | `push({ type: 'log', id: 'auth', data: { message: 'Authenticating with Spotify...' } })` |
+| `Authenticated successfully.` | `push({ type: 'status', id: 'auth', data: { state: 'success', message: 'Authenticated' } })` |
+| `Fetched "These Dreams": 6 tracks` | `push({ type: 'status', id: 'fetch', data: { state: 'success', message: 'Fetched "These Dreams": 6 tracks' } })` |
+| `[1/6] Downloading: Heart - These Dreams` | `push({ type: 'progress', id: 'download', data: { value: 1/6, label: 'Heart - These Dreams', total: 6, current: 1 } })` |
+| `OK: .../Heart - These Dreams.mp3` | `push({ type: 'log', id: 'results', data: { message: 'OK: Heart - These Dreams.mp3' } })` |
+| `TAGGED: Heart - These Dreams.mp3` | `push({ type: 'log', id: 'tagging', data: { message: 'TAGGED: Heart - These Dreams.mp3' } })` |
+| Summary table | `push({ type: 'table', id: 'summary', data: { columns: ['Metric', 'Count'], rows: [...] } })` |
 
 ## Tips
 
-- **Keep console.log too.** The emitter supplements your CLI, it doesn't replace it. Your app should work fine without the push server running.
-- **One emitter per app.** Create it once at startup, pass it around or import it.
+- **Keep console.log too.** Pushing supplements your CLI, it doesn't replace it. Your app should work fine without the push server running.
+- **Wrap it once.** If the raw envelopes get repetitive, write your own `log(id, msg)` helper around `push` at startup and import that — it's a few lines, and it's yours to shape.
 - **IDs are stable strings.** Use descriptive names like `"auth"`, `"download"`, `"summary"` — not generated UUIDs.
 - **Don't over-decompose.** You don't need a separate panel for every log line. Group related output under one ID.
