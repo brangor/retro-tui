@@ -45,8 +45,12 @@ small apps. If a proposed addition doesn't pass that test, update this section f
 ### Using retro-tui in your app
 
 ```bash
-npm install retro-tui
+npm install retro-tui@next
 ```
+
+**Ask for `@next`.** The `latest` dist-tag still points at 2.2.5, three majors back, so
+a bare `npm install retro-tui` installs that instead — silently. A `"^5.0.0"` range in
+`package.json` also works, since semver ranges ignore dist-tags.
 
 ```javascript
 import 'retro-tui';                       // registers all <tui-*> elements + tokens

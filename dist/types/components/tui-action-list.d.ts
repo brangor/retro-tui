@@ -13,6 +13,9 @@ import { LitElement } from 'lit';
  *
  * @slot actions-{id} - Per-item action content shown below the item when selected.
  *                      One slot per item, named by item id. e.g. slot="actions-my-item-id"
+ *                      While an item is collapsed its slot content is unplaced: it still
+ *                      answers getComputedStyle, but with unresolved values (colours read
+ *                      as rgb(0, 0, 0)). Expand the item before measuring it.
  */
 export declare class ActionList extends LitElement {
     items: Array<{
