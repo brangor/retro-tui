@@ -56,6 +56,9 @@ examples/push-server/ — optional recipe for live dashboard use cases
 - `src/protocol/types.ts` — Type definitions used by component props (no runtime)
 - `docs/api/` — Public API contracts: `semantic-colors.md`, `events.md`, `event-protocol.md`, `tui-tiled.md`, `distribution.md`
 - `docs/guides/` — Task-oriented guides: `component-selection.md`, `upgrading.md`, `decision-engine.md`, `porting.md`
+- `docs/references/` — Visual reference images the aesthetic is drawn from (Unity Systems
+  home-security panel, Jupiter Hell, MGS2, Diablo 2). Not stray files — they are the
+  source `theme-home-security-interface` and `index.html` are built against.
 
 Pre-vault implementation plans (`docs/plans/`, `docs/superpowers/`) were archived out of
 the repo on 2026-08-16 to `~/Code/agents/vault/plans/brando/retro-tui/archive-prevault/`.
@@ -120,9 +123,16 @@ npm dist-tag add retro-tui@<version> latest   # only when verified
 ### Token System
 
 `src/styles/tokens.css` defines three themes (apply as body class):
-- `.theme-terminal-classic` (default) — dark green-on-black
-- `.theme-vibrant-scifi` — bright cyan/magenta
-- `.theme-home-security-interface` — amber-on-dark
+- `.theme-terminal-classic` (default) — cyan `#00ffff` primary on near-black, green
+  `#00ff00` secondary
+- `.theme-vibrant-scifi` — magenta `#ff00ff` primary on deep blue-black, cyan-teal
+  `#00ffcc` secondary
+- `.theme-home-security-interface` — green `#3fb950` on black with orange `#e8691e`
+  alerts and 3px borders. Named for the Unity Systems home-security panel in
+  `docs/references/`; `index.html` uses it for the SELECT PROGRAM page.
+
+Verify a colour against `tokens.css` before describing a theme — these three
+descriptions were all wrong until 2026-08-16.
 
 Semantic tokens: `--color-primary`, `--color-secondary`, `--color-error`, `--color-warning`, `--color-success`, `--color-info` (+ `-bg`/`-fg` variants), `--surface-base/elevated/overlay`, `--text-primary/muted`, `--spacing-xs/sm/md/lg`, `--font-mono`.
 
