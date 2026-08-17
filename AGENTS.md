@@ -1,6 +1,43 @@
-# CLAUDE.md
+<!-- probe:
+  must-report:
+    - "scope fence: additions must be a terminal-aesthetic UI primitive usable across multiple small apps; canvas/tool-state work lives in ../retro-tui-lab, the push server in examples/push-server/"
+    - "the semantic colour vocabulary is enforced (tests/semantic-vocabulary.test.ts) and defined once in src/styles/semantics.ts — never add a component-local colour union; literal names (cyan/green/magenta/yellow/red) were removed in 4.0.0"
+    - "event naming is enforced (tests/event-naming.test.ts): every event is tui-<subject>-<verb>, and the dispatched set must equal the documented @fires set"
+    - "verify a colour against src/styles/tokens.css before describing a theme — the three theme descriptions were all wrong until 2026-08-16; never restate token values, cite the source"
+    - "dist/ is committed to git (quiltsketch pins a git tag); rebuild in the same branch as the source change"
+  verify:
+    - kind: command-exists
+      value: npm
+    - kind: file-matches
+      path: package.json
+      expect: "retro-tui"
+    - kind: path-exists
+      path: src/styles/semantics.ts
+    - kind: path-exists
+      path: src/styles/tokens.css
+    - kind: file-matches
+      path: src/styles/tokens.css
+      expect: "--color-primary: #00ffff"
+    - kind: file-matches
+      path: src/styles/semantics.ts
+      expect: "SEMANTIC_COLORS"
+  triggers:
+    - prompt: "what colour values does a retro-tui component's color attribute accept?"
+      expect: fires
+    - prompt: "what's the primary colour of the terminal-classic theme?"
+      expect: fires
+    - prompt: "what colour is the sky?"
+      expect: silent
+  never:
+    - "restates a token hex value instead of pointing at tokens.css"
+    - "introduces a component-local colour union instead of importing SemanticColor"
+-->
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+# AGENTS.md
+
+Project conventions for RetroTUI. Tool-neutral: Claude Code, Copilot CLI, and any
+AGENTS.md-aware agent read this file. (Claude Code also loads the sibling `CLAUDE.md`
+pointer natively, and the SessionStart hook injects this file.)
 
 ## Project Overview
 
