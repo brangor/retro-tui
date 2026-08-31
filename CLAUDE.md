@@ -1,43 +1,6 @@
-<!-- probe:
-  must-report:
-    - "scope fence: additions must be a terminal-aesthetic UI primitive usable across multiple small apps; canvas/tool-state work lives in ../retro-tui-lab, the push server in examples/push-server/"
-    - "the semantic colour vocabulary is enforced (tests/semantic-vocabulary.test.ts) and defined once in src/styles/semantics.ts — never add a component-local colour union; literal names (cyan/green/magenta/yellow/red) were removed in 4.0.0"
-    - "event naming is enforced (tests/event-naming.test.ts): every event is tui-<subject>-<verb>, and the dispatched set must equal the documented @fires set"
-    - "verify a colour against src/styles/tokens.css before describing a theme — the three theme descriptions were all wrong until 2026-08-16; never restate token values, cite the source"
-    - "dist/ is committed to git (quiltsketch pins a git tag); rebuild in the same branch as the source change"
-  verify:
-    - kind: command-exists
-      value: npm
-    - kind: file-matches
-      path: package.json
-      expect: "retro-tui"
-    - kind: path-exists
-      path: src/styles/semantics.ts
-    - kind: path-exists
-      path: src/styles/tokens.css
-    - kind: file-matches
-      path: src/styles/tokens.css
-      expect: "--color-primary: #00ffff"
-    - kind: file-matches
-      path: src/styles/semantics.ts
-      expect: "SEMANTIC_COLORS"
-  triggers:
-    - prompt: "what colour values does a retro-tui component's color attribute accept?"
-      expect: fires
-    - prompt: "what's the primary colour of the terminal-classic theme?"
-      expect: fires
-    - prompt: "what colour is the sky?"
-      expect: silent
-  never:
-    - "restates a token hex value instead of pointing at tokens.css"
-    - "introduces a component-local colour union instead of importing SemanticColor"
--->
+# CLAUDE.md
 
-# AGENTS.md
-
-Project conventions for RetroTUI. Tool-neutral: Claude Code, Copilot CLI, and any
-AGENTS.md-aware agent read this file. (Claude Code also loads the sibling `CLAUDE.md`
-pointer natively, and the SessionStart hook injects this file.)
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
@@ -93,9 +56,6 @@ examples/push-server/ — optional recipe for live dashboard use cases
 - `src/protocol/types.ts` — Type definitions used by component props (no runtime)
 - `docs/api/` — Public API contracts: `semantic-colors.md`, `events.md`, `event-protocol.md`, `tui-tiled.md`, `distribution.md`
 - `docs/guides/` — Task-oriented guides: `component-selection.md`, `upgrading.md`, `decision-engine.md`, `porting.md`
-- `docs/references/` — Visual reference images the aesthetic is drawn from (Unity Systems
-  home-security panel, Jupiter Hell, MGS2, Diablo 2). Not stray files — they are the
-  source `theme-home-security-interface` and `index.html` are built against.
 
 Pre-vault implementation plans (`docs/plans/`, `docs/superpowers/`) were archived out of
 the repo on 2026-08-16 to `~/Code/agents/vault/plans/brando/retro-tui/archive-prevault/`.
@@ -160,16 +120,9 @@ npm dist-tag add retro-tui@<version> latest   # only when verified
 ### Token System
 
 `src/styles/tokens.css` defines three themes (apply as body class):
-- `.theme-terminal-classic` (default) — cyan `#00ffff` primary on near-black, green
-  `#00ff00` secondary
-- `.theme-vibrant-scifi` — magenta `#ff00ff` primary on deep blue-black, cyan-teal
-  `#00ffcc` secondary
-- `.theme-home-security-interface` — green `#3fb950` on black with orange `#e8691e`
-  alerts and 3px borders. Named for the Unity Systems home-security panel in
-  `docs/references/`; `index.html` uses it for the SELECT PROGRAM page.
-
-Verify a colour against `tokens.css` before describing a theme — these three
-descriptions were all wrong until 2026-08-16.
+- `.theme-terminal-classic` (default) — dark green-on-black
+- `.theme-vibrant-scifi` — bright cyan/magenta
+- `.theme-home-security-interface` — amber-on-dark
 
 Semantic tokens: `--color-primary`, `--color-secondary`, `--color-error`, `--color-warning`, `--color-success`, `--color-info` (+ `-bg`/`-fg` variants), `--surface-base/elevated/overlay`, `--text-primary/muted`, `--spacing-xs/sm/md/lg`, `--font-mono`.
 
