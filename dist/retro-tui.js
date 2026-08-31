@@ -1942,7 +1942,7 @@ function rt(t) {
 function Ue(t) {
   if (!t) return "";
   let e = t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const r = /\x1b\[([0-9;]+)m/g;
+  const r = /\x1b\[([0-9;]*)m/g;
   let s = "", o = 0, i = [], a;
   for (; (a = r.exec(e)) !== null; ) {
     s += e.slice(o, a.index), o = a.index + a[0].length;

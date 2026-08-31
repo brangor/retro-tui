@@ -1,6 +1,6 @@
 {
   "name": "retro-tui",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Terminal-aesthetic Lit components and tokens for building small app UIs.",
   "type": "module",
   "main": "dist/retro-tui.js",
