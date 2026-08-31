@@ -64,7 +64,11 @@ export function ansiToHtml(text) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-  const ansiRegex = /\x1b\[([0-9;]+)m/g;
+  // `*` not `+`: a reset may omit its parameter entirely (`ESC[m`), which the SGR spec
+  // defines as equivalent to `ESC[0m` and which real programs — `git log --color` among
+  // them — emit for every reset. Requiring a digit here left bare resets unmatched, so
+  // they leaked into the output as literal escape characters and no span ever closed.
+  const ansiRegex = /\x1b\[([0-9;]*)m/g;
 
   let result = '';
   let lastIndex = 0;
