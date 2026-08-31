@@ -2,8 +2,9 @@
  * RetroTUI Design Tokens
  * 
  * Theme switching via class on :root or body:
- *   <body class="theme-terminal-classic">
- *   <body class="theme-vibrant-scifi">
+ *   <body class="theme-terminal-classic">          cyan on near-black (default)
+ *   <body class="theme-vibrant-scifi">             magenta on deep blue-black
+ *   <body class="theme-home-security-interface">   green on black, orange alerts
  */
 
 /* ═══════════════════════════════════════════════════════════════════════════════
